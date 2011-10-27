@@ -1,0 +1,26 @@
+Load default data set to begin with, or no? User option.
+Let editor choose a chart to go with it
+Chooser for div width (content area) and number of columns accordingly
+Disable checkboxes on > 5
+Editor choice: Default Google theme or our theme
+Is embed code possible, or do we have to use iframe?
+Initial query creator / data limiter
+Generate both full page HTML & embed code (producer's choice)
+Git repo
+
+
+
+Name: 
+    data explorer
+    tangerine
+    frontier
+    everest
+    freedive *
+    snorkel
+    data snorkel
+    data runner
+    datasnort
+    
+    
+    
+    
