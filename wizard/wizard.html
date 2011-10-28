@@ -405,21 +405,23 @@
     	var rowNum = data.getNumberOfRows();
 	
 
-        
-        // All columns into an object literal
+        // All columns into a "cols" object literal
         var cols = {};
         for (var i = 0; i < colNum; i++) {
             var key = data.B[i].id;
             cols[key] = {
                 label: data.B[i].label
             };
+        }   
+
+        // How to iterate through cols array:
+        for(var i in cols) {
+        	var value = cols[i];
+        	console.log(i,value.label);
         }
         
-        console.log(cols);
         
 	}
-	
-getTableMeta();	
 
 </script>
 
