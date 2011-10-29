@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Smart Wizard 2 - Basic Example  - a javascript jQuery wizard control plugin</title>
+<title>Freedive 0.1 - Generate embeddable filter tables from Google Docs data</title>
 <link href="styles/demo_style.css" rel="stylesheet" type="text/css">
 
 <link href="styles/smart_wizard.css" rel="stylesheet" type="text/css">
@@ -55,8 +55,10 @@
             // Take input from step 1 and insert vals into the DOM so they're available in step 2
             spreadsheet_id = $('input[id=sidfield]').val();
             $('#s2_sid').html(spreadsheet_id);
-            getTableMeta(spreadsheet_id); // Try to get this spreadsheet's metadata from Google
+            getTableMeta(spreadsheet_id);
+            
             return true; // Return true so that navigation continues
+
 
         } else if(step_num == 2) {
             
@@ -213,25 +215,11 @@
 
                 <tbody>
                     <tr id="colnames">
-                        <td>Bike</td>
-                        <td>Car</td>
-                        <td>Bus</td>
-                        <td>Scooter</td>
-                        <td>Train</td>
-                        <td>Hovercraft</td>
-                        <td>Pogo stick</td>
-                        <td>Elephant</td>
+                        <!-- Cells populated by jQuery -->
                     </tr>
                     
                     <tr id="colids">
-                        <td><input type="checkbox" name="usecols" value="A" /></td>
-                        <td><input type="checkbox" name="usecols" value="B" /></td>
-                        <td><input type="checkbox" name="usecols" value="C" /></td>
-                        <td><input type="checkbox" name="usecols" value="D" /></td>
-                        <td><input type="checkbox" name="usecols" value="E" /></td>
-                        <td><input type="checkbox" name="usecols" value="F" /></td>
-                        <td><input type="checkbox" name="usecols" value="G" /></td>
-                        <td><input type="checkbox" name="usecols" value="H" /></td>
+                        <!-- Column IDs populated by jQuery -->                        
                     </tr>
 
                  </tbody>
@@ -362,69 +350,83 @@
 
 
 <script type="text/javascript" charset="utf-8">
-    // Misc functions
+    // In-wizard functions
     
     // Populate any known parameters from URL
     var spreadsheet_id = $.getUrlVar('sid');
     $('input[id=sidfield]').val(spreadsheet_id);
 
+
+    // Populate set of column checkboxes from query results
+    function populateColCells(orig_cols) {
+        $.each(orig_cols, function(column, value) { 
+          $("tr#colnames").append('<td>' + value.label + '</td>');        
+        });
+    }
+    
+    function populateColIDCells(orig_cols) {
+        $.each(orig_cols, function(column, value) { 
+          $("tr#colids").append('<td><input type="checkbox" name="usecols" value="'+ column +'" /></td>');        
+        });
+    }    
+    
     
     // Warn if user tries to select more than five columns
+    function limitCols() {
     $('input[name=usecols]').click(function () {
     selected = $('input[name="usecols"]').filter(':checked').length;
     if (selected > 5){
         $('#wizard').smartWizard('showMessage','You have selected more than five columns');
             } else {
         $('div.msgBox').hide();
-            
         }
-    });
+      });
+    }
 </script>    
 
 
 <script type="text/javascript" charset="utf-8">
     // Get table metadata from Google
-    function getTableMeta(spreadsheet_id) {
-	
+    function getTableMeta(spreadsheet_id,response) {
+	    
     	// ------------ Load data from google docs ----------------
-
 		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id);
-		
-    	query.send(handleQueryResponse);  
+    	query.send(handleQueryResponse);
+        
     	}
 
-    	function handleQueryResponse(response) {
-    	  if (response.isError()) {
-    		alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-    		return;
-    	  }
-	
-    	//pass the data into a variable
-    	var data = response.getDataTable();
-    	var colNum = data.getNumberOfColumns();
-    	var rowNum = data.getNumberOfRows();
-	
+	function handleQueryResponse(response) {
+        if (response.isError()) {
+            alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage() + '. Please click Previous and enter a different spreadsheet ID.');
+        }
 
-        // All columns into a "cols" object literal
-        var cols = {};
+        var data = response.getDataTable();
+        var colNum = data.getNumberOfColumns();
+        var rowNum = data.getNumberOfRows();
+
+        // All columns into an "orig_cols" map (object literal)
+        orig_cols = {};
         for (var i = 0; i < colNum; i++) {
             var key = data.B[i].id;
-            cols[key] = {
+            orig_cols[key] = {
                 label: data.B[i].label
             };
-        }   
+        } 
+        
+        // Populate original column cells with returned data
+        // Make sure user doesn't select more than n columns
+        populateColCells(orig_cols);
+        populateColIDCells(orig_cols);
+        limitCols();       
 
-        // How to iterate through cols array:
-        for(var col_id in cols) {
-        	var label = cols[col_id].label;
-        	console.log(col_id,label);
-        }
-        
-        
+
+        // Example: How to iterate through cols array:
+        // for(var col_id in cols) {
+        //  var label = cols[col_id].label;
+        //  console.log(col_id,label);
+        // }
 	}
 
 </script>
-
-    		
 </body>
 </html>
