@@ -4,7 +4,7 @@
 <title>Freedive 0.1 - Generate embeddable filter tables from Google Docs data</title>
 <link href="styles/demo_style.css" rel="stylesheet" type="text/css">
 
-<link href="styles/smart_wizard.css" rel="stylesheet" type="text/css">
+<link href="styles/freeDive.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
 
@@ -49,8 +49,18 @@
       function leaveAStepCallback(obj){
         // This function gets called after each step and appends new params to the URL
         var step_num= obj.attr('rel'); // get the current step number
+
+		 if(step_num == 1){
+
+	            return true; // Return true so that navigation continues
+	
+	
+		} else if(step_num == 2) {
+
+            return true; // Return true so that navigation continues
+
         
-        if(step_num == 1){
+        } else if(step_num == 3) {
 
             // Take input from step 1 and insert vals into the DOM so they're available in step 2
             spreadsheet_id = $('input[id=sidfield]').val();
@@ -60,7 +70,7 @@
             return true; // Return true so that navigation continues
 
 
-        } else if(step_num == 2) {
+        } else if(step_num == 4) {
             
             // Take column selector input from step 2 and append checked column names to "columns" array
             var columns = new Array();
@@ -74,7 +84,7 @@
             return true; // Return true so that navigation continues
             
               
-        } else if(step_num == 3) {
+        } else if(step_num == 5) {
 
             // Collect inputs from step 3 
             search_col = $('select#search_col').val();
@@ -98,6 +108,18 @@
             // Send it!
             $('#s4_embed_text').html(embed_text);
             
+            return true; // Return true so that navigation continues
+
+		} else if(step_num == 6) {
+
+            return true; // Return true so that navigation continues
+			
+		} else if(step_num == 7) {
+
+            return true; // Return true so that navigation continues
+
+		} else if(step_num == 8) {
+
             return true; // Return true so that navigation continues
    
         } else {
@@ -147,55 +169,97 @@
   			<ul>
   				<li><a href="#step-1">
                 <label class="stepNumber">1</label>
-                <span class="stepDesc">
-                   Step 1<br />
-                   <small>Enter spreadsheet ID</small>
-                </span>
             </a></li>
   				<li><a href="#step-2">
                 <label class="stepNumber">2</label>
-                <span class="stepDesc">
-                   Step 2<br />
-                   <small>Select dataset</small>
-                </span>
             </a></li>
   				<li><a href="#step-3">
-                <label class="stepNumber">3</label>
-                <span class="stepDesc">
-                   Step 3<br />
-                   <small>Widgets and labels</small>
-                </span>                   
+                <label class="stepNumber">3</label>                  
              </a></li>
   				<li><a href="#step-4">
                 <label class="stepNumber">4</label>
-                <span class="stepDesc">
-                   Step 4<br />
-                   <small>Get embed code</small>
-                </span>                   
             </a></li>
+				<li><a href="#step-5">
+                <label class="stepNumber">5</label>
+            </a></li>
+				<li><a href="#step-6">
+                <label class="stepNumber">6</label>
+            </a></li>
+				<li><a href="#step-7">
+                <label class="stepNumber">7</label>
+            </a></li>
+				<li><a href="#step-8">
+            	<label class="stepNumber">8</label>
+	        </a></li>
+				<li><a href="#step-9">
+	            <label class="stepNumber">9</label>
+	        </a></li>
   			</ul>
-  			<div id="step-1">	
-            <h2 class="StepTitle">Step 1 - Spreadsheet ID</h2>
-            
-            <p>To get started, enter the ID of the spreadsheet you want to use. See the bolded section below, for example:</p>
-            
-            <p><code>https://docs.google.com/spreadsheet/ccc?key=<b>0AqaXaxpnzZkNdEJtUDZoTENnSE1JekpCWEZMXzhnNmc</b>&amp;hl=en_US#gid=7</code></p>
-            
-            <p>The spreadsheet must have exactly one worksheet, and must be published to the world.</p>
+				<div id="step-1">	
+	            <h2 class="StepTitle">Get ready...</h2>
+
+	            <p>For the best results, clean and edit your spreadsheet before you use this tool. If you don’t know how to clean data, <a href="http://multimedia.journalism.berkeley.edu/tutorials/cleaning-data/">read our tutorial</a>. Here are some things to keep in mind:</p>
+				<div style="width:440px; height:180px;float:left">
+				<h3>Requirements</h2>
+					<ul style="padding:0 0 0 15px">
+						<li>You must have at least one column of numbers.</li>
+						<li>You must have a single row of column labels. Multiple label rows will break the tool.</li>
+						<li>Format special characters such as thousand separators (,) and currency signs ($) in the Google Spreadsheet.</li>
+						<li>The spreadsheet must have exactly one worksheet (the default).</li>
+						</ul>	
+				</div>
+				
+				<div style="width:440px; height:250px; float:right">
+				<h3>Recommendations</h2>
+					<ul style="padding:0 0 0 15px">
+						<li>Optimize your data for the Web for better performance. Delete everything you don’t need from your Google spreadsheet, including columns you don’t plan to publish and blank rows.</li>
+						<li>Arrange your columns in the order in which you would like them displayed.</li>
+						<li>Use a finished spreadsheet. If you must edit the Google spreadsheet, changes in will update auto- matically in the published graph. But editing can introduce errors that can break your table.</li>
+						<li>Do not use all caps text. It requires additional space and makes your chart harder to read.</li>
+						</ul>	
+				</div>	
+
+	        </div>
+	
+				<div id="step-2">	
+	            <h2 class="StepTitle">Get set...</h2>
+
+				<div style="width:200px; height:250px; float:left">
+					<ol style="padding:0 0 0 15px;font-weight:bold;">
+	            <li><span style="font-weight:normal">Click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /><a href"URL">EXAMPLE</a></span></li>
+	<br/>
+				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
+
+	           </ol>
+</div>
 
 
-            <h3>Spreadsheet ID:</h3>
+
+	        </div>
+	
+  			<div id="step-3">	
+            <h2 class="StepTitle">Enter your spreadsheet ID</h2>
+            
+            <p>With your spreadsheet open, look in the URL for the term “key=” This will be followed by a unique ID made of letters and numbers. Copy just the ID and paste in the field below.</p>
+			<img src="images/freeDive-key.png">
+            
+
+         	<h3>Spreadsheet ID:</h3>
             <div id="spreadsheet_id"></div>
             <input id="sidfield" value="">
                         
 
+			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
+			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
 
           			
         </div>
-  			<div id="step-2">
-            <h2 class="StepTitle">Step 2 - Default Data</h2>	
+  			<div id="step-4">
+            <h2 class="StepTitle">Select your columns</h2>	
+
+			<p>You are working on spreadsheet: <strong><span id="s2_sid">&nbsp;</span></strong>. It contains <strong><span id="need_col_nums"></span></strong> columns. Check the ones you want to include in your table.</p>
+			<p><em>TIP: Make sure to limit your columns to fit where you plan to publish your table. If your story area is 600 pixels wide, limit the number of columns to five or so. Too many columns in a small space can be very hard to read. EXAMPLE If you need to dislpay more columns, consider publishing on a full page so that the text is easier to scan.</em></p>
             
-            <p>Working on spreadsheet: <span id="s2_sid">&nbsp;</span></p>
             
             <p>
                 Please select the columns you want to display (five columns max).</p>
@@ -231,16 +295,18 @@
             
                     
         </div>                      
-  			<div id="step-3">
-            <h2 class="StepTitle">Step 3 Content</h2>	
+  			<div id="step-5">
+            <h2 class="StepTitle">Set up the initial search</h2>	
+
+			<p>Take some time to consider what you want your readers to see and do when they first see your table. Do you want them to see the top 20 political contributors in your database? Or do you want to show them items with the best or worst ratings?</p>
             
             <p>Working with columns: <span id="s3_col_arr">&nbsp;</span></p>
             
             <table>
-                <tr>
+                <tr style="vertical-align:top">
                     <td>
                         <p>
-                            <label for="search_col">Field to use for text searches:</label><br />
+                            <label for="search_col">Pick your main column:</label><br />
                             <select id="search_col">
                               <option value="A">Bike</option>
                               <option value="B">Car</option>
@@ -254,15 +320,22 @@
                         </p>
 
                         <p>
-                            <label for="search_label">Label for search:</label><br />
-                            <input id="search_label" value=""><br />
-                            <span class="help_text">e.g. "Search for a contributor by name:"</span>
+                            <label for="def_search_label">Default search:</label><br />
+                            <input id="def_search_label" value=""><br />
+                            <span class="help_text">Add default search text</span>
                         </p>
+						<h3>OR...</h3>
+						<p>
+                            <label for="def_rank_label">Rank by number</label><br />
+                            <input id="def_search_label" value=""><br />
+                            <span class="help_text">Number of results</span>
+                        </p>
+						
                     </td>
                     
                     <td>
                         <p>
-                            <label for="filter_col">Field to enable for filtering:</label><br />
+                            <label for="filter_col">Column to sort by:</label><br />
                             <select id="filter_col">
                               <option value="A">Bike</option>
                               <option value="B">Car</option>
@@ -276,49 +349,163 @@
                         </p>
 
                         <p>
-                            <label for="filter_label">Label for filter:</label><br />
-                            <input id="filter_label" value=""><br />
-                            <span class="help_text">e.g. "Pick a city:"</span>
+                            <input type="radio" name="a-z" value="a-z" /> Low to High (A-Z)<br />
+							<input type="radio" name="z-a" value="z-a" /> High to Low (Z-A)
                         </p>
                     </td>
                     
                     
                     <td>
-                        <p>
-                            <label for="range_col">Field to enable for range slider:</label><br />
-                            <select id="range_col">
-                              <option value="A">Bike</option>
-                              <option value="B">Car</option>
-                              <option value="C">Bus</option>
-                              <option value="D">Scooter</option>
-                              <option value="E">Train</option>              
-                              <option value="F">Hovercraft</option>                            
-                              <option value="G">Pogo Stick</option>                            
-                              <option value="H">Elephant</option>                                                        
-                            </select>
+						<h3>Search invitation: </h3>
+                        <p>The table will include a widget that allows readers to search the entire database. Fill out the following:    
                         </p>
 
-                        <p>
-                            <label for="range_label">Label for filter:</label><br />
-                            <input id="range_label" value=""><br />
-                            <span class="help_text">e.g. "Adjust dollar range of contributions:"</span>
-                        </p>
+						<h3>Headline: <span style="font-weight:normal">A call to action</span></h3>
+						<div id="XXXXXX"></div>
+						<input id="XXXXXX-X" value="">
+						<h3>Lead-in: <span style="font-weight:normal;">Invite users to search the data. Include some examples to get them started.</span></h3>
+						<div id="YYYYY"></div>
+						<input id="YYYY-Y" value="">						
                     </td>                    
                 </tr>
             </table>
             
+       
+
+         </div>
+  		
+		<div id="step-6">
+            <h2 class="StepTitle">Set up the user results page</h2>
+            	
+            <p>FreeDive includes interactive filters on the results page. This allows your readers to refine their results. This is especially helpful with large databases. If you do not choose a column, the filter will be omitted from the results page. To see the three types in use, look at this example.
+            </p>
+
+			 <p>Working with columns: <span id="s3_col_arr">&nbsp;</span></p>
+
+	            <table>
+	                <tr style="vertical-align:top">
+	                    <td>
+	                        <p>
+	                            <label for="search_col">Field to use for text searches:</label><br />
+	                            <select id="search_col">
+	                              <option value="A">Bike</option>
+	                              <option value="B">Car</option>
+	                              <option value="C">Bus</option>
+	                              <option value="D">Scooter</option>
+	                              <option value="E">Train</option>              
+	                              <option value="F">Hovercraft</option>                            
+	                              <option value="G">Pogo Stick</option>                            
+	                              <option value="H">Elephant</option>                                                        
+	                            </select>
+	                        </p>
+
+	                        <p>
+	                            <label for="search_label">Label for search:</label><br />
+	                            <input id="search_label" value=""><br />
+	                            <span class="help_text">e.g. "Search for a contributor by name:"</span>
+	                        </p>
+							<p style="width:200px"> Allows users to search within a column. For example, they can search for part of a name or a ZIP Code.
+							</p>
+	                    </td>
+
+	                    <td>
+	                        <p>
+	                            <label for="filter_col">Field to enable for filtering:</label><br />
+	                            <select id="filter_col">
+	                              <option value="A">Bike</option>
+	                              <option value="B">Car</option>
+	                              <option value="C">Bus</option>
+	                              <option value="D">Scooter</option>
+	                              <option value="E">Train</option>              
+	                              <option value="F">Hovercraft</option>                            
+	                              <option value="G">Pogo Stick</option>                            
+	                              <option value="H">Elephant</option>                                                        
+	                            </select>
+	                        </p>
+
+	                        <p>
+	                            <label for="filter_label">Label for filter:</label><br />
+	                            <input id="filter_label" value=""><br />
+	                            <span class="help_text">e.g. "Pick a city:"</span>
+	                        </p>
+							<p style="width:200px"> Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
+							</p>
+	                    </td>
+
+
+	                    <td>
+	                        <p>
+	                            <label for="range_col">Field to enable for range slider:</label><br />
+	                            <select id="range_col">
+	                              <option value="A">Bike</option>
+	                              <option value="B">Car</option>
+	                              <option value="C">Bus</option>
+	                              <option value="D">Scooter</option>
+	                              <option value="E">Train</option>              
+	                              <option value="F">Hovercraft</option>                            
+	                              <option value="G">Pogo Stick</option>                            
+	                              <option value="H">Elephant</option>                                                        
+	                            </select>
+	                        </p>
+
+	                        <p>
+	                            <label for="range_label">Label for filter:</label><br />
+	                            <input id="range_label" value=""><br />
+	                            <span class="help_text">e.g. "Adjust dollar range of contributions:"</span>
+	                        </p>
+							<p style="width:200px"> Creates a slider tool so that users can change which range of data is included in the results.
+							</p>
+	                    </td>                    
+	                </tr>
+		            </table>
+
+		</div>
+		
+  		<div id="step-7">
+            <h2 class="StepTitle">Size</h2>
+            	
+            <p>Setting the size of your chart is very important. It directly impacts how your reader interacts with your data. Make it too small and the the value of the data is diminished in their eyes. Make it too big and it will overwhelm and scare them away.
+            </p>
+           	<h3>Width</h3>
+			<div id="XXXXXX"></div>
+			<input id="XXXXXXX" value=""> 
+			<p><em>TIP: We recommend that you make your chart the full width of your regular story or post content. This helps it integrate the table into your site. If you must display 7-10 columns, you may have to make the table the full width of your page.</em></p>
+			
+			<h3>Height</h3>
+			<div id="XXXXXX"></div>
+			<input id="XXXXXXX" value="">
+           <p><em>TIP: If the chart will be above a story, consider setting the height to 300-400 pixels. For example, this wizard is 450 pixels high so that if we need to display text below you will still be able to see it. If your table will stand alone on a page, 800 pixels or more of depth will give the reader access to more data and may be better.</em></p>
+               			
         </div>
-        
-        
-        
-  			<div id="step-4">
+
+  			<div id="step-8">
+            <h2 class="StepTitle">Congratulations! You’re done...</h2>
+
+			<div id="table_embed" style="width:440px; float:left">
+				<h3>Your Table</h3>
+				<p>Copy and paste this code into a web page to display your table. The code includes javascript, so you may have to ask a producer to post it if you.</p>
+				<textarea id="s4_embed_text" style="width:435px; height:150px"></textarea>
+				
+			</div>
+			
+			<div id="widget_embed" style="width:440px; float:right">
+				<h3>Search Widget</h3>
+				<p>This code will help your readers to search your database from any page on your site. Just replace the “URL” text with the web page address of your table.</p>
+				<textarea id="s4_embed_text" style="width:435px; height:150px"></textarea>
+			</div>
+			
+            <!-- <h3>iframe options</h3>
+        			<p>You can choose to download the chart as a separate html document and include it in an <iframe> tag. This will give you the option to use a FreeDive theme or customize the CSS.</p> -->
+
+ 			
+        </div>
+
+  			<div id="step-9">
             <h2 class="StepTitle">Step 4 Embed code</h2>
             	
             <p>Paste the embed code below into your story or blog post in HTML mode:
             </p>
-            
-            <textarea id="s4_embed_text"></textarea>
-               			
+            <textarea id="s4_widget_text" style="width:435px; height:150px"></textarea> 			
         </div>
   		</div>
 <!-- End SmartWizard Content -->  		
