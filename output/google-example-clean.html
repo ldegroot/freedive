@@ -29,7 +29,7 @@
 		
 		// ------------ Load data from google docs ----------------
  
-		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=0AtP_YtDJ532RdGVQeEw4WUNwS0pReUNKQlFxby1OYmc&range=A1:G6&pub=1');
+		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE&range=A1:F101&pub=1');
 		query.send(handleQueryResponse);  
 		}
 
@@ -93,7 +93,7 @@
 		var table = new google.visualization.ChartWrapper({
 		  'chartType': 'Table',
 		  'containerId': 'chart1',
-		  'options': {'height': '13em', 'width': '620px', 'allowHtml':'true', 'title': 'Click a column header to sort', }
+		  'options': {'height': '25em', 'width': '620px','allowHtml':'true', 'title': 'Click a column header to sort', }
 		});
 
 		//Create the dashboard 
@@ -114,6 +114,9 @@
 		<title></title>
 	</head>
 	<body>
+		
+		<h3>Campaign contributions example</h3>
+		<p> The example below is a spreadsheet of California Gov. Jerry Brown's monetary campaign contributions for the 2010 election. There are roughly 25,000 records and the full spreadsheet is available <a href="https://docs.google.com/spreadsheet/ccc?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE">here</a>. The data was dowmlaoded from the California Secratay of State <a href="http://cal-access.sos.ca.gov/">web site</a>.  Play with the slider, text filer and picker to get a sense of what the tool can do. Click on a column lable at any time to resort the data. 
 				
 		<!--Div that will hold the dashboard-->
 		<div id="dashboard" style='width: 620px;font-family:Arial, sans-serif;'>
