@@ -1,0 +1,124 @@
+
+	<script type="text/javascript" >
+		var width = '620px';
+			
+			// vars for spreadsheet URL
+			spreadsheet_id = '0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE' ;
+			sheet_range = '*';  //* is all, or can be A,B,D
+			sheet_filter_id = 'F'; // col id
+			sheet_op = '>'; //must be <=, <, >, >=, =. Comparison operators != <> mean not-equal. Strings are compared by lexicographic value. Equality is indicated by =, not ==. Comparing to null is done using is null or is not null.
+			sheet_val = '1000000';
+			sheet_order_id = 'B';
+			sheet_order_direc = 'desc' //asc for ascending or desc for decending 
+			
+			//vars for table and control settings
+			slider_min = 0 ;
+			slider_max = 10000000 ;
+			slider_instruct = 'Adjust dollar range of contributions' ;
+			slider_col_label = 'Contribution' ;
+			search_instruct = 'Search for a contributor by name:' ;
+			search_col_label = 'Name' ;
+			picker_instruct = 'Pick a City' ;
+			picker_col_label = 'City' ;
+			table_height = '13em';
+		
+		</script>
+
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+		<script type="text/javascript">google.load('visualization', '1.1', {packages:['controls']});</script>
+		
+		
+		 <style type="text/css">
+		
+		div.control1{width:100%; padding: 0 0 20px 0; font-size:0.9em; color:black;}
+		div.control2{height:30px; width:400px;font-size:0.9em; padding: 0 20px 20px 0; float:left;}
+		div.control3{float:right; height:30px; font-size:0.9em;vertical-align:inherit;}
+		div.chart1{float: left;}
+		</style>
+		
+		<script type="text/javascript">
+		
+		
+		
+		  function drawVisualization() {
+		
+ 
+		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id + '&tq=select%20' + sheet_range + '%20where%20' + sheet_filter_id + sheet_op +sheet_val+'%20order%20by%20'+sheet_order_id+'%20'+sheet_order_direc);
+		query.send(handleQueryResponse);  
+		}
+
+		function handleQueryResponse(response) {
+		  if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+			return;
+		  }
+		
+
+		var data = response.getDataTable();
+
+		  var slider = new google.visualization.ControlWrapper({
+		    'controlType': 'NumberRangeFilter',
+		    'containerId': 'control1',
+		    'options': {
+		      'filterColumnLabel': slider_col_label,  
+		      'minValue': slider_min,
+			  'maxValue': slider_max,
+			'ui': {
+				'label': slider_instruct,
+		  }}
+		  });
+
+		var stringFilter = new google.visualization.ControlWrapper({
+		  'controlType': 'StringFilter',
+		  'containerId': 'control2',
+		  'options': {
+			'filterColumnLabel': search_col_label,
+			'matchType':'any',
+			'ui': {
+				'label': search_instruct,
+		  }}
+		});
+		
+		
+	  var categoryPicker = new google.visualization.ControlWrapper({
+	    'controlType': 'CategoryFilter',
+	    'containerId': 'control3',
+	    'options': {
+	      'filterColumnLabel': picker_col_label, 
+	      'ui': {
+			'label':picker_instruct,
+	        'allowTyping': false,
+	        'allowMultiple': false,
+	      }}
+	    });
+	  		
+
+		var table = new google.visualization.ChartWrapper({
+		  'chartType': 'Table',
+		  'containerId': 'chart1',
+		  'options': {'height': table_height, 'width': width, 'allowHtml':'true', }
+		});
+
+	
+		var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard')).
+		  bind([stringFilter,categoryPicker, slider], table).
+		  draw(data);   
+				
+	
+		}
+
+		google.setOnLoadCallback(drawVisualization);
+		
+		
+	</script>
+		
+		
+		<div id="dashboard" style='width:620px; font-family:Arial, sans-serif;'>
+
+			<div id="control1" class="control1"></div>
+			<div id="control3" class="control3"></div>
+			<div id="control2" class="control2"></div>
+			<div id="chart1" class="chart1"></div>
+</div>
