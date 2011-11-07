@@ -92,7 +92,10 @@
             filter_col = $('select#filter_col').val();
             filter_label = $('input[id=filter_label]').val();
             range_col = $('select#range_col').val();
-            range_label = $('input[id=range_label]').val();                                                            
+            range_label = $('input[id=range_label]').val(); 
+
+                                             
+			
 
             embed_text = 
                 "Spreadsheet ID: " + spreadsheet_id + "\n" +
@@ -103,6 +106,7 @@
                 "Filter label: " + filter_label + "\n" +
                 "Range column: " + range_col + "\n" +
                 "Range label: " + range_label + "\n" 
+
             ;
             
             // Send it!
@@ -320,15 +324,12 @@
                         </p>
 
                         <p>
-                            <label for="def_search_label">Default search:</label><br />
-                            <input id="def_search_label" value=""><br />
-                            <span class="help_text">Add default search text</span>
-                        </p>
-						<h3>OR...</h3>
-						<p>
-                            <label for="def_rank_label">Rank by number</label><br />
-                            <input id="def_search_label" value=""><br />
-                            <span class="help_text">Number of results</span>
+							<input type="radio" name="sheet_op" id="search_text" value="like" style="vertical-align: middle; margin: 0px;"/>
+							<label for="search_text" >Search text</label><br />
+							<input type="radio" name="sheet_op" id="rank_by_number" value="limit" style="vertical-align: middle; margin: 0px;"/>
+							<label for="rank_by_number" >Rank by number</label><br />
+							<input id="val_input" value=""><br />
+                            <span class="help_text">Enter default search text or...<br /> Enter a number: e.g. "10" for top 10</span>
                         </p>
 						
                     </td>
@@ -348,9 +349,11 @@
                             </select>
                         </p>
 
-                        <p>
-                            <input type="radio" name="a-z" value="a-z" /> Low to High (A-Z)<br />
-							<input type="radio" name="z-a" value="z-a" /> High to Low (Z-A)
+                        <p >
+                            <input type="radio" name="sheet_order_direc" id="sheet_order_asc" value="asc" style="vertical-align: middle; margin: 0px;"/>
+							<label for="sheet_order_asc" >Ascending (A-Z)</label><br />
+							<input type="radio" name="sheet_order_direc" id="sheet_order_desc" style="vertical-align: middle; margin: 0px;" value="desc" />
+							<label for="sheet_order_desc" >Descending (Z-A)</label>
                         </p>
                     </td>
                     
@@ -613,6 +616,9 @@
         //  console.log(col_id,label);
         // }
 	}
+	
+	
+	
 
 </script>
 </body>

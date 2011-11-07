@@ -5,11 +5,12 @@
 			// vars for spreadsheet URL
 			spreadsheet_id = '0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE' ;
 			sheet_range = '*';  //* is all, or can be A,B,D
-			sheet_filter_id = 'F'; // col id
-			sheet_op = '>'; //must be <=, <, >, >=, =. Comparison operators != <> mean not-equal. Strings are compared by lexicographic value. Equality is indicated by =, not ==. Comparing to null is done using is null or is not null.
+			sheet_filter_id = 'F'; // col id - can also be column name
+			sheet_op = '>'; //must be <=, <, >, >=, =. Comparison operators != <> mean not-equal.  Equality is indicated by =, not ==. Comparing to null is done using is null or is not null.  Strings are compared by lexicographic value. e.g. where name like fre%
 			sheet_val = '1000000';
 			sheet_order_id = 'B';
 			sheet_order_direc = 'desc' //asc for ascending or desc for decending 
+			// val_limit = '100'
 			
 			//vars for table and control settings
 			slider_min = 0 ;
