@@ -257,7 +257,7 @@
             <div id="spreadsheet_id"></div>
             <input id="sidfield" value="">  
             <input type="button" id="sidtest" value="Test">
-            <span id="sidtest_spinner"><img src="images/loader.gif" width="28" height="28" alt="Loader"></span>
+            <span id="sidtest_spinner"><img src="images/ajax-loader.gif" width="28" height="28" alt="Loader"></span>
                         
 
 			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
@@ -285,6 +285,8 @@
                     width:300px;
                 }
             </style>
+
+            <p id="col_load_spinner"><img src="images/loader.gif" width="28" height="28" alt="Loader">Retrieving column data...</p>
             
             <table>
 
@@ -659,7 +661,11 @@
         // for(var col_id in cols) {
         //  var label = cols[col_id].label;
         //  console.log(col_id,label);
-        // }
+        // }  
+        
+        // Turn off the spinner after data is loaded
+        $('#col_load_spinner').hide();   
+        
 	}
 	
 	
