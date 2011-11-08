@@ -94,9 +94,6 @@
             range_col = $('select#range_col').val();
             range_label = $('input[id=range_label]').val(); 
 
-                                             
-			
-
             embed_text = 
                 "Spreadsheet ID: " + spreadsheet_id + "\n" +
                 "Columns: " + cols_as_text + "\n" +                
@@ -146,6 +143,14 @@
         font-family:Tahoma;
         font-size:18px;
         color:#606060;
+    }     
+    
+    input#sidfield {
+        width:450px;
+    }               
+    
+    input[type="button"] {
+        height:40px;
     }
     
     label {
@@ -250,13 +255,14 @@
 
          	<h3>Spreadsheet ID:</h3>
             <div id="spreadsheet_id"></div>
-            <input id="sidfield" value="">
+            <input id="sidfield" value="">  
+            <input type="button" id="sidtest" value="Test">
                         
 
 			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
 			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
+            <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet.</strong></p>
 
-          			
         </div>
   			<div id="step-4">
             <h2 class="StepTitle">Select your columns</h2>	
@@ -544,7 +550,15 @@
     
     // Populate any known parameters from URL
     var spreadsheet_id = $.getUrlVar('sid');
-    $('input[id=sidfield]').val(spreadsheet_id);
+    $('input[id=sidfield]').val(spreadsheet_id);  
+    
+    // Test SID for validity - throws an alert if SID is inaccessible. 
+    // Loads spreadsheet if available.
+    $('input[id=sidtest]').click(function () {
+       var testsid = $('input[id=sidfield]').val();
+       validateTable(testsid);
+    });
+    
 
 
     // Populate set of column checkboxes from query results
@@ -575,7 +589,26 @@
 </script>    
 
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript" charset="utf-8">   
+
+    // Validate spreadsheet ID step #1 (similar to getTableMeta)
+    function validateTable(spreadsheet_id,response) {
+		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id);
+    	query.send(validateQueryResponse);
+        
+    	}
+
+    // Validate spreadsheet ID step #2 (similar to handleQueryResponse but without all the extra processing)
+	function validateQueryResponse(response) {
+        if (response.isError()) {
+            alert('Error in query: ' + response.getMessage() +  '. Please click Previous and enter a different spreadsheet ID.');
+        } else {
+            alert('Spreadsheet is valid and accessible!')
+        }
+    }
+    
+
+
     // Get table metadata from Google
     function getTableMeta(spreadsheet_id,response) {
 	    
@@ -586,9 +619,7 @@
     	}
 
 	function handleQueryResponse(response) {
-        if (response.isError()) {
-            alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage() + '. Please click Previous and enter a different spreadsheet ID.');
-        }
+        // Validation removed - we should always be working with a valid spreadsheet at this point.
 
         var data = response.getDataTable();
         var colNum = data.getNumberOfColumns();
