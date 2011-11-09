@@ -1,10 +1,12 @@
 
 	<script type="text/javascript" >
-		var width = '620px';
+		var table_width = '620';
+			table_height = '400';
+		 
 			
 			// vars for spreadsheet URL
 			spreadsheet_id = '0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE' ;
-			sheet_range = '*';  //* is all, or can be A,B,D
+			cols_arr = '*';  //* is all, or can be A,B,D as A%2CB%2CD
 			sheet_filter_id = 'F'; // col id - can also be column name
 			sheet_op = '>'; //must be <=, <, >, >=, =. Comparison operators != <> mean not-equal.  Equality is indicated by =, not ==. Comparing to null is done using is null or is not null.  Strings are compared by lexicographic value. e.g. where name like fre%
 			sheet_val = '1000000';
@@ -21,7 +23,6 @@
 			search_col_label = 'Name' ;
 			picker_instruct = 'Pick a City' ;
 			picker_col_label = 'City' ;
-			table_height = '13em';
 		
 		</script>
 
@@ -46,7 +47,7 @@
 		  function drawVisualization() {
 		
  
-		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id + '&tq=select%20' + sheet_range + '%20where%20' + sheet_filter_id + sheet_op +sheet_val+'%20order%20by%20'+sheet_order_id+'%20'+sheet_order_direc);
+		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id + '&tq=select%20' + cols_arr + '%20where%20' + sheet_filter_id + sheet_op +sheet_val+'%20order%20by%20'+sheet_order_id+'%20'+sheet_order_direc);
 		query.send(handleQueryResponse);  
 		}
 
@@ -99,7 +100,7 @@
 		var table = new google.visualization.ChartWrapper({
 		  'chartType': 'Table',
 		  'containerId': 'chart1',
-		  'options': {'height': table_height, 'width': width, 'allowHtml':'true', }
+		  'options': {'height': table_height+'px', 'width': table_width+'px', 'allowHtml':'true', }
 		});
 
 	
