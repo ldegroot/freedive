@@ -10,19 +10,20 @@
 			sheet_filter_id = 'F'; // col id - can also be column name
 			sheet_op = '>'; //must be <=, <, >, >=, =. Comparison operators != <> mean not-equal.  Equality is indicated by =, not ==. Comparing to null is done using is null or is not null.  Strings are compared by lexicographic value. e.g. where name like fre%
 			sheet_val = '1000000';
-			sheet_order_id = 'B';
-			sheet_order_direc = 'desc' //asc for ascending or desc for decending 
+			// sheet_order_id = 'B';
+			// sheet_order_direc = 'desc' //asc for ascending or desc for decending 
 			// val_limit = '100'
+			'https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id + '&tq=select%20' + cols_arr + '%20where%20' + sheet_filter_id + sheet_op +sheet_val+'%20order%20by%20'+sheet_order_id+'%20'+sheet_order_direc);
 			
 			//vars for table and control settings
 			slider_min = 0 ;
 			slider_max = 10000000 ;
 			slider_instruct = 'Adjust dollar range of contributions' ;
-			slider_col_label = 'Contribution' ;
-			search_instruct = 'Search for a contributor by name:' ;
-			search_col_label = 'Name' ;
-			picker_instruct = 'Pick a City' ;
-			picker_col_label = 'City' ;
+			slider_col = 'Contribution' ;
+			filter_label = 'Search for a contributor by name:' ;
+			filter_col = 'Name' ;
+			picker_label = 'Pick a City' ;
+			picker_col = 'City' ;
 		
 		</script>
 
@@ -64,11 +65,11 @@
 		    'controlType': 'NumberRangeFilter',
 		    'containerId': 'control1',
 		    'options': {
-		      'filterColumnLabel': slider_col_label,  
+		      'filterColumnLabel': slider_col,  
 		      'minValue': slider_min,
 			  'maxValue': slider_max,
 			'ui': {
-				'label': slider_instruct,
+				'label': slider_label,
 		  }}
 		  });
 
@@ -76,10 +77,10 @@
 		  'controlType': 'StringFilter',
 		  'containerId': 'control2',
 		  'options': {
-			'filterColumnLabel': search_col_label,
+			'filterColumnLabel': filter_col,
 			'matchType':'any',
 			'ui': {
-				'label': search_instruct,
+				'label': filter_label,
 		  }}
 		});
 		
@@ -88,9 +89,9 @@
 	    'controlType': 'CategoryFilter',
 	    'containerId': 'control3',
 	    'options': {
-	      'filterColumnLabel': picker_col_label, 
+	      'filterColumnLabel': picker_col, 
 	      'ui': {
-			'label':picker_instruct,
+			'label':picker_label,
 	        'allowTyping': false,
 	        'allowMultiple': false,
 	      }}

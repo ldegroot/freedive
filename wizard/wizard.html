@@ -10,6 +10,7 @@
 
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- <script type="text/javascript" src="js/embedtest.js"></script> -->
 <script type="text/javascript">
 //Load the #D6D6D6 API and the controls package.  
   google.load('visualization', '1.1', {packages:['controls']});
@@ -79,12 +80,17 @@
             });
             
             // Can't send an array into html - need to convert array to string
-            cols_as_text = columns.join(",");
+            cols_as_text = columns.join("%2C");
             $('#cols_arr').html(cols_as_text);
+			
+			
             return true; // Return true so that navigation continues
             
               
         } else if(step_num == 5) {
+	
+	
+			
 	
 				filter_col = $('select#filter_col').val();
 				
@@ -97,7 +103,7 @@
 	            filter_col = $('select#filter_col').val();
 	            filter_label = $('input[id=filter_label]').val();
 	            picker_col = $('select#picker_col').val();
-	            picker_filter = $('input[id=picker_filter]').val();
+	            picker_label = $('input[id=picker_label]').val();
 	            slider_col = $('select#slider_col').val();
 	            slider_label = $('input[id=slider_label]').val(); 
 				;
@@ -109,7 +115,8 @@
 					// Collect inputs from step 7
 					table_width = $('input[id=table_width]').val();
 					table_height = $('input[id=table_height]').val();
-					;
+					
+					sheet_limit="&range=A1:F6"; // for testing remove before publishing
 				      
 					embed_text = 
 		                "Spreadsheet ID: " + spreadsheet_id + "\n" +
@@ -117,15 +124,27 @@
 		                "Search column: " + filter_col + "\n" +
 		                "Search label: " + filter_label + "\n" +
 		                "Filter column: " + picker_col + "\n" +
-		                "Filter label: " + picker_filter + "\n" +
+		                "Filter label: " + picker_label + "\n" +
 		                "Range column: " + slider_col + "\n" +
 		                "Range label: " + slider_label + "\n" +
 						"Table Width: " + table_width + "\n" +
 						"Table Height: " + table_height + "\n" 
 		            ;
 					
+					embed_actual = "&ltscript type=&apos;text/javascript&apos;src=&apos;https://www.google.com/jsapi&apos;&gt&lt/script&gt&ltscript type=&apos;text/javascript&apos;&gtgoogle.load(&apos;visualization&apos;,&apos;1.1&apos;,{packages:[&apos;controls&apos;+]});&lt/script&gt&ltstyle type=&apos;text/css&apos;&gtdiv.control1{width:100%;padding: 0 0 20px 0;font-size:0.9em;color:black;}div.control2{height:30px;width:400px;font-size:0.9em;padding: 0 20px 20px 0;float:left;}div.control3{float:right;height:30px;font-size:0.9em;vertical-align:inherit;}div.chart1{float: left;}&lt/style&gt&ltscript type=&apos;text/javascript&apos;&gtfunction drawVisualization(){var query=new google.visualization.Query(&apos;https://spreadsheets.google.com/a/google.com/tq?key="+spreadsheet_id+"&tq=select%20" + cols_as_text+sheet_limit+"&apos;);query.send(handleQueryResponse);}function handleQueryResponse(response){if (response.isError()){alert(&apos;Error in query: &apos;+response.getMessage() +&apos; &apos; +response.getDetailedMessage());return;}var data=response.getDataTable();var slider=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;NumberRangeFilter&apos;, &apos;containerId&apos;: &apos;control1&apos;, &apos;options&apos;:}&apos;filterColumnLabel&apos;:&apos;" +slider_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+ slider_label+"&apos;, }}});var stringFilter=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;StringFilter&apos;, &apos;containerId&apos;:&apos; &apos;control2&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:"+ +filter_col+"&apos;,&apos;matchType&apos;:&apos;any&apos;,&apos;ui&apos;:{&apos;label&apos;:&apos;"+filter_label+"&apos;, }}});var categoryPicker=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;CategoryFilter&apos;, &apos;containerId&apos;: &apos;control3&apos;, &apos;options&apos;:}&apos;filterColumnLabel&apos;:&apos;"+ picker_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+picker_label+"&apos;, &apos;allowTyping&apos;: false, &apos;allowMultiple&apos;: false, }}});var table=new google.visualization.ChartWrapper({&apos;chartType&apos;: &apos;Table&apos;, &apos;containerId&apos;: &apos;chart1&apos;, &apos;options&apos;:{&apos;height&apos;:&apos;"+table_height+"px&apos;, &apos;width&apos;:&apos;"+table_width+"px&apos;, &apos;allowHtml&apos;:&apos;true&apos;, }});var dashboard=new google.visualization.Dashboard(document.getElementById(&apos;dashboard&apos;)).  bind([stringFilter,categoryPicker, slider], table).  draw(data);}google.setOnLoadCallback(drawVisualization);&lt/script&gt&ltdiv id='dashboard' style='width:"+table_width+"px; font-family:Arial, sans-serif;'&gt&ltdiv id='control1' class='control1'&gt&lt/div&gt&ltdiv id='control3'class='control3'&gt&lt/div&gt&ltdiv id='control2' class='control2'&gt&lt/div&gt&ltdiv id='chart1' class='chart1'&gt&lt/div&gt&lt/div&gt"
+					;
+					
+					
+					
 					// Send it!
-		            $('#table_embed_text').html(embed_text);
+		            $('widget_embed_text').html(embed_text);
+		
+		
+		
+					$('#table_embed_text').html(embed_actual);
+		
+		
+		
 
             return true; // Return true so that navigation continues
 
@@ -256,10 +275,8 @@
 	            <li><span style="font-weight:normal">Click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /><a href"URL">EXAMPLE</a></span></li>
 	<br/>
 				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
-
 	           </ol>
-</div>
-
+			</div>
 
 
 	        </div>
@@ -452,8 +469,8 @@
 	                        </p>
 
 	                        <p>
-	                            <label for="picker_filter">Label for filter:</label><br />
-	                            <input id="picker_filter" value=""><br />
+	                            <label for="picker_label">Label for filter:</label><br />
+	                            <input id="picker_label" value=""><br />
 	                            <span class="help_text">e.g. "Pick a city:"</span>
 	                        </p>
 							<p style="width:200px"> Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
