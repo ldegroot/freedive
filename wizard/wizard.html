@@ -257,6 +257,7 @@
             <div id="spreadsheet_id"></div>
             <input id="sidfield" value="">  
             <input type="button" id="sidtest" value="Test">
+            <span id="sidtest_spinner"><img src="images/ajax-loader.gif" width="28" height="28" alt="Loader"></span>
                         
 
 			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
@@ -284,6 +285,8 @@
                     width:300px;
                 }
             </style>
+
+            <p id="col_load_spinner"><img src="images/loader.gif" width="28" height="28" alt="Loader">Retrieving column data...</p>
             
             <table>
 
@@ -551,13 +554,22 @@
     // Populate any known parameters from URL
     var spreadsheet_id = $.getUrlVar('sid');
     $('input[id=sidfield]').val(spreadsheet_id);  
+
+    // Turn the loading spinner on or off
+    // Default to off, then toggle as needed
+    $('#sidtest_spinner').hide();
     
     // Test SID for validity - throws an alert if SID is inaccessible. 
-    // Loads spreadsheet if available.
-    $('input[id=sidtest]').click(function () {
+    $('input[id=sidtest]').click(function () { 
+       $('#sidtest_spinner').show();           
        var testsid = $('input[id=sidfield]').val();
-       validateTable(testsid);
+       validateTable(testsid);                 
+
     });
+       
+    
+
+
     
 
 
@@ -602,9 +614,13 @@
 	function validateQueryResponse(response) {
         if (response.isError()) {
             alert('Error in query: ' + response.getMessage() +  '. Please click Previous and enter a different spreadsheet ID.');
+           
         } else {
-            alert('Spreadsheet is valid and accessible!')
+            alert('Spreadsheet is valid and accessible!');
+
         }
+        // Always turn off the spinner after the tests.
+        $('#sidtest_spinner').hide();   
     }
     
 
@@ -645,7 +661,11 @@
         // for(var col_id in cols) {
         //  var label = cols[col_id].label;
         //  console.log(col_id,label);
-        // }
+        // }  
+        
+        // Turn off the spinner after data is loaded
+        $('#col_load_spinner').hide();   
+        
 	}
 	
 	
