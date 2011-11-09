@@ -6,7 +6,8 @@
 
 <link href="styles/freeDive.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
+<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script> 
+<script type="text/javascript" src="js/spin.min.js"></script> 
 
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -240,11 +241,11 @@
 				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
 
 	           </ol>
-</div>
+           </div>
 
 
 
-	        </div>
+	       </div>
 	
   			<div id="step-3">	
             <h2 class="StepTitle">Enter your spreadsheet ID</h2>
@@ -254,17 +255,22 @@
             
 
          	<h3>Spreadsheet ID:</h3>
+         	<p id="sidtest_spinner">
             <div id="spreadsheet_id"></div>
             <input id="sidfield" value="">  
             <input type="button" id="sidtest" value="Test">
-            <span id="sidtest_spinner"><img src="images/ajax-loader.gif" width="28" height="28" alt="Loader"></span>
+            </p>
                         
 
 			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
 			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
             <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet.</strong></p>
 
-        </div>
+        </div>     
+        
+        
+        
+        
   			<div id="step-4">
             <h2 class="StepTitle">Select your columns</h2>	
 
@@ -286,7 +292,7 @@
                 }
             </style>
 
-            <p id="col_load_spinner"><img src="images/loader.gif" width="28" height="28" alt="Loader">Retrieving column data...</p>
+            <p id="col_load_spinner"></p>
             
             <table>
 
@@ -557,7 +563,7 @@
 
     // Turn the loading spinner on or off
     // Default to off, then toggle as needed
-    $('#sidtest_spinner').hide();
+    // $('#sidtest_spinner').hide();
     
     // Test SID for validity - throws an alert if SID is inaccessible. 
     $('input[id=sidtest]').click(function () { 
@@ -566,8 +572,23 @@
        validateTable(testsid);                 
 
     });
-       
-    
+        
+    // For spin.js
+    var spinneropts = {
+      lines: 10, // The number of lines to draw
+      length: 5, // The length of each line
+      width: 5, // The line thickness
+      radius: 10, // The radius of the inner circle
+      color: '#000', // #rgb or #rrggbb
+      speed: 1.3, // Rounds per second
+      trail: 60, // Afterglow percentage
+      shadow: false // Whether to render a shadow
+    };
+    var $target = $('#sidtest_spinner');
+    var spinner = new Spinner(spinneropts).spin($target); 
+    $('#sidtest_spinner').css('top', 800);
+
+    $('#sidtest_spinner').append(spinner.el); 
 
 
     
@@ -620,7 +641,7 @@
 
         }
         // Always turn off the spinner after the tests.
-        $('#sidtest_spinner').hide();   
+        // $('#sidtest_spinner').hide();   
     }
     
 
