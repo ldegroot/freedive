@@ -85,48 +85,59 @@
             
               
         } else if(step_num == 5) {
+	
+				filter_col = $('select#filter_col').val();
+				
             
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 6) {
 			
-		
+				// Collect inputs from step 6 
+	            filter_col = $('select#filter_col').val();
+	            filter_label = $('input[id=filter_label]').val();
+	            picker_col = $('select#picker_col').val();
+	            picker_filter = $('input[id=picker_filter]').val();
+	            slider_col = $('select#slider_col').val();
+	            slider_label = $('input[id=slider_label]').val(); 
+				;
 
             return true; // Return true so that navigation continues
 			
 		} else if(step_num == 7) {
+			
+					// Collect inputs from step 7
+					table_width = $('input[id=table_width]').val();
+					table_height = $('input[id=table_height]').val();
+					;
 				      
-				
+					embed_text = 
+		                "Spreadsheet ID: " + spreadsheet_id + "\n" +
+		                "Columns: " + cols_as_text + "\n" +                
+		                "Search column: " + filter_col + "\n" +
+		                "Search label: " + filter_label + "\n" +
+		                "Filter column: " + picker_col + "\n" +
+		                "Filter label: " + picker_filter + "\n" +
+		                "Range column: " + slider_col + "\n" +
+		                "Range label: " + slider_label + "\n" +
+						"Table Width: " + table_width + "\n" +
+						"Table Height: " + table_height + "\n" 
+		            ;
 					
+					// Send it!
+		            $('#table_embed_text').html(embed_text);
 
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 8) {
 			
 			
-			// Collect inputs from step 6 
-	            col_search = $('select#col_search').val();
-	            label_search = $('input[id=label_search]').val();
-	            col_filter = $('select#col_filter').val();
-	            label_filter = $('input[id=label_filter]').val();
-	            col_range = $('select#col_range').val();
-	            label_range = $('input[id=label_range]').val(); 
-				label_range = $('input[id=label_range]').val(); 
+			
+				
 
-	            embed_text = 
-	                "Spreadsheet ID: " + spreadsheet_id + "\n" +
-	                "Columns: " + cols_as_text + "\n" +                
-	                "Search column: " + col_search + "\n" +
-	                "Search label: " + label_search + "\n" +
-	                "Filter column: " + col_filter + "\n" +
-	                "Filter label: " + label_filter + "\n" +
-	                "Range column: " + col_range + "\n" +
-	                "Range label: " + label_range + "\n" 
+	            
 
-	            ;
-
-	            // Send it!
-	            $('#table_embed_text').html(embed_text);
+	            
 
             return true; // Return true so that navigation continues
    
@@ -326,8 +337,8 @@
                            <tr style="vertical-align:top">
                                <td>
                                    <p>
-                                       <label for="col_search_5">Pick your main column:</label><br />
-                                       <select id="col_search_5">
+                                       <label for="filter_col_5">Pick your main column:</label><br />
+                                       <select id="filter_col_5">
                                          <option value="A">Bike</option>
                                          <option value="B">Car</option>
                                          <option value="C">Bus</option>
@@ -352,8 +363,8 @@
                                
                                <td>
                                    <p>
-                                       <label for="col_filter_5b">Column to sort by:</label><br />
-                                       <select id="col_filter_5b">
+                                       <label for="picker_col_5b">Column to sort by:</label><br />
+                                       <select id="picker_col_5b">
                                          <option value="A">Bike</option>
                                          <option value="B">Car</option>
                                          <option value="C">Bus</option>
@@ -403,8 +414,8 @@
 	                <tr style="vertical-align:top">
 	                    <td>
 	                        <p>
-	                            <label for="col_search">Field to use for text searches:</label><br />
-	                            <select id="col_search">
+	                            <label for="filter_col">Field to use for text searches:</label><br />
+	                            <select id="filter_col">
 	                              <option value="A">Bike</option>
 	                              <option value="B">Car</option>
 	                              <option value="C">Bus</option>
@@ -417,8 +428,8 @@
 	                        </p>
 
 	                        <p>
-	                            <label for="label_search">Label for search:</label><br />
-	                            <input type=text id="label_search" value=""><br />
+	                            <label for="filter_label">Label for search:</label><br />
+	                            <input type=text id="filter_label" value=""><br />
 	                            <span class="help_text">e.g. "Search for a contributor by name:"</span>
 	                        </p>
 							<p style="width:200px"> Allows users to search within a column. For example, they can search for part of a name or a ZIP Code.
@@ -427,8 +438,8 @@
 
 	                    <td>
 	                        <p>
-	                            <label for="col_filter">Field to enable for filtering:</label><br />
-	                            <select id="col_filter">
+	                            <label for="picker_col">Field to enable for filtering:</label><br />
+	                            <select id="picker_col">
 	                              <option value="A">Bike</option>
 	                              <option value="B">Car</option>
 	                              <option value="C">Bus</option>
@@ -441,8 +452,8 @@
 	                        </p>
 
 	                        <p>
-	                            <label for="label_filter">Label for filter:</label><br />
-	                            <input id="label_filter" value=""><br />
+	                            <label for="picker_filter">Label for filter:</label><br />
+	                            <input id="picker_filter" value=""><br />
 	                            <span class="help_text">e.g. "Pick a city:"</span>
 	                        </p>
 							<p style="width:200px"> Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
@@ -452,8 +463,8 @@
 
 	                    <td>
 	                        <p>
-	                            <label for="col_range">Field to enable for range slider:</label><br />
-	                            <select id="col_range">
+	                            <label for="slider_col">Field to enable for range slider:</label><br />
+	                            <select id="slider_col">
 	                              <option value="A">Bike</option>
 	                              <option value="B">Car</option>
 	                              <option value="C">Bus</option>
@@ -466,8 +477,8 @@
 	                        </p>
 
 	                        <p>
-	                            <label for="label_range">Label for filter:</label><br />
-	                            <input id="label_range" value=""><br />
+	                            <label for="slider_label">Label for filter:</label><br />
+	                            <input id="slider_label" value=""><br />
 	                            <span class="help_text">e.g. "Adjust dollar range of contributions:"</span>
 	                        </p>
 							<p style="width:200px"> Creates a slider tool so that users can change which range of data is included in the results.
