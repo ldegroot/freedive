@@ -85,42 +85,48 @@
             
               
         } else if(step_num == 5) {
-
-            // Collect inputs from step 3 
-            col_search = $('select#col_search').val();
-            label_search = $('input[id=label_search]').val();
-            col_filter = $('select#col_filter').val();
-            label_filter = $('input[id=label_filter]').val();
-            col_range = $('select#col_range').val();
-            label_range = $('input[id=label_range]').val(); 
-			label_range = $('input[id=label_range]').val(); 
-
-            embed_text = 
-                "Spreadsheet ID: " + spreadsheet_id + "\n" +
-                "Columns: " + cols_as_text + "\n" +                
-                "Search column: " + col_search + "\n" +
-                "Search label: " + label_search + "\n" +
-                "Filter column: " + col_filter + "\n" +
-                "Filter label: " + label_filter + "\n" +
-                "Range column: " + col_range + "\n" +
-                "Range label: " + label_range + "\n" 
-
-            ;
-            
-            // Send it!
-            $('#table_embed_text').html(embed_text);
             
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 6) {
+			
+		
 
             return true; // Return true so that navigation continues
 			
 		} else if(step_num == 7) {
+				      
+				
+					
 
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 8) {
+			
+			
+			// Collect inputs from step 6 
+	            col_search = $('select#col_search').val();
+	            label_search = $('input[id=label_search]').val();
+	            col_filter = $('select#col_filter').val();
+	            label_filter = $('input[id=label_filter]').val();
+	            col_range = $('select#col_range').val();
+	            label_range = $('input[id=label_range]').val(); 
+				label_range = $('input[id=label_range]').val(); 
+
+	            embed_text = 
+	                "Spreadsheet ID: " + spreadsheet_id + "\n" +
+	                "Columns: " + cols_as_text + "\n" +                
+	                "Search column: " + col_search + "\n" +
+	                "Search label: " + label_search + "\n" +
+	                "Filter column: " + col_filter + "\n" +
+	                "Filter label: " + label_filter + "\n" +
+	                "Range column: " + col_range + "\n" +
+	                "Range label: " + label_range + "\n" 
+
+	            ;
+
+	            // Send it!
+	            $('#table_embed_text').html(embed_text);
 
             return true; // Return true so that navigation continues
    
