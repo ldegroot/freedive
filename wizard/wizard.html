@@ -11,9 +11,8 @@
 
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-//Load the #D6D6D6 API and the controls package.  
-  google.load('visualization', '1.1', {packages:['controls']});
+<!-- <script type="text/javascript" src="js/embed.js"></script> -->
+<script type="text/javascript">  google.load('visualization', '1.1', {packages:['controls']});
 </script>
 
 <script type="text/javascript">
@@ -64,8 +63,8 @@
         } else if(step_num == 3) {
 
             // Take input from step 1 and insert vals into the DOM so they're available in step 2
-            spreadsheet_id = $('input[id=sidfield]').val();
-            $('#s2_sid').html(spreadsheet_id);
+            spreadsheet_id = $('input[id=sheet_id_field]').val();
+            $('#sheet_id').html(spreadsheet_id);
             getTableMeta(spreadsheet_id);
             
             return true; // Return true so that navigation continues
@@ -75,52 +74,84 @@
             
             // Take column selector input from step 2 and append checked column names to "columns" array
             var columns = new Array();
-            $("input[name='usecols']:checked").each(function(){
+            $("input[name='cols_use']:checked").each(function(){
                 columns.push($(this).val());
             });
             
             // Can't send an array into html - need to convert array to string
-            cols_as_text = columns.join(",");
-            $('#s3_col_arr').html(cols_as_text);
+            cols_as_text = columns.join("%2C");
+            $('#cols_arr').html(cols_as_text);
+			
+			
             return true; // Return true so that navigation continues
             
               
         } else if(step_num == 5) {
-
-            // Collect inputs from step 3 
-            search_col = $('select#search_col').val();
-            search_label = $('input[id=search_label]').val();
-            filter_col = $('select#filter_col').val();
-            filter_label = $('input[id=filter_label]').val();
-            range_col = $('select#range_col').val();
-            range_label = $('input[id=range_label]').val(); 
-
-            embed_text = 
-                "Spreadsheet ID: " + spreadsheet_id + "\n" +
-                "Columns: " + cols_as_text + "\n" +                
-                "Search column: " + search_col + "\n" +
-                "Search label: " + search_label + "\n" +
-                "Filter column: " + filter_col + "\n" +
-                "Filter label: " + filter_label + "\n" +
-                "Range column: " + range_col + "\n" +
-                "Range label: " + range_label + "\n" 
-
-            ;
-            
-            // Send it!
-            $('#s4_embed_text').html(embed_text);
+	
+				filter_col = $('select#filter_col').val();				
             
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 6) {
+			
+				// Collect inputs from step 6 
+	            filter_col = $('select#filter_col').val();
+	            filter_label = $('input[id=filter_label]').val();
+	            picker_col = $('select#picker_col').val();
+	            picker_label = $('input[id=picker_label]').val();
+	            slider_col = $('select#slider_col').val();
+	            slider_label = $('input[id=slider_label]').val(); 
+				;
 
             return true; // Return true so that navigation continues
 			
 		} else if(step_num == 7) {
+			
+					// Collect inputs from step 7
+					table_width = $('input[id=table_width]').val();
+					table_height = $('input[id=table_height]').val();
+					
+					sheet_limit="&range=A1:F6"; // for testing remove before publishing
+				      
+					embed_text = 
+		                "Spreadsheet ID: " + spreadsheet_id + "\n" +
+		                "Columns: " + cols_as_text + "\n" +                
+		                "Search column: " + filter_col + "\n" +
+		                "Search label: " + filter_label + "\n" +
+		                "Filter column: " + picker_col + "\n" +
+		                "Filter label: " + picker_label + "\n" +
+		                "Range column: " + slider_col + "\n" +
+		                "Range label: " + slider_label + "\n" +
+						"Table Width: " + table_width + "\n" +
+						"Table Height: " + table_height + "\n" 
+		            ;
+					
+					
+					embed_actual = "&ltscript type=&apos;text/javascript&apos;src=&apos;https://www.google.com/jsapi&apos;&gt&lt/script&gt&ltscript type=&apos;text/javascript&apos;&gtgoogle.load(&apos;visualization&apos;,&apos;1.1&apos;,{packages:[&apos;controls&apos;]});&lt/script&gt&ltstyle type=&apos;text/css&apos;&gtdiv.control1{width:100%;padding: 0 0 20px 0;font-size:0.9em;color:black;}div.control2{height:30px;width:400px;font-size:0.9em;padding: 0 20px 20px 0;float:left;}div.control3{float:right;height:30px;font-size:0.9em;vertical-align:inherit;}div.chart1{float: left;}&lt/style&gt&ltscript type=&apos;text/javascript&apos;&gtfunction drawVisualization(){var query=new google.visualization.Query(&apos;https://spreadsheets.google.com/a/google.com/tq?key="+spreadsheet_id+"&tq=select%20" + cols_as_text+sheet_limit+"&apos;);query.send(handleQueryResponse);}function handleQueryResponse(response){if (response.isError()){alert(&apos;Error in query: &apos;+response.getMessage() +&apos; &apos; +response.getDetailedMessage());return;}var data=response.getDataTable();var slider=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;NumberRangeFilter&apos;, &apos;containerId&apos;: &apos;control1&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;" +slider_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+ slider_label+"&apos;, }}});var stringFilter=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;StringFilter&apos;, &apos;containerId&apos;: &apos;control2&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos"+ +filter_col+"&apos;,&apos;matchType&apos;:&apos;any&apos;,&apos;ui&apos;:{&apos;label&apos;:&apos;"+filter_label+"&apos;, }}});var categoryPicker=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;CategoryFilter&apos;, &apos;containerId&apos;: &apos;control3&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;"+ picker_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+picker_label+"&apos;, &apos;allowTyping&apos;: false, &apos;allowMultiple&apos;: false, }}});var table=new google.visualization.ChartWrapper({&apos;chartType&apos;: &apos;Table&apos;, &apos;containerId&apos;: &apos;chart1&apos;, &apos;options&apos;:{&apos;height&apos;:&apos;"+table_height+"px&apos;, &apos;width&apos;:&apos;"+table_width+"px&apos;, &apos;allowHtml&apos;:&apos;true&apos;, }});var dashboard=new google.visualization.Dashboard(document.getElementById(&apos;dashboard&apos;)).  bind([stringFilter,categoryPicker, slider], table).  draw(data);}google.setOnLoadCallback(drawVisualization);&lt/script&gt&ltdiv id='dashboard' style='width:"+table_width+"px; font-family:Arial, sans-serif;'&gt&ltdiv id='control1' class='control1'&gt&lt/div&gt&ltdiv id='control3'class='control3'&gt&lt/div&gt&ltdiv id='control2' class='control2'&gt&lt/div&gt&ltdiv id='chart1' class='chart1'&gt&lt/div&gt&lt/div&gt"
+															;
+					
+					
+					
+					// Send it!
+
+					$('#table_embed_text').html(embed_actual);
+					$('widget_embed_text').html(embed_text);
+		            
+		
+		
+		
 
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 8) {
+			
+			
+			
+				
+
+	            
+
+	            
 
             return true; // Return true so that navigation continues
    
@@ -146,7 +177,7 @@
         color:#606060;
     }     
     
-    input#sidfield {
+    input#sheet_id_field {
         width:450px;
     }               
     
@@ -239,9 +270,9 @@
 	            <li><span style="font-weight:normal">Click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /><a href"URL">EXAMPLE</a></span></li>
 	<br/>
 				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
-
 	           </ol>
            </div>
+
 
 
 
@@ -257,7 +288,7 @@
          	<h3>Spreadsheet ID:</h3>
          	<p id="sidtest_spinner">
             <div id="spreadsheet_id"></div>
-            <input id="sidfield" value="">  
+            <input id="sheet_id_field" value="">  
             <input type="button" id="sidtest" value="Test">
             </p>
                         
@@ -274,7 +305,7 @@
   			<div id="step-4">
             <h2 class="StepTitle">Select your columns</h2>	
 
-			<p>You are working on spreadsheet: <strong><span id="s2_sid">&nbsp;</span></strong>. It contains <strong><span id="need_col_nums"></span></strong> columns. Check the ones you want to include in your table.</p>
+			<p>You are working on spreadsheet: <strong><span id="sheet_id">&nbsp;</span></strong>. It contains <strong><span id="need_col_nums"></span></strong> columns. Check the ones you want to include in your table.</p>
 			<p><em>TIP: Make sure to limit your columns to fit where you plan to publish your table. If your story area is 600 pixels wide, limit the number of columns to five or so. Too many columns in a small space can be very hard to read. EXAMPLE If you need to dislpay more columns, consider publishing on a full page so that the text is easier to scan.</em></p>
             
             
@@ -319,74 +350,72 @@
 
 			<p>Take some time to consider what you want your readers to see and do when they first see your table. Do you want them to see the top 20 political contributors in your database? Or do you want to show them items with the best or worst ratings?</p>
             
-            <p>Working with columns: <span id="s3_col_arr">&nbsp;</span></p>
+            <p>Working with columns: <span id="cols_arr">&nbsp;</span></p>
             
-            <table>
-                <tr style="vertical-align:top">
-                    <td>
-                        <p>
-                            <label for="search_col">Pick your main column:</label><br />
-                            <select id="search_col">
-                              <option value="A">Bike</option>
-                              <option value="B">Car</option>
-                              <option value="C">Bus</option>
-                              <option value="D">Scooter</option>
-                              <option value="E">Train</option>              
-                              <option value="F">Hovercraft</option>                            
-                              <option value="G">Pogo Stick</option>                            
-                              <option value="H">Elephant</option>                                                        
-                            </select>
-                        </p>
+            <!-- <table>
+                           <tr style="vertical-align:top">
+                               <td>
+                                   <p>
+                                       <label for="filter_col_5">Pick your main column:</label><br />
+                                       <select id="filter_col_5">
+                                         <option value="A">Bike</option>
+                                         <option value="B">Car</option>
+                                         <option value="C">Bus</option>
+                                         <option value="D">Scooter</option>
+                                         <option value="E">Train</option>              
+                                         <option value="F">Hovercraft</option>                            
+                                         <option value="G">Pogo Stick</option>                            
+                                         <option value="H">Elephant</option>                                                        
+                                       </select>
+                                   </p>
 
-                        <p>
-							<input type="radio" name="sheet_op" id="search_text" value="like" style="vertical-align: middle; margin: 0px;"/>
-							<label for="search_text" >Search text</label><br />
-							<input type="radio" name="sheet_op" id="rank_by_number" value="limit" style="vertical-align: middle; margin: 0px;"/>
-							<label for="rank_by_number" >Rank by number</label><br />
-							<input id="val_input" value=""><br />
-                            <span class="help_text">Enter default search text or...<br /> Enter a number: e.g. "10" for top 10</span>
-                        </p>
-						
-                    </td>
-                    
-                    <td>
-                        <p>
-                            <label for="filter_col">Column to sort by:</label><br />
-                            <select id="filter_col">
-                              <option value="A">Bike</option>
-                              <option value="B">Car</option>
-                              <option value="C">Bus</option>
-                              <option value="D">Scooter</option>
-                              <option value="E">Train</option>              
-                              <option value="F">Hovercraft</option>                            
-                              <option value="G">Pogo Stick</option>                            
-                              <option value="H">Elephant</option>                                                        
-                            </select>
-                        </p>
+                                   <p>
+           							<input type="radio" name="sheet_op" id="search_text_5" value="like" style="vertical-align: middle; margin: 0px;"/>
+           							<label for="search_text_5" >Search text</label><br />
+           							<input type="radio" name="sheet_op" id="rank_by_number" value="limit" style="vertical-align: middle; margin: 0px;"/>
+           							<label for="rank_by_number" >Rank by number</label><br />
+           							<input id="val_input" value=""><br />
+                                       <span class="help_text">Enter default search text or...<br /> Enter a number: e.g. "10" for top 10</span>
+                                   </p>
+           						
+                               </td>
+                               
+                               <td>
+                                   <p>
+                                       <label for="picker_col_5b">Column to sort by:</label><br />
+                                       <select id="picker_col_5b">
+                                         <option value="A">Bike</option>
+                                         <option value="B">Car</option>
+                                         <option value="C">Bus</option>
+                                         <option value="D">Scooter</option>
+                                         <option value="E">Train</option>              
+                                         <option value="F">Hovercraft</option>                            
+                                         <option value="G">Pogo Stick</option>                            
+                                         <option value="H">Elephant</option>                                                        
+                                       </select>
+                                   </p>
 
-                        <p >
-                            <input type="radio" name="sheet_order_direc" id="sheet_order_asc" value="asc" style="vertical-align: middle; margin: 0px;"/>
-							<label for="sheet_order_asc" >Ascending (A-Z)</label><br />
-							<input type="radio" name="sheet_order_direc" id="sheet_order_desc" style="vertical-align: middle; margin: 0px;" value="desc" />
-							<label for="sheet_order_desc" >Descending (Z-A)</label>
-                        </p>
-                    </td>
-                    
-                    
-                    <td>
-						<h3>Search invitation: </h3>
-                        <p>The table will include a widget that allows readers to search the entire database. Fill out the following:    
-                        </p>
+                                   <p >
+                                       <input type="radio" name="sheet_order_direc" id="sheet_order_asc" value="asc" style="vertical-align: middle; margin: 0px;"/>
+           							<label for="sheet_order_asc" >Ascending (A-Z)</label><br />
+           							<input type="radio" name="sheet_order_direc" id="sheet_order_desc" style="vertical-align: middle; margin: 0px;" value="desc" />
+           							<label for="sheet_order_desc" >Descending (Z-A)</label>
+                                   </p>
+                               </td>
+                               
+                               
+                               <td>
+           						<h3>Search invitation: </h3>
+                                   <p>The table will include a widget that allows readers to search the entire database. Fill out the following:    
+                                   </p>
 
-						<h3>Headline: <span style="font-weight:normal">A call to action</span></h3>
-						<div id="XXXXXX"></div>
-						<input id="XXXXXX-X" value="">
-						<h3>Lead-in: <span style="font-weight:normal;">Invite users to search the data. Include some examples to get them started.</span></h3>
-						<div id="YYYYY"></div>
-						<input id="YYYY-Y" value="">						
-                    </td>                    
-                </tr>
-            </table>
+           						<h3>Headline: <span style="font-weight:normal">A call to action</span></h3>
+           						<input id="head_5" value="">
+           						<h3>Lead-in: <span style="font-weight:normal;">Invite users to search the data. Include some examples to get them started.</span></h3>
+           						<input id="leadin_5" value="">						
+                               </td>                    
+                           </tr>
+                       </table> -->
             
        
 
@@ -398,37 +427,13 @@
             <p>FreeDive includes interactive filters on the results page. This allows your readers to refine their results. This is especially helpful with large databases. If you do not choose a column, the filter will be omitted from the results page. To see the three types in use, look at this example.
             </p>
 
-			 <p>Working with columns: <span id="s3_col_arr">&nbsp;</span></p>
+			 <p>Working with columns: <span id="cols_arr">&nbsp;</span></p>
 
 	            <table>
 	                <tr style="vertical-align:top">
 	                    <td>
 	                        <p>
-	                            <label for="search_col">Field to use for text searches:</label><br />
-	                            <select id="search_col">
-	                              <option value="A">Bike</option>
-	                              <option value="B">Car</option>
-	                              <option value="C">Bus</option>
-	                              <option value="D">Scooter</option>
-	                              <option value="E">Train</option>              
-	                              <option value="F">Hovercraft</option>                            
-	                              <option value="G">Pogo Stick</option>                            
-	                              <option value="H">Elephant</option>                                                        
-	                            </select>
-	                        </p>
-
-	                        <p>
-	                            <label for="search_label">Label for search:</label><br />
-	                            <input id="search_label" value=""><br />
-	                            <span class="help_text">e.g. "Search for a contributor by name:"</span>
-	                        </p>
-							<p style="width:200px"> Allows users to search within a column. For example, they can search for part of a name or a ZIP Code.
-							</p>
-	                    </td>
-
-	                    <td>
-	                        <p>
-	                            <label for="filter_col">Field to enable for filtering:</label><br />
+	                            <label for="filter_col">Field to use for text searches:</label><br />
 	                            <select id="filter_col">
 	                              <option value="A">Bike</option>
 	                              <option value="B">Car</option>
@@ -442,19 +447,18 @@
 	                        </p>
 
 	                        <p>
-	                            <label for="filter_label">Label for filter:</label><br />
-	                            <input id="filter_label" value=""><br />
-	                            <span class="help_text">e.g. "Pick a city:"</span>
+	                            <label for="filter_label">Label for search:</label><br />
+	                            <input type=text id="filter_label" value=""><br />
+	                            <span class="help_text">e.g. "Search for a contributor by name:"</span>
 	                        </p>
-							<p style="width:200px"> Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
+							<p style="width:200px"> Allows users to search within a column. For example, they can search for part of a name or a ZIP Code.
 							</p>
 	                    </td>
 
-
 	                    <td>
 	                        <p>
-	                            <label for="range_col">Field to enable for range slider:</label><br />
-	                            <select id="range_col">
+	                            <label for="picker_col">Field to enable for filtering:</label><br />
+	                            <select id="picker_col">
 	                              <option value="A">Bike</option>
 	                              <option value="B">Car</option>
 	                              <option value="C">Bus</option>
@@ -467,8 +471,33 @@
 	                        </p>
 
 	                        <p>
-	                            <label for="range_label">Label for filter:</label><br />
-	                            <input id="range_label" value=""><br />
+	                            <label for="picker_label">Label for filter:</label><br />
+	                            <input id="picker_label" value=""><br />
+	                            <span class="help_text">e.g. "Pick a city:"</span>
+	                        </p>
+							<p style="width:200px"> Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
+							</p>
+	                    </td>
+
+
+	                    <td>
+	                        <p>
+	                            <label for="slider_col">Field to enable for range slider:</label><br />
+	                            <select id="slider_col">
+	                              <option value="A">Bike</option>
+	                              <option value="B">Car</option>
+	                              <option value="C">Bus</option>
+	                              <option value="D">Scooter</option>
+	                              <option value="E">Train</option>              
+	                              <option value="F">Hovercraft</option>                            
+	                              <option value="G">Pogo Stick</option>                            
+	                              <option value="H">Elephant</option>                                                        
+	                            </select>
+	                        </p>
+
+	                        <p>
+	                            <label for="slider_label">Label for filter:</label><br />
+	                            <input id="slider_label" value=""><br />
 	                            <span class="help_text">e.g. "Adjust dollar range of contributions:"</span>
 	                        </p>
 							<p style="width:200px"> Creates a slider tool so that users can change which range of data is included in the results.
@@ -485,13 +514,11 @@
             <p>Setting the size of your chart is very important. It directly impacts how your reader interacts with your data. Make it too small and the the value of the data is diminished in their eyes. Make it too big and it will overwhelm and scare them away.
             </p>
            	<h3>Width</h3>
-			<div id="XXXXXX"></div>
-			<input id="XXXXXXX" value=""> 
+			<input id="table_width" value=""> 
 			<p><em>TIP: We recommend that you make your chart the full width of your regular story or post content. This helps it integrate the table into your site. If you must display 7-10 columns, you may have to make the table the full width of your page.</em></p>
 			
 			<h3>Height</h3>
-			<div id="XXXXXX"></div>
-			<input id="XXXXXXX" value="">
+			<input id="table_height" value="">
            <p><em>TIP: If the chart will be above a story, consider setting the height to 300-400 pixels. For example, this wizard is 450 pixels high so that if we need to display text below you will still be able to see it. If your table will stand alone on a page, 800 pixels or more of depth will give the reader access to more data and may be better.</em></p>
                			
         </div>
@@ -502,14 +529,14 @@
 			<div id="table_embed" style="width:440px; float:left">
 				<h3>Your Table</h3>
 				<p>Copy and paste this code into a web page to display your table. The code includes javascript, so you may have to ask a producer to post it if you.</p>
-				<textarea id="s4_embed_text" style="width:435px; height:150px"></textarea>
+				<textarea id="table_embed_text" style="width:435px; height:150px"></textarea>
 				
 			</div>
 			
 			<div id="widget_embed" style="width:440px; float:right">
 				<h3>Search Widget</h3>
 				<p>This code will help your readers to search your database from any page on your site. Just replace the “URL” text with the web page address of your table.</p>
-				<textarea id="s4_embed_text" style="width:435px; height:150px"></textarea>
+				<textarea id="widget_embed_text" style="width:435px; height:150px"></textarea>
 			</div>
 			
             <!-- <h3>iframe options</h3>
@@ -523,7 +550,7 @@
             	
             <p>Paste the embed code below into your story or blog post in HTML mode:
             </p>
-            <textarea id="s4_widget_text" style="width:435px; height:150px"></textarea> 			
+            <textarea id="table_embed_text" style="width:435px; height:150px"></textarea> 			
         </div>
   		</div>
 <!-- End SmartWizard Content -->  		
@@ -559,7 +586,7 @@
     
     // Populate any known parameters from URL
     var spreadsheet_id = $.getUrlVar('sid');
-    $('input[id=sidfield]').val(spreadsheet_id);  
+    $('input[id=sheet_id_field]').val(spreadsheet_id);  
 
     // Turn the loading spinner on or off
     // Default to off, then toggle as needed
@@ -568,7 +595,7 @@
     // Test SID for validity - throws an alert if SID is inaccessible. 
     $('input[id=sidtest]').click(function () { 
        $('#sidtest_spinner').show();           
-       var testsid = $('input[id=sidfield]').val();
+       var testsid = $('input[id=sheet_id_field]').val();
        validateTable(testsid);                 
 
     });
@@ -603,15 +630,15 @@
     
     function populateColIDCells(orig_cols) {
         $.each(orig_cols, function(column, value) { 
-          $("tr#colids").append('<td><input type="checkbox" name="usecols" value="'+ column +'" /></td>');        
+          $("tr#colids").append('<td><input type="checkbox" name="cols_use" value="'+ column +'" /></td>');        
         });
     }    
     
     
     // Warn if user tries to select more than five columns
     function limitCols() {
-    $('input[name=usecols]').click(function () {
-    selected = $('input[name="usecols"]').filter(':checked').length;
+    $('input[name=cols_use]').click(function () {
+    selected = $('input[name="cols_use"]').filter(':checked').length;
     if (selected > 5){
         $('#wizard').smartWizard('showMessage','You have selected more than five columns');
             } else {

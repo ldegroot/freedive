@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+		<!--Load the AJAX API-->
+
+		<script type="text/javascript" src="https://www.google.com/jsapi">
+</script><!--open script-->
+
+		<script type="text/javascript">
+		//Load the API and the controls package.  
+		  google.load('visualization', '1.1', {packages:['controls']});
+		</script>
+		
+		
+		 <style type="text/css">
+		
+		/*	div styles */
+		div.control1{width:620px; padding: 0 0 20px 0; font-size:0.9em; color:black; vertical-align: middle;margin:0;}
+		div.control2{height:30px; width:300px;font-size:0.9em; padding: 0 20px 20px 0; vertical-align: middle;margin:0;}
+		div.control3{float:right; height:30px; font-size:0.9em;vertical-align:inherit; vertical-align: middle;margin:0;}	
+		div.chart1{float: left;}
+				
+		</style>
+		
+		<script type="text/javascript">
+		
+					
+		//Change to drawVisualization.
+		  function drawVisualization() {
+		
+		// ------------ Load data from google docs ----------------
+ 
+		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE&range=A1:F101&pub=1');
+		query.send(handleQueryResponse);  
+		}
+
+		function handleQueryResponse(response) {
+		  if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+			return;
+		  }
+		
+		//pass the data into a variable
+		var data = response.getDataTable();
+		
+
+		// ------------ Draw dashboard ----------------
+		
+		// Define a NumberRangeFilter slider control for the 'Age' column.
+		  var slider = new google.visualization.ControlWrapper({
+		    'controlType': 'NumberRangeFilter',
+		    'containerId': 'control1',
+		    'options': {
+		      'filterColumnLabel': 'Contribution',  // Must match your data!
+		      'minValue': 0,
+		      // 'maxValue': 500000,
+			'ui': {
+				'label':'Adjust dollar range of contributions',
+		  }}
+		  });
+
+		// Define a StringFilter control for the 'Name' column
+		var stringFilter = new google.visualization.ControlWrapper({
+		  'controlType': 'StringFilter',
+		  'containerId': 'control2',
+		// 'ui.label':'Search by name',
+		  'options': {
+			'filterColumnLabel': 'Name', // Must match your data!
+			'matchType':'any',
+			'ui': {
+				'label':'Filter contributors by name:',
+				'cssClass' : 'custom-stringfilter'
+		  }}
+		});
+		
+		
+		// Define category pickers for 'Charter schools'
+	  var categoryPicker = new google.visualization.ControlWrapper({
+	    'controlType': 'CategoryFilter',
+	    'containerId': 'control3',
+	    'options': {
+	      'filterColumnLabel': 'City', // Must match your data!
+	      'ui': {
+	        // 'labelStacking': 'vertical',
+			'label':'Pick a City',
+	        'allowTyping': false,
+	        'allowMultiple': false,
+	      }}
+	    });
+	  		
+
+
+		// here's our table visualization in a wrapper
+		var table = new google.visualization.ChartWrapper({
+		  'chartType': 'Table',
+		  'containerId': 'chart1',
+		  'options': {'height': '25em', 'width': '620px','allowHtml':'true', 'title': 'Click a column header to sort', }
+		});
+
+		//Create the dashboard 
+		var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard')).
+// 	----> Configure the string to filter table and chart  [table, chart].
+		  bind([stringFilter,categoryPicker, slider], table).
+		  draw(data);   
+				
+	
+		}
+
+		google.setOnLoadCallback(drawVisualization);
+		
+		
+	</script>
+		
+		
+		<title></title>
+	</head>
+	<body>
+		
+		<h3>Campaign contributions example</h3>
+		<p> The example below is a spreadsheet of California Gov. Jerry Brown's monetary campaign contributions for the 2010 election. There are roughly 25,000 records and the full spreadsheet is available <a href="https://docs.google.com/spreadsheet/ccc?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE">here</a>. The data was downloaded from the California Secretary of State <a href="http://cal-access.sos.ca.gov/">web site</a>.   
+			<div id="full_search" style=" width:100%; background-color:#DADADA; padding:10px 0 10px 20px;">
+				<h2>Search the entire database</h2>
+				<p style="font-size:12px; line-height:30px"><label for="range_label">Name includes: <input id="search_label" value="Enter text" style="color:#656565"><input type="submit" value="Search" ><span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
+					<label for="range_label">Contribution </label> <select name="sheet_op">
+					<option value=">=">Greater than or equal to</option>
+					<option value="<=">Less than or equal to</option>
+					<option value=">">Greater than</option>
+					<option value="<">Less than</option>
+					<option value="=">Equals</option>
+					</select><input id="range_label" value="Enter a number" style="color:#656565"> <input type="submit" value="Search"> <span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
+					 <input type="submit" value="Show all records">&nbsp;<span style="color:#3F3F3F; font-size:10px">May cause long load times and browser slowdowns.</span>
+                    
+			</div>
+						
+				
+				
+		<!--Div that will hold the dashboard-->
+		<div id="dashboard" style='width: 620px;font-family:Arial, sans-serif;'>
+			
+			<h3>Explore your results</h3>
+			<p>You can use the slider, text filter and picker to investigate your search results or click on a column label to resort the table. To perform a new search, use the tool above. 
+			<div id="control1" class="control1"></div>
+			<div id="control3" class="control3"></div>
+			<div id="control2" class="control2"></div>
+			<div id="chart1" class="chart1"></div>
+
+		</div>		
+		
+	</body>
+</html>
