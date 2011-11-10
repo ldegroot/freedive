@@ -6,11 +6,11 @@
 
 <link href="styles/freeDive.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script> 
+<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
 
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<!-- <script type="text/javascript" src="js/embed.js"></script> -->
+<script type="text/javascript" src="js/iframe_top.js"></script>
 <script type="text/javascript">  google.load('visualization', '1.1', {packages:['controls']});
 </script>
 
@@ -155,13 +155,14 @@
 		            ;
 					
 					
-					embed_actual = "&ltscript type=&apos;text/javascript&apos;src=&apos;https://www.google.com/jsapi&apos;&gt&lt/script&gt&ltscript type=&apos;text/javascript&apos;&gtgoogle.load(&apos;visualization&apos;,&apos;1.1&apos;,{packages:[&apos;controls&apos;]});&lt/script&gt&ltstyle type=&apos;text/css&apos;&gtdiv.control1{width:100%;padding: 0 0 20px 0;font-size:0.9em;color:black;}div.control2{height:30px;width:400px;font-size:0.9em;padding: 0 20px 20px 0;float:left;}div.control3{float:right;height:30px;font-size:0.9em;vertical-align:inherit;}div.chart1{float: left;}&lt/style&gt&ltscript type=&apos;text/javascript&apos;&gtfunction drawVisualization(){var query=new google.visualization.Query(&apos;https://spreadsheets.google.com/a/google.com/tq?key="+spreadsheet_id+"&tq=select%20" + cols_as_text+sheet_limit+"&apos;);query.send(handleQueryResponse);}function handleQueryResponse(response){if (response.isError()){alert(&apos;Error in query: &apos;+response.getMessage() +&apos; &apos; +response.getDetailedMessage());return;}var data=response.getDataTable();var slider=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;NumberRangeFilter&apos;, &apos;containerId&apos;: &apos;control1&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;" +slider_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+ slider_label+"&apos;, }}});var stringFilter=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;StringFilter&apos;, &apos;containerId&apos;: &apos;control2&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos"+ +filter_col+"&apos;,&apos;matchType&apos;:&apos;any&apos;,&apos;ui&apos;:{&apos;label&apos;:&apos;"+filter_label+"&apos;, }}});var categoryPicker=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;CategoryFilter&apos;, &apos;containerId&apos;: &apos;control3&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;"+ picker_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+picker_label+"&apos;, &apos;allowTyping&apos;: false, &apos;allowMultiple&apos;: false, }}});var table=new google.visualization.ChartWrapper({&apos;chartType&apos;: &apos;Table&apos;, &apos;containerId&apos;: &apos;chart1&apos;, &apos;options&apos;:{&apos;height&apos;:&apos;"+table_height+"px&apos;, &apos;width&apos;:&apos;"+table_width+"px&apos;, &apos;allowHtml&apos;:&apos;true&apos;, }});var dashboard=new google.visualization.Dashboard(document.getElementById(&apos;dashboard&apos;)).  bind([stringFilter,categoryPicker, slider], table).  draw(data);}google.setOnLoadCallback(drawVisualization);&lt/script&gt&ltdiv id='dashboard' style='width:"+table_width+"px; font-family:Arial, sans-serif;'&gt&ltdiv id='control1' class='control1'&gt&lt/div&gt&ltdiv id='control3'class='control3'&gt&lt/div&gt&ltdiv id='control2' class='control2'&gt&lt/div&gt&ltdiv id='chart1' class='chart1'&gt&lt/div&gt&lt/div&gt"
-															;
+					embed_actual = "&ltscript type=&apos;text/javascript&apos;src=&apos;https://www.google.com/jsapi&apos;&gt&lt/script&gt&ltscript type=&apos;text/javascript&apos;&gtgoogle.load(&apos;visualization&apos;,&apos;1.1&apos;,{packages:[&apos;controls&apos;]});&lt/script&gt&ltstyle type=&apos;text/css&apos;&gtdiv.control1{width:100%;padding: 0 0 20px 0;font-size:0.9em;color:black;}div.control2{height:30px;width:400px;font-size:0.9em;padding: 0 20px 20px 0;float:left;}div.control3{float:right;height:30px;font-size:0.9em;vertical-align:inherit;}div.chart1{float: left;}&lt/style&gt&ltscript type=&apos;text/javascript&apos;&gtfunction drawVisualization(){var query=new google.visualization.Query(&apos;https://spreadsheets.google.com/a/google.com/tq?key="+spreadsheet_id+"&tq=select%20" + cols_as_text+sheet_limit+"&apos;);query.send(handleQueryResponse);}function handleQueryResponse(response){if (response.isError()){alert(&apos;Error in query: &apos;+response.getMessage() +&apos; &apos; +response.getDetailedMessage());return;}var data=response.getDataTable();var slider=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;NumberRangeFilter&apos;, &apos;containerId&apos;: &apos;control1&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;" +slider_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+ slider_label+"&apos;, }}});var stringFilter=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;StringFilter&apos;, &apos;containerId&apos;: &apos;control2&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos"+ +filter_col+"&apos;,&apos;matchType&apos;:&apos;any&apos;,&apos;ui&apos;:{&apos;label&apos;:&apos;"+filter_label+"&apos;, }}});var categoryPicker=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;CategoryFilter&apos;, &apos;containerId&apos;: &apos;control3&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;"+ picker_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+picker_label+"&apos;, &apos;allowTyping&apos;: false, &apos;allowMultiple&apos;: false, }}});var table=new google.visualization.ChartWrapper({&apos;chartType&apos;: &apos;Table&apos;, &apos;containerId&apos;: &apos;chart1&apos;, &apos;options&apos;:{&apos;height&apos;:&apos;"+table_height+"px&apos;, &apos;width&apos;:&apos;"+table_width+"px&apos;, &apos;allowHtml&apos;:&apos;true&apos;, }});var dashboard=new google.visualization.Dashboard(document.getElementById(&apos;dashboard&apos;)).  bind([stringFilter,categoryPicker, slider], table).  draw(data);}google.setOnLoadCallback(drawVisualization);&lt/script&gt&ltdiv id='dashboard' style='width:"+table_width+"px; font-family:Arial, sans-serif;'&gt&ltdiv id='control1' class='control1'&gt&lt/div&gt&ltdiv id='control3'class='control3'&gt&lt/div&gt&ltdiv id='control2' class='control2'&gt&lt/div&gt&ltdiv id='chart1' class='chart1'&gt&lt/div&gt&lt/div&gt";
+					
+					
+					iframe_actual = iframe_start+embed_actual+"&lt/body&gt&lt/html&gt";
 					
 					// Send it!
 					$('#table_embed_text').html(embed_actual);
 					$('widget_embed_text').html(embed_text);
-		
 		
 
             return true; // Return true so that navigation continues
@@ -497,12 +498,12 @@
             	
             <p>Setting the size of your chart is very important. It directly impacts how your reader interacts with your data. Make it too small and the the value of the data is diminished in their eyes. Make it too big and it will overwhelm and scare them away.
             </p>
-           	<h3>Width</h3>
-			<input id="table_width" value=""> 
+           	<h3>Width in pixels</h3>
+			<input id="table_width" value="600"> 
 			<p><em>TIP: We recommend that you make your chart the full width of your regular story or post content. This helps it integrate the table into your site. If you must display 7-10 columns, you may have to make the table the full width of your page.</em></p>
 			
-			<h3>Height</h3>
-			<input id="table_height" value="">
+			<h3>Height in pixels</h3>
+			<input id="table_height" value="400">
            <p><em>TIP: If the chart will be above a story, consider setting the height to 300-400 pixels. For example, this wizard is 450 pixels high so that if we need to display text below you will still be able to see it. If your table will stand alone on a page, 800 pixels or more of depth will give the reader access to more data and may be better.</em></p>
                			
         </div>
@@ -518,32 +519,43 @@
 			</div>
 			
 			<div id="widget_embed" style="width:440px; float:right">
-				<h3>Search Widget</h3>
-				<p>This code will help your readers to search your database from any page on your site. Just replace the “URL” text with the web page address of your table.</p>
-				<textarea id="widget_embed_text" style="width:435px; height:150px"></textarea>
+				<h3>Iframe</h3>
+				<p>You can choose to download the chart as a separate html document and include it in an iframe tag. This will give you the option to use a FreeDive theme or customize the CSS.</p>
+		            <textarea id="widget_embed_text" style="width:100px; height:100px; position:absolute;left:600px" ></textarea>
+		            <input type="button" value="Download table" onclick="downloadTable()" />
 			</div>
-			
-            <!-- <h3>iframe options</h3>
-        			<p>You can choose to download the chart as a separate html document and include it in an <iframe> tag. This will give you the option to use a FreeDive theme or customize the CSS.</p> -->
-
- 			
         </div>
 
-  			<div id="step-9">
+  		<div id="step-9">
             <h2 class="StepTitle">Step 4 Embed code</h2>
             	
             <p>Paste the embed code below into your story or blog post in HTML mode:
             </p>
             <textarea id="table_embed_text" style="width:435px; height:150px"></textarea> 			
         </div>
-  		</div>
+
+  	</div>
 <!-- End SmartWizard Content -->  		
  		
 </td></tr>
 </table>
 
 <script type="text/javascript" charset="utf-8">
-    // Plugin to allow parsing of URL parameters via http://kdmc.us/oDWxGy
+
+		function downloadTable(){
+						
+			uriContent = "data:application/octet-stream," + encodeURIComponent(document.getElementById('widget_embed_text').value);			
+			location.href = uriContent;
+		};
+		
+		// function previewTable(){
+		// 	uriContent = "data:application/octet-stream," + encodeURIComponent(document.getElementById('widget_embed_text').value);
+		// 	newWindow=window.open(uriContent, 'neuesDokument');
+		//  
+		// }
+</script>
+		
+<script type="text/javascript" charset="utf-8">
 
 	$.extend({
       getUrlVars: function(){
