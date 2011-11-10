@@ -7,7 +7,6 @@
 <link href="styles/freeDive.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script> 
-<script type="text/javascript" src="js/spin.min.js"></script> 
 
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -61,6 +60,9 @@
 
         
         } else if(step_num == 3) {
+            
+            // Turn spinner on before we go and try to retrieve data
+            $('#colfetch_spinner').show();  
 
             // Take input from step 1 and insert vals into the DOM so they're available in step 2
             spreadsheet_id = $('input[id=sheet_id_field]').val();
@@ -73,13 +75,16 @@
         } else if(step_num == 4) {
 
             // Need to make a new columns object that contains just
-            // the checked columns (unlike cols_orig which contains all).
-            // This is tricky because the previous form element only sends the column IDs.
+            // the checked columns (unlike cols_orig which contains all cols from spreadsheet).
+            // This is tricky because the previous form element only sends the column IDs,
+            // while we need both IDs and values, and we need the passed columns array
+            // to have the same format as the original one.
+            
             // Step through the checked columns, find the equivalent element
             // in orig_cols, and make it a key/val pair in the new object.   
             // Also build up a cols_as_text string for display in next step.
             
-            var columns = {}; 
+            columns = {}; 
             cols_as_text = '';
             $("input[name='cols_use']:checked").each(function(){
                 temp = orig_cols[$(this).val()];  
@@ -90,14 +95,28 @@
             // Strip trailing comma from cols_as_text and send to HTML
             cols_as_text = cols_as_text.slice(0, -1)
             $('#cols_arr').html(cols_as_text);
-			
-			
+
+
+			// Populate dropdowns for step 5 from new array of usable columns
+			populateDropDown(columns,'#pick_sortby_col');
+			populateDropDown(columns,'#pick_main_col');  
+
+
             return true; // Return true so that navigation continues
             
               
         } else if(step_num == 5) {
-	
-				filter_col = $('select#filter_col').val();				
+                
+            // Populate step 6 dropdowns when leaving step 5
+            populateDropDown(columns,'#pick_results_filter');
+            populateDropDown(columns,'#pick_results_text');
+            populateDropDown(columns,'#pick_results_slider');            
+
+
+    		// Store selected values for next step
+    		filter_col = $('select#filter_col').val();      
+				
+ 			
             
             return true; // Return true so that navigation continues
 
@@ -139,28 +158,15 @@
 					embed_actual = "&ltscript type=&apos;text/javascript&apos;src=&apos;https://www.google.com/jsapi&apos;&gt&lt/script&gt&ltscript type=&apos;text/javascript&apos;&gtgoogle.load(&apos;visualization&apos;,&apos;1.1&apos;,{packages:[&apos;controls&apos;]});&lt/script&gt&ltstyle type=&apos;text/css&apos;&gtdiv.control1{width:100%;padding: 0 0 20px 0;font-size:0.9em;color:black;}div.control2{height:30px;width:400px;font-size:0.9em;padding: 0 20px 20px 0;float:left;}div.control3{float:right;height:30px;font-size:0.9em;vertical-align:inherit;}div.chart1{float: left;}&lt/style&gt&ltscript type=&apos;text/javascript&apos;&gtfunction drawVisualization(){var query=new google.visualization.Query(&apos;https://spreadsheets.google.com/a/google.com/tq?key="+spreadsheet_id+"&tq=select%20" + cols_as_text+sheet_limit+"&apos;);query.send(handleQueryResponse);}function handleQueryResponse(response){if (response.isError()){alert(&apos;Error in query: &apos;+response.getMessage() +&apos; &apos; +response.getDetailedMessage());return;}var data=response.getDataTable();var slider=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;NumberRangeFilter&apos;, &apos;containerId&apos;: &apos;control1&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;" +slider_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+ slider_label+"&apos;, }}});var stringFilter=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;StringFilter&apos;, &apos;containerId&apos;: &apos;control2&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos"+ +filter_col+"&apos;,&apos;matchType&apos;:&apos;any&apos;,&apos;ui&apos;:{&apos;label&apos;:&apos;"+filter_label+"&apos;, }}});var categoryPicker=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;CategoryFilter&apos;, &apos;containerId&apos;: &apos;control3&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;"+ picker_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+picker_label+"&apos;, &apos;allowTyping&apos;: false, &apos;allowMultiple&apos;: false, }}});var table=new google.visualization.ChartWrapper({&apos;chartType&apos;: &apos;Table&apos;, &apos;containerId&apos;: &apos;chart1&apos;, &apos;options&apos;:{&apos;height&apos;:&apos;"+table_height+"px&apos;, &apos;width&apos;:&apos;"+table_width+"px&apos;, &apos;allowHtml&apos;:&apos;true&apos;, }});var dashboard=new google.visualization.Dashboard(document.getElementById(&apos;dashboard&apos;)).  bind([stringFilter,categoryPicker, slider], table).  draw(data);}google.setOnLoadCallback(drawVisualization);&lt/script&gt&ltdiv id='dashboard' style='width:"+table_width+"px; font-family:Arial, sans-serif;'&gt&ltdiv id='control1' class='control1'&gt&lt/div&gt&ltdiv id='control3'class='control3'&gt&lt/div&gt&ltdiv id='control2' class='control2'&gt&lt/div&gt&ltdiv id='chart1' class='chart1'&gt&lt/div&gt&lt/div&gt"
 															;
 					
-					
-					
 					// Send it!
-
 					$('#table_embed_text').html(embed_actual);
 					$('widget_embed_text').html(embed_text);
-		            
-		
 		
 		
 
             return true; // Return true so that navigation continues
 
-		} else if(step_num == 8) {
-			
-			
-			
-				
-
-	            
-
-	            
+		} else if(step_num == 8) {  
 
             return true; // Return true so that navigation continues
    
@@ -295,10 +301,11 @@
             
 
          	<h3>Spreadsheet ID:</h3>
-         	<p id="sidtest_spinner">
+         	<p>
             <div id="spreadsheet_id"></div>
             <input id="sheet_id_field" value="">  
             <input type="button" id="sidtest" value="Test">
+            <span id="sidtest_spinner"><img src="images/loader.gif" width="20" height="20" alt="Loader"></span>
             </p>
                         
 
@@ -319,7 +326,9 @@
             
             
             <p>
-                Please select the columns you want to display (five columns max).</p>
+                Please select the columns you want to display (five columns max).</p>    
+                
+            <p id="colfetch_spinner"><img src="images/loader.gif" width="20" height="20" alt="Loader"> Retrieving column data...</p> 
             
             <style type="text/css" media="screen">
                 input[type='checkbox'] {
@@ -361,70 +370,57 @@
             
             <p>Working with columns: <span id="cols_arr">&nbsp;</span></p>
             
-            <!-- <table>
-                           <tr style="vertical-align:top">
-                               <td>
-                                   <p>
-                                       <label for="filter_col_5">Pick your main column:</label><br />
-                                       <select id="filter_col_5">
-                                         <option value="A">Bike</option>
-                                         <option value="B">Car</option>
-                                         <option value="C">Bus</option>
-                                         <option value="D">Scooter</option>
-                                         <option value="E">Train</option>              
-                                         <option value="F">Hovercraft</option>                            
-                                         <option value="G">Pogo Stick</option>                            
-                                         <option value="H">Elephant</option>                                                        
-                                       </select>
-                                   </p>
+            <table>
+                <tr style="vertical-align:top">
+                    <td>
+                        <p>
+                            <label for="pick_main_col">Pick your main column:</label><br />
+                            <select id="pick_main_col"> 
+                               <!-- Options generated with jQuery -->
+                                                        
+                            </select>
+                        </p>
 
-                                   <p>
-           							<input type="radio" name="sheet_op" id="search_text_5" value="like" style="vertical-align: middle; margin: 0px;"/>
-           							<label for="search_text_5" >Search text</label><br />
-           							<input type="radio" name="sheet_op" id="rank_by_number" value="limit" style="vertical-align: middle; margin: 0px;"/>
-           							<label for="rank_by_number" >Rank by number</label><br />
-           							<input id="val_input" value=""><br />
-                                       <span class="help_text">Enter default search text or...<br /> Enter a number: e.g. "10" for top 10</span>
-                                   </p>
-           						
-                               </td>
-                               
-                               <td>
-                                   <p>
-                                       <label for="picker_col_5b">Column to sort by:</label><br />
-                                       <select id="picker_col_5b">
-                                         <option value="A">Bike</option>
-                                         <option value="B">Car</option>
-                                         <option value="C">Bus</option>
-                                         <option value="D">Scooter</option>
-                                         <option value="E">Train</option>              
-                                         <option value="F">Hovercraft</option>                            
-                                         <option value="G">Pogo Stick</option>                            
-                                         <option value="H">Elephant</option>                                                        
-                                       </select>
-                                   </p>
+                        <p>
+                            <input type="radio" name="sheet_op" id="search_text_5" value="like" style="vertical-align: middle; margin: 0px;"/>
+                            <label for="search_text_5" >Search text</label><br />
+                            <input type="radio" name="sheet_op" id="rank_by_number" value="limit" style="vertical-align: middle; margin: 0px;"/>
+                            <label for="rank_by_number" >Rank by number</label><br />
+                            <input id="val_input" value=""><br />
+                            <span class="help_text">Enter default search text or...<br /> Enter a number: e.g. "10" for top 10</span>
+                        </p>
+                        
+                    </td>
+                    
+                    <td>
+                        <p>
+                            <label for="pick_sortby_col">Column to sort by:</label><br />
+                            <select id="pick_sortby_col">
+                                <!-- Options generated with jQuery -->
+                            </select>
+                        </p>
 
-                                   <p >
-                                       <input type="radio" name="sheet_order_direc" id="sheet_order_asc" value="asc" style="vertical-align: middle; margin: 0px;"/>
-           							<label for="sheet_order_asc" >Ascending (A-Z)</label><br />
-           							<input type="radio" name="sheet_order_direc" id="sheet_order_desc" style="vertical-align: middle; margin: 0px;" value="desc" />
-           							<label for="sheet_order_desc" >Descending (Z-A)</label>
-                                   </p>
-                               </td>
-                               
-                               
-                               <td>
-           						<h3>Search invitation: </h3>
-                                   <p>The table will include a widget that allows readers to search the entire database. Fill out the following:    
-                                   </p>
+                        <p >
+                            <input type="radio" name="sheet_order_direc" id="sheet_order_asc" value="asc" style="vertical-align: middle; margin: 0px;"/>
+                            <label for="sheet_order_asc" >Ascending (A-Z)</label><br />
+                            <input type="radio" name="sheet_order_direc" id="sheet_order_desc" style="vertical-align: middle; margin: 0px;" value="desc" />
+                            <label for="sheet_order_desc" >Descending (Z-A)</label>
+                        </p>
+                    </td>
+                    
+                    
+                    <td>
+                        <h3>Search invitation: </h3>
+                        <p>The table will include a widget that allows readers to search the entire database. Fill out the following:    
+                        </p>
 
-           						<h3>Headline: <span style="font-weight:normal">A call to action</span></h3>
-           						<input id="head_5" value="">
-           						<h3>Lead-in: <span style="font-weight:normal;">Invite users to search the data. Include some examples to get them started.</span></h3>
-           						<input id="leadin_5" value="">						
-                               </td>                    
-                           </tr>
-                       </table> -->
+                        <h3>Headline: <span style="font-weight:normal">A call to action</span></h3>
+                        <input id="head_5" value="">
+                        <h3>Lead-in: <span style="font-weight:normal;">Invite users to search the data. Include some examples to get them started.</span></h3>
+                        <input id="leadin_5" value="">                      
+                    </td>                    
+                </tr>
+            </table>     
             
        
 
@@ -442,16 +438,9 @@
 	                <tr style="vertical-align:top">
 	                    <td>
 	                        <p>
-	                            <label for="filter_col">Field to use for text searches:</label><br />
-	                            <select id="filter_col">
-	                              <option value="A">Bike</option>
-	                              <option value="B">Car</option>
-	                              <option value="C">Bus</option>
-	                              <option value="D">Scooter</option>
-	                              <option value="E">Train</option>              
-	                              <option value="F">Hovercraft</option>                            
-	                              <option value="G">Pogo Stick</option>                            
-	                              <option value="H">Elephant</option>                                                        
+	                            <label for="pick_results_text">Field to use for text searches:</label><br />
+	                            <select id="pick_results_text">
+                                    <!-- Options populated with jQuery -->
 	                            </select>
 	                        </p>
 
@@ -466,16 +455,9 @@
 
 	                    <td>
 	                        <p>
-	                            <label for="picker_col">Field to enable for filtering:</label><br />
-	                            <select id="picker_col">
-	                              <option value="A">Bike</option>
-	                              <option value="B">Car</option>
-	                              <option value="C">Bus</option>
-	                              <option value="D">Scooter</option>
-	                              <option value="E">Train</option>              
-	                              <option value="F">Hovercraft</option>                            
-	                              <option value="G">Pogo Stick</option>                            
-	                              <option value="H">Elephant</option>                                                        
+	                            <label for="pick_results_filter">Field to enable for filtering:</label><br />
+	                            <select id="pick_results_filter">
+                                    <!-- Options populated with jQuery -->                                                        
 	                            </select>
 	                        </p>
 
@@ -491,16 +473,9 @@
 
 	                    <td>
 	                        <p>
-	                            <label for="slider_col">Field to enable for range slider:</label><br />
-	                            <select id="slider_col">
-	                              <option value="A">Bike</option>
-	                              <option value="B">Car</option>
-	                              <option value="C">Bus</option>
-	                              <option value="D">Scooter</option>
-	                              <option value="E">Train</option>              
-	                              <option value="F">Hovercraft</option>                            
-	                              <option value="G">Pogo Stick</option>                            
-	                              <option value="H">Elephant</option>                                                        
+	                            <label for="pick_results_slider">Field to enable for range slider:</label><br />
+	                            <select id="pick_results_slider">
+                                   <!-- Options populated with jQuery --> 
 	                            </select>
 	                        </p>
 
@@ -597,9 +572,9 @@
     var spreadsheet_id = $.getUrlVar('sid');
     $('input[id=sheet_id_field]').val(spreadsheet_id);  
 
-    // Turn the loading spinner on or off
-    // Default to off, then toggle as needed
-    // $('#sidtest_spinner').hide();
+    // Initially hide the loading spinners, then toggle on as needed
+    $('#sidtest_spinner').hide();
+    $('#colfetch_spinner').hide();    
     
     // Test SID for validity - throws an alert if SID is inaccessible. 
     $('input[id=sidtest]').click(function () { 
@@ -609,28 +584,9 @@
 
     });
         
-    // For spin.js
-    var spinneropts = {
-      lines: 10, // The number of lines to draw
-      length: 5, // The length of each line
-      width: 5, // The line thickness
-      radius: 10, // The radius of the inner circle
-      color: '#000', // #rgb or #rrggbb
-      speed: 1.3, // Rounds per second
-      trail: 60, // Afterglow percentage
-      shadow: false // Whether to render a shadow
-    };
-    var $target = $('#sidtest_spinner');
-    var spinner = new Spinner(spinneropts).spin($target); 
-    $('#sidtest_spinner').css('top', 800);
-
-    $('#sidtest_spinner').append(spinner.el); 
 
 
-    
-
-
-    // Populate set of column checkboxes from query results
+    // Populate sets of original column checkboxes 
     function populateColCells(orig_cols) {
         $.each(orig_cols, function(column, value) { 
           $("tr#colnames").append('<td>' + value.label + '</td>');        
@@ -641,8 +597,19 @@
         $.each(orig_cols, function(column, value) { 
           $("tr#colids").append('<td><input type="checkbox" name="cols_use" value="'+ column +'" /></td>');        
         });
-    }    
+    }   
     
+    
+    // Dropdown lists of columns appear at several places in the wizard, populated either with
+    // the original list of columns or a subset. This function populates them as needed. 
+    // Takes an object of column data to use and a CSS selector as args.
+    function populateDropDown(cols_ob,selector) { 
+        $.each(cols_ob, function(column, value) { 
+          $(selector).append('<option value="'+ column +'">'+ value.label +'</option>');        
+        });
+    }  
+    
+    			
     
     // Warn if user tries to select more than five columns
     function limitCols() {
@@ -677,7 +644,7 @@
 
         }
         // Always turn off the spinner after the tests.
-        // $('#sidtest_spinner').hide();   
+        $('#sidtest_spinner').hide();   
     }
     
 
@@ -721,7 +688,7 @@
         // }  
         
         // Turn off the spinner after data is loaded
-        $('#col_load_spinner').hide();   
+        $('#colfetch_spinner').hide();    
         
 	}
 	
