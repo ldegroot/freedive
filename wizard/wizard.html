@@ -8,6 +8,9 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
 
+<script type="text/javascript" src="http://use.typekit.com/qfd4pcz.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="js/iframe_top.js"></script>
@@ -194,6 +197,10 @@
         color:#606060;
     }     
     
+    h2 {
+	    font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+    }
+    
     input#sheet_id_field {
         width:450px;
     }               
@@ -274,7 +281,7 @@
 	            <label class="stepNumber">9</label>
 	        </a></li>
   			</ul>
-				<div id="step-1">	
+				<div id="step-1">	   
 	            <h2 class="StepTitle">Get ready...</h2>
 
 	            <p>For the best results, clean and edit your spreadsheet before you use this tool. If you don’t know how to clean data, <a href="http://multimedia.journalism.berkeley.edu/tutorials/cleaning-data/">read our tutorial</a>. Here are some things to keep in mind:</p>
@@ -306,7 +313,7 @@
 				<div style="width:200px; height:250px; float:left">
 					<ol style="padding:0 0 0 15px;font-weight:bold;">
 	            <li><span style="font-weight:normal">Click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /><a href"URL">EXAMPLE</a></span></li>
-	<br/>
+	            <br/>
 				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
 	           </ol>
            </div>
@@ -321,8 +328,6 @@
             
             <p>With your spreadsheet open, look in the URL for the term “key=” This will be followed by a unique ID made of letters and numbers. Copy just the ID and paste in the field below.</p>
 			<img src="images/freeDive-key.png">
-            
-
 
          	<h3 class="sub_head_fd">Spreadsheet ID:</h3>
          	<p>
@@ -331,15 +336,11 @@
             <input type="button" id="sidtest" value="Test">
             <span id="sidtest_spinner"><img src="images/loader.gif" width="20" height="20" alt="Loader"></span>
             </p>
-                        
 
 			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
 			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
             <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet.</strong></p>
-
         </div>     
-        
-        
         
         
   			<div id="step-4">
@@ -400,43 +401,39 @@
 
 
 	                <td>
-	<h3 class="sub_head_fd">Select a column for text search</h3>
-	<p>Users can only search within a text column.</p>
-	                    <p>
+                    	<h3 class="sub_head_fd">Select a column for text search</h3>
+                    	<p>Users can only search within a text column.</p>    
 
+	                    <p>
 	                		<select id="pick_main_col">
-	           <!-- Options generated with jQuery -->
-                               
+	                            <!-- Options generated with jQuery -->
 	                        </select>
 	                    </p>
 
-	                    </p>
-		
 	                </td>
                 
 	                <td>
 	                   <h3 class="sub_head_fd">Select a column for numeric search</h3>
-	<p>Your table must have at least one column with numbers. They will be able to select "less than," "greater than," etc.    
-	                    </p>
-	<p>
+	                   <p>Your table must have at least one column with numbers. They will be able to select "less than," "greater than," etc.    
+	                   </p>
+	                   <p>
 	                        <select id="pick_sortby_col">
 	                          <!-- Options generated with jQuery -->
-                                                                  
 	                        </select>
 	                    </p>
 
 	                </td>
 	                	<td>
-				<h3 class="sub_head_fd">Invite your users to search</h3>
+				         <h3 class="sub_head_fd">Invite your users to search</h3>
 	                     <p>The table will start with a widget that allows readers to search the entire database. Fill out the following:    
 	                     </p>
 
-				<label for="head_5">Headline</label><br />
-				<input class="input_fd" id="head_5" value=""><br />
-	<span class="help_text">e.g. "Search all contributions"</span><br /><br />
-				<label class="label_fd" for="leadin_5">Lead-in</label><br />
-				<input class="input_fd" id="leadin_5" value=""><br />	
-	<span class="help_text">Invite users to search the data. Include some examples to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
+                        <label for="head_5">Headline</label><br />
+                        <input class="input_fd" id="head_5" value=""><br />
+                        <span class="help_text">e.g. "Search all contributions"</span><br /><br />
+                        <label class="label_fd" for="leadin_5">Lead-in</label><br />
+                        <input class="input_fd" id="leadin_5" value=""><br />	
+                        <span class="help_text">Invite users to search the data. Include some examples to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
 	                 </td>
                 
                                     
@@ -450,17 +447,18 @@
 		<div id="step-6">
             <h2 class="StepTitle">Set up the user results page</h2>
             	
-            <p>FreeDive includes interactive filters on the results page. This allows your readers to refine their results. This is especially helpful with large databases. You must choose one column for each filter. To see the three types in use, check out this example.
+            <p>
+                FreeDive includes interactive filters on the results page. This allows your readers to refine their results. This is especially helpful with large databases. You must choose one column for each filter. To see the three types in use, check out this example.
             </p>
 
 	            <table>
 	                <tr style="vertical-align:top">
-	                    <td><h3 class="sub_head_fd">Select a column for text filtering</h3>
+	                    <td>
+	                        <h3 class="sub_head_fd">Select a column for text filtering</h3>
 	                        <p>
 	                            <label for="pick_results_text">Field to use for text searches:</label><br />
 	                            <select id="pick_results_text">
                                     <!-- Options populated with jQuery -->
-
 	                            </select>
 	                        </p>
 
@@ -468,17 +466,19 @@
 	                            <label for="filter_label">Label for search:</label><br />
 	                            <input class="input_fd" type=text id="filter_label" value=""><br />
 	                            <span class="help_text">e.g. "Search for a contributor by name:"</span>
-	                        </p>
-							<p style="width:200px"> Allows users to search within a text column. For example, they can search for part of a name or a ZIP Code.
+	                        </p>  
+	                        
+							<p style="width:200px"> 
+							    Allows users to search within a text column. For example, they can search for part of a name or a ZIP Code.
 							</p>
 	                    </td>
 
-	                    <td><h3 class="sub_head_fd">Select a column for category picker</h3>
+	                    <td>
+	                        <h3 class="sub_head_fd">Select a column for category picker</h3>
 	                        <p>
 	                            <label for="pick_results_filter">Field to enable for filtering:</label><br />
 	                            <select id="pick_results_filter">
                                     <!-- Options populated with jQuery -->                                                        
-
 	                            </select>
 	                        </p>
 
@@ -486,8 +486,10 @@
 	                            <label for="picker_label">Label for filter:</label><br />
 	                            <input class="input_fd" id="picker_label" value=""><br />
 	                            <span class="help_text">e.g. "Pick a city:"</span>
-	                        </p>
-							<p style="width:200px"> Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
+	                        </p> 
+	                        
+							<p style="width:200px"> 
+							    Allows users to select a category from a drop down menu. <em>TIP: Every attribute will be added to the picker list so use columns with limited attributes.</em>
 							</p>
 	                    </td>
 
