@@ -71,15 +71,24 @@
 
 
         } else if(step_num == 4) {
+
+            // Need to make a new columns object that contains just
+            // the checked columns (unlike cols_orig which contains all).
+            // This is tricky because the previous form element only sends the column IDs.
+            // Step through the checked columns, find the equivalent element
+            // in orig_cols, and make it a key/val pair in the new object.   
+            // Also build up a cols_as_text string for display in next step.
             
-            // Take column selector input from step 2 and append checked column names to "columns" array
-            var columns = new Array();
+            var columns = {}; 
+            cols_as_text = '';
             $("input[name='cols_use']:checked").each(function(){
-                columns.push($(this).val());
-            });
+                temp = orig_cols[$(this).val()];  
+                columns[$(this).val()] = {label: temp.label};  
+                cols_as_text += temp.label + ",";
+            });  
             
-            // Can't send an array into html - need to convert array to string
-            cols_as_text = columns.join("%2C");
+            // Strip trailing comma from cols_as_text and send to HTML
+            cols_as_text = cols_as_text.slice(0, -1)
             $('#cols_arr').html(cols_as_text);
 			
 			
@@ -706,8 +715,8 @@
 
 
         // Example: How to iterate through cols array:
-        // for(var col_id in cols) {
-        //  var label = cols[col_id].label;
+        // for(var col_id in orig_cols) {
+        //  var label = orig_cols[col_id].label;
         //  console.log(col_id,label);
         // }  
         
