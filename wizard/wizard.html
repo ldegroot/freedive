@@ -114,8 +114,9 @@
 
 
     		// Store selected values for next step
-    		filter_col = $('select#filter_col').val();      
-				
+    		search_widget_col = $('select#pick_main_col').val();      
+			number_widget_col = $('select#pick_sortby_col').val();
+            	
  			
             
             return true; // Return true so that navigation continues
@@ -162,7 +163,7 @@
 					
 					// Send it!
 					$('#table_embed_text').html(embed_actual);
-					$('widget_embed_text').html(embed_text);
+					$('#widget_embed_text').html(iframe_actual);
 		
 
             return true; // Return true so that navigation continues
@@ -395,52 +396,52 @@
             
             <table>
     
-                                     <tr style="vertical-align:top;">
-	
-									
-                                         <td>
-											<h3 class="sub_head_fd">Select a column for text search</h3>
-											<p>Users can only search within a text column.</p>
-                                             <p>
-	
-                                         		<select id="pick_main_col">
-					                               <!-- Options generated with jQuery -->
-	                                                       
-                                                 </select>
-                                             </p>
+	            <tr style="vertical-align:top;">
 
-                                             </p>
-                     						
-                                         </td>
-                                         
-                                         <td>
-                                            <h3 class="sub_head_fd">Select a column for numeric search</h3>
-											<p>Your table must have at least one column with numbers. They will be able to select "less than," "greater than," etc.    
-                                             </p>
-											<p>
-                                                 <select id="pick_sortby_col">
-                                                   <!-- Options generated with jQuery -->
-					                                                                                      
-                                                 </select>
-                                             </p>
 
-                                         </td>
-                                         	<td>
-	                     						<h3 class="sub_head_fd">Invite your users to search</h3>
-	                                             <p>The table will start with a widget that allows readers to search the entire database. Fill out the following:    
-	                                             </p>
+	                <td>
+	<h3 class="sub_head_fd">Select a column for text search</h3>
+	<p>Users can only search within a text column.</p>
+	                    <p>
 
-	                     						<label for="head_5">Headline</label><br />
-	                     						<input class="input_fd" id="head_5" value=""><br />
-												<span class="help_text">e.g. "Search all contributions"</span><br /><br />
-	                     						<label class="label_fd" for="leadin_5">Lead-in</label><br />
-	                     						<input class="input_fd" id="leadin_5" value=""><br />	
-												<span class="help_text">Invite users to search the data. Include some examples to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
-	                                         </td>
-                                         
-                                                             
-                                     </tr>
-                                 </table>
+	                		<select id="pick_main_col">
+	           <!-- Options generated with jQuery -->
+                               
+	                        </select>
+	                    </p>
+
+	                    </p>
+		
+	                </td>
+                
+	                <td>
+	                   <h3 class="sub_head_fd">Select a column for numeric search</h3>
+	<p>Your table must have at least one column with numbers. They will be able to select "less than," "greater than," etc.    
+	                    </p>
+	<p>
+	                        <select id="pick_sortby_col">
+	                          <!-- Options generated with jQuery -->
+                                                                  
+	                        </select>
+	                    </p>
+
+	                </td>
+	                	<td>
+				<h3 class="sub_head_fd">Invite your users to search</h3>
+	                     <p>The table will start with a widget that allows readers to search the entire database. Fill out the following:    
+	                     </p>
+
+				<label for="head_5">Headline</label><br />
+				<input class="input_fd" id="head_5" value=""><br />
+	<span class="help_text">e.g. "Search all contributions"</span><br /><br />
+				<label class="label_fd" for="leadin_5">Lead-in</label><br />
+				<input class="input_fd" id="leadin_5" value=""><br />	
+	<span class="help_text">Invite users to search the data. Include some examples to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
+	                 </td>
+                
+                                    
+	            </tr>
+	        </table>
             
        
 
@@ -554,7 +555,6 @@
             	
             <p>Paste the embed code below into your story or blog post in HTML mode:
             </p>
-            <textarea id="table_embed_text" style="width:435px; height:150px"></textarea> 			
         </div>
 
   	</div>
