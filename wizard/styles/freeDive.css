@@ -19,6 +19,8 @@ top:20px;
   overflow:visible;
   float:left;
   width:940px;
+  height:525px;
+
 }
 .swMain .stepContainer {
   display:block;
@@ -28,7 +30,7 @@ top:20px;
   border: 0px solid #CCC;    
   overflow:hidden;
   clear:both;
-  height:350px;
+  height:475px;
 }
 
 .swMain .stepContainer div.content {
@@ -36,10 +38,12 @@ top:20px;
   position: absolute;  
   float:left;
   margin: 0;
-  padding:20px;    
-  font: normal 12px Arial, Helvetica, sans-serif; 
+  padding:20px;   
+  font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+  font-size:.9em;
+  line-height:1.3em;
   color:#5A5655;   
-  height:350px;
+  height:425px;
   text-align:left;
   overflow:visible;    
   z-index:88; 
@@ -65,7 +69,8 @@ top:20px;
   display:block;
   position: relative;
   margin:0;   
-  font: bold 20px Arial, Helvetica, sans-serif; 
+  font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+  font: bold 20px; 
   color:#5A5655;   
   clear:both;
   text-align:left; 
@@ -120,7 +125,8 @@ top:20px;
   float:left;
   text-align: left;
   padding:10px;
-  font: bold 20px Verdana, Arial, Helvetica, sans-serif;
+  font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+  font: bold 20px;
 }
 .swMain ul.anchor li a .stepDesc small{
   font: normal 12px Verdana, Arial, Helvetica, sans-serif;

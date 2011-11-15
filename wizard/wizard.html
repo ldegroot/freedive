@@ -245,6 +245,7 @@
     }
 	
 	.sub_head_fd {
+		font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
 		font-size:1.3em;
         font-weight:bold;
         margin-top:20px;
@@ -252,6 +253,7 @@
 	}
 	
 	.label_fd {
+		font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
 		font-size:1em;
         font-weight:bold;
         margin-top:20px;
@@ -260,6 +262,7 @@
 	}
 	
 	.input_fd {
+		font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
         margin-top:10px;
 		margin-bottom:5px;
 	}
@@ -298,7 +301,7 @@
 	        </a>
   			</ul>
 				<div id="step-1">	   
-	            <h2 class="StepTitle">Get ready...</h2>
+	            <h2 class="StepTitle">kdmc Get ready...</h2>
 
 	            <p>For the best results, clean and edit your spreadsheet before you use this tool. If you don’t know how to clean data, <a href="http://multimedia.journalism.berkeley.edu/tutorials/cleaning-data/">read our tutorial</a>. Here are some things to keep in mind:</p>
 				<div style="width:440px; height:180px;float:left">
@@ -316,11 +319,27 @@
 					<ul style="padding:0 0 0 15px">
 						<li>Optimize your data for the Web for better performance. Delete everything you don’t need from your Google spreadsheet, including columns you don’t plan to publish and blank rows.</li>
 						<li>Arrange your columns in the order in which you would like them displayed.</li>
-						<li>Use a finished spreadsheet. If you must edit the Google spreadsheet, changes in will update auto- matically in the published graph. But editing can introduce errors that can break your table.</li>
+						<li>Use a finished spreadsheet. If you must edit the Google spreadsheet, changes in will update automatically in the published graph. But editing can introduce errors that can break your table.</li>
 						<li>Do not use all caps text. It requires additional space and makes your chart harder to read.</li>
 					</ul>	
 				</div>	
 	        </div>
+
+
+				<div style="width:200px; height:400px; float:left">
+					<p>Next you need to make sure your spreadsheet is published and available on the web. There are two steps:</p>
+					<ol style="padding:0 0 0 15px;font-weight:bold;">
+	            <li><span style="font-weight:normal">Click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /></li>
+	            <br/>
+				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /></li>
+	           </ol>
+		If you are still a little confused, the video to the right demonstrates how to publish.
+	</div>
+				<div style="width:635px; height:400px; float:right">
+				<iframe src="http://player.vimeo.com/video/31934760?title=0&amp;byline=0&amp;portrait=0" width="627" height="400" frameborder="0" webkitAllowFullScreen allowFullScreen></iframe>
+				</div>
+				
+           
 
 
 			<div id="step-2">	
@@ -340,6 +359,7 @@
   			<div id="step-3">	
                 <h2 class="StepTitle">Enter your spreadsheet ID</h2>
             
+
                 <p>With your spreadsheet open, look in the URL for the term “key=” This will be followed by a unique ID made of letters and numbers. Copy just the ID and paste in the field below.</p>
     			<img src="images/freeDive-key.png">
 
@@ -355,6 +375,7 @@
     			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
                 <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet. The test may take 30 seconds.</strong></p>
             </div>     
+
         
         
   			<div id="step-4">
@@ -409,7 +430,7 @@
             <table>
 	            <tr style="vertical-align:top;">
 	                <td>
-                    	<h3 class="sub_head_fd">Select a column for text search</h3>
+                    	<h3 class="sub_head_fd">Select a text column</h3>
                     	<p>Users can only search within a text column.</p>    
 
 	                    <p>
@@ -421,7 +442,7 @@
 	                </td>
                 
 	                <td>
-	                   <h3 class="sub_head_fd">Select a column for numeric search</h3>
+	                   <h3 class="sub_head_fd">Select a numeric column</h3>
 	                   <p>Your table must have at least one column with numbers. They will be able to select "less than," "greater than," etc.    
 	                   </p>
 	                   <p>
@@ -457,7 +478,7 @@
 	            <table>
 	                <tr style="vertical-align:top">
 	                    <td>
-	                        <h3 class="sub_head_fd">Select a column for text filtering</h3>
+	                        <h3 class="sub_head_fd">Select a text column</h3>
 	                        <p>
 	                            <label for="filter_col">Field to use for text searches:</label><br />
 	                            <select id="filter_col">
@@ -477,7 +498,7 @@
 	                    </td>
 
 	                    <td>
-	                        <h3 class="sub_head_fd">Select a column for category picker</h3>
+	                        <h3 class="sub_head_fd">Select a category column</h3>
 	                        <p>
 	                            <label for="picker_col">Field to enable for filtering:</label><br />
 	                            <select id="picker_col">
@@ -497,7 +518,7 @@
 	                    </td>
 
 
-	                    <td><h3 class="sub_head_fd">Select a column for a range slider</h3>
+	                    <td><h3 class="sub_head_fd">Select a numeric slider column</h3>
 	                        <p>
 	                            <label for="slider_col">Field to enable for range slider:</label><br />
 	                            <select id="slider_col">
@@ -549,7 +570,7 @@
 				<p>You can choose to download your table as an html document. This table uses the FreeDive theme and looks a little better. It also makes it easier for you to customize the CSS to match your site.</p>
 		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px" ></textarea>
 		            <input type="button" value="Download HTML" onclick="downloadTable()" /><br /><br />
-					<span class="help_text"><b>Instructions</b><ol><li>After download, rename the file to <b>"yourname.html"</b> and upload it to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code with the URL of your uploaded html page.</li></ol> <br/> <code>&ltiframe src="<b>URL</b>" width="100%" height="300"&gt
+					<span class="help_text"><b>Instructions</b><ol><li>After download, rename the file to <b>"yourname.html"</b> and upload it to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code with the URL of your uploaded html page.</li></ol> <br/> <code>&ltiframe src="<b>URL</b>" width="100%" height="300" frameborder="0"&gt
 					  &ltp>Your browser does not support iframes.&lt/p&gt
 					&lt/iframe&gt</code> </span>
 			</div>
