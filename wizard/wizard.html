@@ -14,8 +14,7 @@
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="js/iframe_top.js"></script>
-<script type="text/javascript">  google.load('visualization', '1.1', {packages:['controls']});
-</script>
+<script type="text/javascript"> google.load('visualization', '1.1', {packages:['controls']}); </script>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -90,15 +89,15 @@
             columns = {}; 
             cols_as_text = '';
             $("input[name='cols_use']:checked").each(function(){
-                temp = orig_cols[$(this).val()];  
+                temp = orig_cols[$(this).val()]; 
                 columns[$(this).val()] = {label: temp.label};  
-                cols_as_text += temp.label + "%2C";
+                // cols_as_text += temp.label + "%2C"; // Outputs column labels
+                cols_as_text += $(this).val() + "%2C"; // But we want column IDs for the URL search query
             });  
             
             // Strip trailing comma (%2C) from cols_as_text
-            cols_as_text = cols_as_text.slice(0, -3)
-            // $('#cols_arr').html(cols_as_text);
-
+            cols_as_text = cols_as_text.slice(0, -3)  
+            console.log(cols_as_text);
 
 			// Populate dropdowns for step 5 from new array of usable columns
 			populateDropDown(columns,'#pick_sortby_col');
@@ -110,26 +109,29 @@
         } else if(step_num == 5) {
                 
             // Populate step 6 dropdowns when leaving step 5
-            populateDropDown(columns,'#pick_results_filter');
-            populateDropDown(columns,'#pick_results_text');
-            populateDropDown(columns,'#pick_results_slider');            
+            populateDropDown(columns,'#filter_col');
+            populateDropDown(columns,'#picker_col');
+            populateDropDown(columns,'#slider_col');            
 
     		// Store selected values for embed code
     		search_widget_col = $('select#pick_main_col').val();      
-			number_widget_col = $('select#pick_sortby_col').val();
+			number_widget_col = $('select#pick_sortby_col').val();   
+			search_headline = $('input#search_headline').val();
+            search_leadin = $('input#search_leadin').val();  
+            
             
             return true; // Return true so that navigation continues
 
 		} else if(step_num == 6) {
 			
-				// Collect inputs from step 6 
-	            filter_col = $('select#filter_col').val();
-	            filter_label = $('input[id=filter_label]').val();
-	            picker_col = $('select#picker_col').val();
-	            picker_label = $('input[id=picker_label]').val();
-	            slider_col = $('select#slider_col').val();
-	            slider_label = $('input[id=slider_label]').val(); 
-				;
+			// Collect inputs from step 6 
+            filter_col = $('select#filter_col').val();
+            filter_label = $('input[id=filter_label]').val();
+            picker_col = $('select#picker_col').val();
+            picker_label = $('input[id=picker_label]').val();
+            slider_col = $('select#slider_col').val();
+            slider_label = $('input[id=slider_label]').val(); 
+			;   
 
             return true; // Return true so that navigation continues
 			
@@ -139,22 +141,42 @@
     		table_width = $('input[id=table_width]').val();
     		table_height = $('input[id=table_height]').val();
 		
-    		sheet_limit="&range=A1:F6"; // for testing remove before publishing
-	      
-    		embed_text = 
-                "Spreadsheet ID: " + spreadsheet_id + "\n" +
-                "Columns: " + cols_as_text + "\n" +                
-                "Search column: " + filter_col + "\n" +
-                "Search label: " + filter_label + "\n" +
-                "Filter column: " + picker_col + "\n" +
-                "Filter label: " + picker_label + "\n" +
-                "Range column: " + slider_col + "\n" +
-                "Range label: " + slider_label + "\n" +
-    			"Table Width: " + table_width + "\n" +
-    			"Table Height: " + table_height + "\n" 
-            ;
-		
-    		embed_actual = "&ltscript type=&apos;text/javascript&apos;src=&apos;https://www.google.com/jsapi&apos;&gt&lt/script&gt&ltscript type=&apos;text/javascript&apos;&gtgoogle.load(&apos;visualization&apos;,&apos;1.1&apos;,{packages:[&apos;controls&apos;]});&lt/script&gt&ltstyle type=&apos;text/css&apos;&gtdiv.control1{width:100%;padding: 0 0 20px 0;font-size:0.9em;color:black;}div.control2{height:30px;width:400px;font-size:0.9em;padding: 0 20px 20px 0;float:left;}div.control3{float:right;height:30px;font-size:0.9em;vertical-align:inherit;}div.chart1{float: left;}&lt/style&gt&ltscript type=&apos;text/javascript&apos;&gtfunction drawVisualization(){var query=new google.visualization.Query(&apos;https://spreadsheets.google.com/a/google.com/tq?key="+spreadsheet_id+"&tq=select%20" + cols_as_text+sheet_limit+"&apos;);query.send(handleQueryResponse);}function handleQueryResponse(response){if (response.isError()){alert(&apos;Error in query: &apos;+response.getMessage() +&apos; &apos; +response.getDetailedMessage());return;}var data=response.getDataTable();var slider=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;NumberRangeFilter&apos;, &apos;containerId&apos;: &apos;control1&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;" +slider_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+ slider_label+"&apos;, }}});var stringFilter=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;StringFilter&apos;, &apos;containerId&apos;: &apos;control2&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos"+ +filter_col+"&apos;,&apos;matchType&apos;:&apos;any&apos;,&apos;ui&apos;:{&apos;label&apos;:&apos;"+filter_label+"&apos;, }}});var categoryPicker=new google.visualization.ControlWrapper({&apos;controlType&apos;: &apos;CategoryFilter&apos;, &apos;containerId&apos;: &apos;control3&apos;, &apos;options&apos;:{&apos;filterColumnLabel&apos;:&apos;"+ picker_col+"&apos;, &apos;ui&apos;:{&apos;label&apos;:&apos;"+picker_label+"&apos;, &apos;allowTyping&apos;: false, &apos;allowMultiple&apos;: false, }}});var table=new google.visualization.ChartWrapper({&apos;chartType&apos;: &apos;Table&apos;, &apos;containerId&apos;: &apos;chart1&apos;, &apos;options&apos;:{&apos;height&apos;:&apos;"+table_height+"px&apos;, &apos;width&apos;:&apos;"+table_width+"px&apos;, &apos;allowHtml&apos;:&apos;true&apos;, }});var dashboard=new google.visualization.Dashboard(document.getElementById(&apos;dashboard&apos;)).  bind([stringFilter,categoryPicker, slider], table).  draw(data);}google.setOnLoadCallback(drawVisualization);&lt/script&gt&ltdiv id='dashboard' style='width:"+table_width+"px; font-family:Arial, sans-serif;'&gt&ltdiv id='control1' class='control1'&gt&lt/div&gt&ltdiv id='control3'class='control3'&gt&lt/div&gt&ltdiv id='control2' class='control2'&gt&lt/div&gt&ltdiv id='chart1' class='chart1'&gt&lt/div&gt&lt/div&gt";	
+            // sheet_limit="&range=A1:F6"; // for testing remove before publishing
+	        
+	        // Dummy embed just to see our variables in action
+            // embed_text = 
+            //                 "Spreadsheet ID: " + spreadsheet_id + "\n" +
+            //                 "Columns: " + cols_as_text + "\n" +                
+            //                 "Search column: " + filter_col + "\n" +
+            //                 "Search label: " + filter_label + "\n" +
+            //                 "Filter column: " + picker_col + "\n" +
+            //                 "Filter label: " + picker_label + "\n" +
+            //                 "Range column: " + slider_col + "\n" +
+            //                 "Range label: " + slider_label + "\n" +
+            //  "Table Width: " + table_width + "\n" +
+            //  "Table Height: " + table_height + "\n" 
+            //             ;       
+                 
+            // Retrieve our hidden template and replace out variables 
+            // If a var needs to be replaced more than once, use /g syntax for global
+		    embed_actual = $("textarea#embed_template").html();
+		    embed_actual = embed_actual.replace("SPREADSHEET_ID",spreadsheet_id);   
+		    embed_actual = embed_actual.replace("COLS_AS_TEXT",cols_as_text);
+		    embed_actual = embed_actual.replace("SLIDER_COL",slider_col);
+		    embed_actual = embed_actual.replace("SLIDER_LABEL",slider_label);		    		       
+		    embed_actual = embed_actual.replace("FILTER_COL",filter_col);
+		    embed_actual = embed_actual.replace("FILTER_LABEL",filter_label);		    		       
+		    embed_actual = embed_actual.replace("PICKER_COL",picker_col);
+		    embed_actual = embed_actual.replace("PICKER_LABEL",picker_label); 
+		    embed_actual = embed_actual.replace(/TABLE_WIDTH/g,table_width); 
+		    embed_actual = embed_actual.replace("TABLE_HEIGHT",table_height); 
+		    embed_actual = embed_actual.replace("SEARCH_HEADLINE",search_headline); 
+		    embed_actual = embed_actual.replace("SEARCH_LEADIN",search_leadin); 		    		    		    		       	    		       
+            // embed_actual = embed_actual.replace("SHEET_LIMIT",sheet_limit);   
+		    
+		    // Prep output for display to user
+            embed_actual = pseudoMinify(embed_actual); 
+    		
     		iframe_actual = iframe_start+embed_actual+"&lt/body&gt&lt/html&gt";
 		
     		// Send embed code to text fields at end of wizard
@@ -208,6 +230,11 @@
     textarea {
         width:600px;
         height:300px;
+    }  
+                    
+    /* Hide the embed code generator template textarea*/
+    textarea#embed_template {
+        display:none;
     }
     
     .help_text {
@@ -268,10 +295,7 @@
             </a></li>
 				<li><a href="#step-8">
             	<label class="stepNumber">8</label>
-	        </a></li>
-				<li><a href="#step-9">
-	            <label class="stepNumber">9</label>
-	        </a></li>
+	        </a>
   			</ul>
 				<div id="step-1">	   
 	            <h2 class="StepTitle">Get ready...</h2>
@@ -294,45 +318,43 @@
 						<li>Arrange your columns in the order in which you would like them displayed.</li>
 						<li>Use a finished spreadsheet. If you must edit the Google spreadsheet, changes in will update auto- matically in the published graph. But editing can introduce errors that can break your table.</li>
 						<li>Do not use all caps text. It requires additional space and makes your chart harder to read.</li>
-						</ul>	
+					</ul>	
 				</div>	
-
 	        </div>
-	
-				<div id="step-2">	
+
+
+			<div id="step-2">	
 	            <h2 class="StepTitle">Get set...</h2>
 
 				<div style="width:200px; height:250px; float:left">
-					<ol style="padding:0 0 0 15px;font-weight:bold;">
-	            <li><span style="font-weight:normal">In your Google Docs spreadsheet, click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /><a href"URL">EXAMPLE</a></span></li>
-	            <br/>
-				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
-	           </ol>
-           </div>
-
-
-
-
+    				<ol style="padding:0 0 0 15px;font-weight:bold;">
+        	            <li><span style="font-weight:normal">In your Google Docs spreadsheet, click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /><a href"URL">EXAMPLE</a></span></li>
+        	            <br/>
+        				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /><a href"URL">EXAMPLE</a></span></li>
+    	            </ol>  
+                </div>
 	       </div>
+
+
 	
   			<div id="step-3">	
-            <h2 class="StepTitle">Enter your spreadsheet ID</h2>
+                <h2 class="StepTitle">Enter your spreadsheet ID</h2>
             
-            <p>With your spreadsheet open, look in the URL for the term “key=” This will be followed by a unique ID made of letters and numbers. Copy just the ID and paste in the field below.</p>
-			<img src="images/freeDive-key.png">
+                <p>With your spreadsheet open, look in the URL for the term “key=” This will be followed by a unique ID made of letters and numbers. Copy just the ID and paste in the field below.</p>
+    			<img src="images/freeDive-key.png">
 
-         	<h3 class="sub_head_fd">Spreadsheet ID:</h3>
-         	<p>
-            <div id="spreadsheet_id"></div>
-            <input id="sheet_id_field" value="">  
-            <input type="button" id="sidtest" value="Test">
-            <span id="sidtest_spinner"><img src="images/loader.gif" width="20" height="20" alt="Loader"></span>
-            </p>
+             	<h3 class="sub_head_fd">Spreadsheet ID:</h3>
+             	<p>
+                 	<div id="spreadsheet_id"></div>
+                    <input id="sheet_id_field" value="">  
+                    <input type="button" id="sidtest" value="Test">
+                    <span id="sidtest_spinner"><img src="images/loader.gif" width="20" height="20" alt="Loader"></span>
+                </p>
 
-			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
-			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
-            <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet. The test may take 30 seconds.</strong></p>
-        </div>     
+    			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
+    			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
+                <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet. The test may take 30 seconds.</strong></p>
+            </div>     
         
         
   			<div id="step-4">
@@ -370,13 +392,10 @@
                     <tr id="colids">
                         <!-- Column IDs populated by jQuery -->                        
                     </tr>
-
                  </tbody>
             </table>
 
             <div id="col_no_warn" class="alert"></div>
-
-      
             
                     
         </div>                      
@@ -388,10 +407,7 @@
             <!-- <p>Working with columns: <span id="cols_arr">&nbsp;</span></p> -->
             
             <table>
-    
 	            <tr style="vertical-align:top;">
-
-
 	                <td>
                     	<h3 class="sub_head_fd">Select a column for text search</h3>
                     	<p>Users can only search within a text column.</p>    
@@ -420,24 +436,19 @@
 	                     <p>The table will start with a widget that allows readers to search the entire database. Fill out the following:    
 	                     </p>
 
-                        <label for="head_5">Headline</label><br />
-                        <input class="input_fd" id="head_5" value=""><br />
+                        <label for="head_5">Search label</label><br />
+                        <input class="input_fd" id="search_headline" value=""><br />
                         <span class="help_text">e.g. "Search all contributions"</span><br /><br />
-                        <label class="label_fd" for="leadin_5">Lead-in</label><br />
-                        <input class="input_fd" id="leadin_5" value=""><br />	
+                        <label class="label_fd" for="search_leadin">Lead-in</label><br />
+                        <input class="input_fd" id="search_leadin" value=""><br />	
                         <span class="help_text">Invite users to search the data. Include some examples to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
 	                 </td>
-                
-                                    
 	            </tr>
 	        </table>
-            
-       
-
          </div>
   		
 		<div id="step-6">
-            <h2 class="StepTitle">Set up the user results page</h2>
+            <h2 class="StepTitle">Set up the results page</h2>
             	
             <p>
                 FreeDive includes interactive filters on the results page. This allows your readers to refine their results. This is especially helpful with large databases. You must choose one column for each filter. To see the three types in use, check out this example.
@@ -448,8 +459,8 @@
 	                    <td>
 	                        <h3 class="sub_head_fd">Select a column for text filtering</h3>
 	                        <p>
-	                            <label for="pick_results_text">Field to use for text searches:</label><br />
-	                            <select id="pick_results_text">
+	                            <label for="filter_col">Field to use for text searches:</label><br />
+	                            <select id="filter_col">
                                     <!-- Options populated with jQuery -->
 	                            </select>
 	                        </p>
@@ -468,8 +479,8 @@
 	                    <td>
 	                        <h3 class="sub_head_fd">Select a column for category picker</h3>
 	                        <p>
-	                            <label for="pick_results_filter">Field to enable for filtering:</label><br />
-	                            <select id="pick_results_filter">
+	                            <label for="picker_col">Field to enable for filtering:</label><br />
+	                            <select id="picker_col">
                                     <!-- Options populated with jQuery -->                                                        
 	                            </select>
 	                        </p>
@@ -488,8 +499,8 @@
 
 	                    <td><h3 class="sub_head_fd">Select a column for a range slider</h3>
 	                        <p>
-	                            <label for="pick_results_slider">Field to enable for range slider:</label><br />
-	                            <select id="pick_results_slider">
+	                            <label for="slider_col">Field to enable for range slider:</label><br />
+	                            <select id="slider_col">
                                    <!-- Options populated with jQuery --> 
 
 	                            </select>
@@ -544,12 +555,7 @@
 			</div>
         </div>
 
-  		<div id="step-9">
-            <h2 class="StepTitle">Step 4 Embed code</h2>
-            	
-            <p>Paste the embed code below into your story or blog post in HTML mode:
-            </p>
-        </div>
+
 
   	</div>
 <!-- End SmartWizard Content -->  		
@@ -634,11 +640,19 @@
     // Takes an object of column data to use and a CSS selector as args.
     function populateDropDown(cols_ob,selector) { 
         $.each(cols_ob, function(column, value) { 
-          $(selector).append('<option value="'+ column +'">'+ value.label +'</option>');        
+          // $(selector).append('<option value="'+ column +'">'+ value.label +'</option>');        
+          $(selector).append('<option value="'+ value.label +'">'+ value.label +'</option>');        
         });
     }  
     
-    			
+    // Takes any string variable and converts it to embeddable code
+    function pseudoMinify(s) {
+    	s = s.replace(/(^\s*)|(\s*$)/gi,""); // Remove leading and trailing spaces from lines
+    	s = s.replace(/\n /,"\n"); // Remove spaces after linebreaks
+        s = s.replace( /\s\s+/g, ' ' ) // Replace double spaces with single
+        s = s.replace(/(\r\n|\n|\r)/gm,""); // Remove all possible linebreak types (flatten)
+    	return s;
+    }  		
     
     // Warn if user tries to select more than five columns
     function limitCols() {
@@ -724,6 +738,124 @@
 	
 	
 
+</script> 
+
+<!-- This textarea stores a multi-line Javascript variable we can 
+search/replace through and minify on output to generate embed code 
+(a workaround since Javascript provides no heredoc syntax). -->
+
+<textarea id="embed_template">
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script><!--open script-->
+
+<script type="text/javascript">
+  google.load('visualization', '1.1', {packages:['controls']});
 </script>
+
+
+<style type="text/css">
+div.control1{width:TABLE_WIDTHpx; padding: 0 0 20px 0; font-size:0.9em; color:black; vertical-align: middle;margin:0;}
+div.control2{height:30px; width:300px;font-size:0.9em; padding: 0 20px 20px 0; vertical-align: middle;margin:0;}
+div.control3{float:right; height:30px; font-size:0.9em;vertical-align:inherit; vertical-align: middle;margin:0;}	
+div.chart1{float: left;}
+</style>
+
+<script type="text/javascript">
+
+function drawVisualization() {
+    var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=SPREADSHEET_ID&tq=select%20COLS_AS_TEXT&range=A1:F101&pub=1');
+    query.send(handleQueryResponse);  
+}
+
+function handleQueryResponse(response) {
+  if (response.isError()) {
+	alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+	return;
+  }
+
+var data = response.getDataTable();
+
+  var slider = new google.visualization.ControlWrapper({
+    'controlType': 'NumberRangeFilter',
+    'containerId': 'control1',
+    'options': {
+      'filterColumnLabel': 'SLIDER_COL',  
+      'minValue': 0,
+	'ui': {
+		'label':'SLIDER_LABEL',
+  }}
+  });
+
+var stringFilter = new google.visualization.ControlWrapper({
+  'controlType': 'StringFilter',
+  'containerId': 'control2',
+  'options': {
+	'filterColumnLabel': 'FILTER_COL', 
+	'matchType':'any',
+	'ui': {
+		'label':'FILTER_LABEL',
+		'cssClass' : 'custom-stringfilter'
+  }}
+});
+
+
+var categoryPicker = new google.visualization.ControlWrapper({
+'controlType': 'CategoryFilter',
+'containerId': 'control3',
+'options': {
+  'filterColumnLabel': 'PICKER_COL', 
+  'ui': {
+	'label':'PICKER_LABEL',
+    'allowTyping': false,
+    'allowMultiple': false,
+  }}
+});
+		
+
+
+var table = new google.visualization.ChartWrapper({
+  'chartType': 'Table',
+  'containerId': 'chart1',
+  'options': {'height': 'TABLE_HEIGHTpx', 'width': 'TABLE_WIDTHpx','allowHtml':'true', 'title': 'Click a column header to sort', }
+});
+
+var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard')).
+  bind([stringFilter,categoryPicker, slider], table).
+  draw(data);   
+}
+
+google.setOnLoadCallback(drawVisualization);
+
+</script>
+  
+	<div id="full_search" style=" width:100%; background-color:#DADADA; padding:10px 0 10px 20px;">
+		<h2>SEARCH_HEADLINE</h2>
+		<p>SEARCH_LEADIN<p/>
+		<p style="font-size:12px; line-height:30px"><label for="range_label">Name includes: <input id="search_label" value="Enter text" style="color:#656565"><input type="submit" value="Search" ><span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
+			<label for="range_label">Contribution </label> <select name="sheet_op">
+			<option value=">=">Greater than or equal to</option>
+			<option value="<=">Less than or equal to</option>
+			<option value=">">Greater than</option>
+			<option value="<">Less than</option>
+			<option value="=">Equals</option>
+			</select><input id="range_label" value="Enter a number" style="color:#656565"> <input type="submit" value="Search"> <span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
+			 <input type="submit" value="Show all records">&nbsp;<span style="color:#3F3F3F; font-size:10px">May cause long load times and browser slowdowns.</span>
+	</div>
+		
+		
+<!--Div that will hold the dashboard-->
+<div id="dashboard" style='width: 620px;font-family:Arial, sans-serif;'>
+	<h3>Explore your results</h3>
+	<p>You can use the slider, text filter and picker to investigate your search results or click on a column label to resort the table. To perform a new search, use the tool above. 
+	<div id="control1" class="control1"></div>
+	<div id="control3" class="control3"></div>
+	<div id="control2" class="control2"></div>
+	<div id="chart1" class="chart1"></div>
+</div>		
+	
+
+</textarea>
+<!-- End hidden embed code generator template -->
+
 </body>
 </html>
