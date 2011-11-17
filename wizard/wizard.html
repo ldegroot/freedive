@@ -234,7 +234,7 @@
 	        </a>
   			</ul>
 				<div id="step-1">	   
-	            <h2 class="StepTitle">kdmc Get ready...</h2>
+	            <h2 class="StepTitle">Get ready...</h2>
 
 	            <p>For the best results, clean and edit your spreadsheet before you use this tool. If you don’t know how to clean data, <a href="http://multimedia.journalism.berkeley.edu/tutorials/cleaning-data/">read our tutorial</a>. Here are some things to keep in mind:</p>
 				<div style="width:440px; height:180px;float:left">
@@ -306,9 +306,12 @@
   			<div id="step-4">
             <h2 class="StepTitle">Select your columns</h2>	
 
-			<p>You are working on spreadsheet: <strong><span id="sheet_id">&nbsp;</span></strong>. It contains <strong><span id="need_col_nums"></span></strong> columns. Check the ones you want to include in your table.</p>
-			<p><em>TIP: Make sure to limit your columns to fit where you plan to publish your table. If your story area is 600 pixels wide, limit the number of columns to five or so. Too many columns in a small space can be very hard to read. EXAMPLE If you need to dislpay more columns, consider publishing on a full page so that the text is easier to scan.</em></p>
-            
+			<p>You are working on spreadsheet: <strong><span id="sheet_id">&nbsp;</span></strong>. <br />
+			   Please select the columns you want included in your table.<br />
+			   <b>At least one column must contain numeric data.</b>
+			</p>
+
+			<p><em><b>Tip:</b> Limit the number of columns to fit the width of the content area on your site. For example, if your story area is 600 pixels wide, limit the number of columns to five or so. Too many columns in a small space can be very hard to read and will make the page load more slowly.  If you need to display more columns, consider publishing on a full-width page.</em></p>
             
             <p>
                 Please select the columns you want to display (five columns max).</p>    
@@ -348,12 +351,25 @@
   			<div id="step-5">
             <h2 class="StepTitle">Decide what the user will search</h2>	
 
-			<p>Take some time to consider what you want your readers to find. What will be the most relevant for them? You must fill out all selections</p>
+		    <p>The table will start with a widget that allows readers to search the entire database. 
+		        After the initial results are displayed, they'll be able to apply filters.
+            </p>
+           
             
-            <!-- <p>Working with columns: <span id="cols_arr">&nbsp;</span></p> -->
             
             <table>
-	            <tr style="vertical-align:top;">
+	            <tr style="vertical-align:top;">  
+	                	<td>
+				         <h3 class="sub_head_fd">Describe the search</h3>
+
+                       <label for="head_5">Search label</label><br />
+                       <input class="input_fd" id="search_headline" value=""><br />
+                       <span class="help_text">e.g. "Search all contributions"</span><br /><br />
+                       <label class="label_fd" for="search_leadin">Lead-in</label><br />
+                       <input class="input_fd" id="search_leadin" value=""><br />	
+                       <span class="help_text">Invite users to search the data. Include an example to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
+	                 </td>
+	                 	                
 	                <td>
                     	<h3 class="sub_head_fd">Select a text column</h3>
                     	<p>Users can only search within a text column.</p>    
@@ -377,18 +393,7 @@
 	                    </p>
 
 	                </td>
-	                	<td>
-				         <h3 class="sub_head_fd">Invite your users to search</h3>
-	                     <p>The table will start with a widget that allows readers to search the entire database. Fill out the following:    
-	                     </p>
 
-                        <label for="head_5">Search label</label><br />
-                        <input class="input_fd" id="search_headline" value=""><br />
-                        <span class="help_text">e.g. "Search all contributions"</span><br /><br />
-                        <label class="label_fd" for="search_leadin">Lead-in</label><br />
-                        <input class="input_fd" id="search_leadin" value=""><br />	
-                        <span class="help_text">Invite users to search the data. Include some examples to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
-	                 </td>
 	            </tr>
 	        </table>
          </div>
