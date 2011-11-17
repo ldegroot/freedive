@@ -289,3 +289,70 @@ top:20px;
   color: #EA8511;
   border: 1px solid #EA8511;  
 }
+
+/* Our customizations... */
+
+
+input {
+    height:20px;
+    font-family:Tahoma;
+    font-size:18px;
+    color:#606060;
+}     
+
+h2 {
+  font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+}
+
+input#sheet_id_field {
+    width:450px;
+}               
+
+input[type="button"] {
+    height:40px;
+}
+
+label {
+    font-weight:bold;
+}
+
+textarea {
+    width:600px;
+    height:300px;
+}  
+                
+/* Hide the embed code generator template textarea*/
+textarea#embed_template {
+    display:none;
+}
+
+.help_text {
+    font-size:0.9em;
+    font-style:italic;
+    margin-top:20px;
+line-height: 1.3em;
+}
+
+.sub_head_fd {
+font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+font-size:1.3em;
+    font-weight:bold;
+    margin-top:20px;
+line-height: 1.4em;	
+}
+
+.label_fd {
+font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+font-size:1em;
+    font-weight:bold;
+    margin-top:20px;
+padding-bottom:20px;
+line-height: 1.1em;
+}
+
+.input_fd {
+font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
+    margin-top:10px;
+margin-bottom:5px;
+}
+
