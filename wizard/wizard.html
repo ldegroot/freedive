@@ -47,7 +47,7 @@
       } 
 
       function leaveAStepCallback(obj){
-        // This function gets called after each step and appends new params to the URL
+        // This function gets called after each step
         var step_num= obj.attr('rel'); // get the current step number
 
 		 if(step_num == 1){
@@ -362,10 +362,11 @@
 	                	<td>
 				         <h3 class="sub_head_fd">Describe the search</h3>
 
-                       <label for="head_5">Search label</label><br />
+                       <label for="search_headline">Search label</label><br />
                        <input class="input_fd" id="search_headline" value=""><br />
                        <span class="help_text">e.g. "Search all contributions"</span><br /><br />
-                       <label class="label_fd" for="search_leadin">Lead-in</label><br />
+                       
+                       <label class="search_leadin" for="search_leadin">Lead-in</label><br />
                        <input class="input_fd" id="search_leadin" value=""><br />	
                        <span class="help_text">Invite users to search the data. Include an example to get them started. e.g. "Enter the name of a contributor to find donations. For example, type in "Fred" or "Flintstone."</span>
 	                 </td>
