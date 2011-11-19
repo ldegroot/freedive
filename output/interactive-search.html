@@ -48,7 +48,7 @@ var numquery = decodeURIComponent($.getUrlVar('fdnq'));
 
 
 // If one of those doesn't exist, it'll come back as string 'undefined'
-// (stupid javascript). Blanking it out here makes the query code below simpler. 
+// (stupid javascript). Blanking it out here simplifies the query generating code. 
 if (textquery == 'undefined') {
     textquery = '';
 };
@@ -70,7 +70,7 @@ console.log("anyquery is " , anyquery);
 if (anyquery == true) {
     // Query params exist. Start building string  
     
-    var querystring = "select * where ";
+    var querystring = "select A,B,C,D,E,F where ";
         
     // Three possible conditionals here, depending 
     // on how they filled the search form

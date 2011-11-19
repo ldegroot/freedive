@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Reference</title>  
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+</head>
+
+<body>
+    
+
+
+<select name="sheet_op" id="sheet_op">
+	<option value=">=">Greater than or equal to</option>
+	<option value="<=">Less than or equal to</option>
+	<option value=">">Greater than</option>
+	<option value="<">Less than</option>
+	<option value="=">Equals</option>
+</select>
+<input id="range_num" value="Enter a number" style="color:#656565"> 
+<input type="submit" value="Search" onclick="refresh()">
+
+
+
+<script type="text/javascript" charset="utf-8" > 
+    // Pre-fill the form fields with any known values
+    
+    // Stopped here - this val should come from URL, if exists.
+    $('input#range_num').val("22");
+
+    function refresh() { 
+        var sheet_op = $('#sheet_op').val();
+        var range_num = $('#range_num').val();
+        console.log(range_num);
+        console.log(sheet_op);
+        
+        var sURL = window.location.href;
+        console.log(sURL);
+        
+        // Strip out our old params, leaving the host's originals and adding new ones back in.  
+        // Match either to the next ampersand or to the end of the line. It'll take the first 
+        // match found, so it's important that the end of line option comes second, or it 
+        // wipe out all params.
+        sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi,'');
+        sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi,'');
+        sURL = sURL.replace(/(sheet_op=.*&|sheet_op=.*$)/gi,'');
+        sURL = sURL.replace(/(range_num=.*&|range_num=.*$)/gi,'');
+        console.log(sURL);                          
+        
+        // It's possible to end up with a trailing & - remove if so.
+        sURL = sURL.replace(/&$/,'') 
+
+        console.log(sURL);
+        
+        // Append new query string. Need to pre-pend ? if not already present. 
+        var qs = ''
+        var found = sURL.search('\\?');
+        if (found == -1) {
+            qs = "?";
+        };
+        
+        qs = qs + "&sheet_op=" + sheet_op + "&range_num=" + range_num;
+        sURL = sURL + qs;
+
+        window.location.replace(sURL);
+
+     }
+</script>  
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+        // Clear range field when clicked in IF it contains the default value
+        $('input#range_num').focus(function() {
+            if($(this).val() == 'Enter a number') $(this).val('');
+        }).blur(function() {
+            if( $(this).val() == '') $(this).val('Enter a number');
+        });
+    });
+</script>  
+
+</body>
+
+</html>
