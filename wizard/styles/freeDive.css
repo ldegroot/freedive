@@ -177,7 +177,7 @@ top:20px;
   padding:5px;
   text-decoration: none;
   text-align: center;
-  font: bold 13px  Arial, Helvetica, sans-serif;
+  font: bold 13px  "ff-din-web-1","ff-din-web-2", Arial, Helvetica, sans-serif;
   width:100px;
   color:#FFF;
   outline-style:none;
@@ -199,7 +199,7 @@ top:20px;
   padding:5px;
   text-decoration: none;
   text-align: center;
-  font: bold 13px  Arial, Helvetica, sans-serif;
+  font: bold 13px  "ff-din-web-1","ff-din-web-2", Arial, Helvetica, sans-serif;
   width:100px;
   color:#FFF;
   outline-style:none;
@@ -215,7 +215,7 @@ top:20px;
   padding:5px;
   text-decoration: none;
   text-align: center;
-  font: bold 13px  Arial, Helvetica, sans-serif;
+  font: bold 13px  "ff-din-web-1","ff-din-web-2",Arial, Helvetica, sans-serif;
   width:100px;
   color:#FFF;
   outline-style:none;
@@ -230,7 +230,7 @@ top:20px;
 .txtBox {
   border:1px solid #CCCCCC;
   color:#5A5655;
-  font:13px Arial,Helvetica,sans-serif;
+  font:13px "ff-din-web-1","ff-din-web-2",Arial,Helvetica,sans-serif;
   padding:2px;
   width:430px;
 }
@@ -244,8 +244,8 @@ top:20px;
   float:left;  
   margin: 2px 0 0 2px;
   padding:8px 10px 8px 40px;
-  border: 1px solid #FFD700; 
-  font: bold 13px Verdana, Arial, Helvetica, sans-serif; 
+  border: 1px solid #656565; 
+  font: bold 13px "ff-din-web-1","ff-din-web-2", Verdana, Arial, Helvetica, sans-serif; 
   color:#5A5655;       
   background: #FFF url(../images/loader.gif) no-repeat 5px;  
   -moz-border-radius  : 5px;
@@ -258,17 +258,17 @@ top:20px;
   float:left;
   margin: 4px 0 0 5px;
   padding:5px;
-  border: 1px solid #FFD700; 
-  background-color: #FFFFDD;  
-  font: normal 12px Verdana, Arial, Helvetica, sans-serif; 
-  color:#5A5655;         
+  border: 1px solid #F8f8f8; 
+  background-color: #F8f8f8;  
+  font: normal 12px "ff-din-web-1","ff-din-web-2", Verdana, Arial, Helvetica, sans-serif; 
+  color:#98212A;         
   -moz-border-radius  : 5px;
   -webkit-border-radius: 5px;
   z-index:999;
   min-width:200px;  
 }
 .swMain .msgBox .content {
-  font: normal 12px Verdana,Arial,Helvetica,sans-serif;
+  font: normal 12px "ff-din-web-1","ff-din-web-2", Verdana,Arial,Helvetica,sans-serif;
   padding: 0px;
   float:left;
 }
@@ -278,7 +278,7 @@ top:20px;
   color: #CCC;
   display: block;
   float: right;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 10px;
   outline-style: none;
   padding: 0 2px 0 2px;
   position: relative;
@@ -286,8 +286,8 @@ top:20px;
   text-decoration: none;
 }
 .swMain .msgBox .close:hover{
-  color: #EA8511;
-  border: 1px solid #EA8511;  
+  color: #98212A;
+  border: 1px solid #98212A;  
 }
 
 /* Our customizations... */
@@ -295,8 +295,8 @@ top:20px;
 
 input {
     height:20px;
-    font-family:Tahoma;
-    font-size:18px;
+    font-family:"ff-din-web-1","ff-din-web-2",Tahoma;
+    font-size:16px;
     color:#606060;
 }     
 
