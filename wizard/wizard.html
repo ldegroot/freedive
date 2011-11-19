@@ -610,7 +610,7 @@
     $('input[name=cols_use]').click(function () {
     selected = $('input[name="cols_use"]').filter(':checked').length;
     if (selected > 5){
-        $('#wizard').smartWizard('showMessage','You have selected more than five columns');
+        $('#wizard').smartWizard('showMessage','You have selected more than five columns. Are you sure you need all of them?');
             } else {
         $('div.msgBox').hide();
         }
