@@ -356,3 +356,6 @@ font-family:"ff-din-web-1","ff-din-web-2",arial, helvetica, sans-serif;
 margin-bottom:5px;
 }
 
+.tr_align{
+	vertical-align:top;
+}
