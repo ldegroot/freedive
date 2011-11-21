@@ -9,6 +9,9 @@
 
 <body>
     
+<p>
+    <label for="range_label">Name includes: 
+        <input id="search_text" value="Enter text">
 
 
 <select name="sheet_op" id="sheet_op">
@@ -17,52 +20,84 @@
 	<option value=">">Greater than</option>
 	<option value="<">Less than</option>
 	<option value="=">Equals</option>
-</select>
+</select> 
+
 <input id="range_num" value="Enter a number" style="color:#656565"> 
 <input type="submit" value="Search" onclick="refresh()">
 
+<script type="text/javascript" charset="utf-8">
 
+	$.extend({
+      getUrlVars: function(){
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+          hash = hashes[i].split('=');
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+        }
+        return vars;
+      },
+      getUrlVar: function(name){
+        return $.getUrlVars()[name];
+      }
+    });
+
+</script>
 
 <script type="text/javascript" charset="utf-8" > 
-    // Pre-fill the form fields with any known values
-    
-    // Stopped here - this val should come from URL, if exists.
-    $('input#range_num').val("22");
+
+    // Get any known values from URL and pre-fill form fields if they exist
+    var range_num = decodeURIComponent($.getUrlVar('range_num'));
+    var sheet_op = decodeURIComponent($.getUrlVar('sheet_op'));
+    var search_text = decodeURIComponent($.getUrlVar('search_text'));        
+
+    if (search_text != 'undefined') {
+       $('input#search_text').val(search_text);
+    };
+    if (range_num != 'undefined') {
+       $('input#range_num').val(range_num);
+    };  
+
 
     function refresh() { 
+        // When search is clicked we get new values from form fields, build
+        // an encoded URL string from them, and request a new page with new values.
         var sheet_op = $('#sheet_op').val();
         var range_num = $('#range_num').val();
-        console.log(range_num);
-        console.log(sheet_op);
+        var search_text = $('#search_text').val();        
         
         var sURL = window.location.href;
-        console.log(sURL);
         
-        // Strip out our old params, leaving the host's originals and adding new ones back in.  
+        // Strip out our old URL params, leaving the host's originals and adding new ones back in.  
+        // We can't just append to the URL because a person will likely do a 2nd, 3rd search etc.
+        // And we can't know what params are already in the host's system, so we have to respect them.
+        
         // Match either to the next ampersand or to the end of the line. It'll take the first 
         // match found, so it's important that the end of line option comes second, or it 
         // wipe out all params.
         sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi,'');
         sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi,'');
         sURL = sURL.replace(/(sheet_op=.*&|sheet_op=.*$)/gi,'');
-        sURL = sURL.replace(/(range_num=.*&|range_num=.*$)/gi,'');
+        sURL = sURL.replace(/(range_num=.*&|range_num=.*$)/gi,''); 
+        sURL = sURL.replace(/(search_text=.*&|search_text=.*$)/gi,'');         
         console.log(sURL);                          
         
         // It's possible to end up with a trailing & - remove if so.
         sURL = sURL.replace(/&$/,'') 
-
-        console.log(sURL);
-        
-        // Append new query string. Need to pre-pend ? if not already present. 
+       
+        // Build new query string. Need to pre-pend ? if not already present. 
         var qs = ''
         var found = sURL.search('\\?');
         if (found == -1) {
             qs = "?";
         };
-        
-        qs = qs + "&sheet_op=" + sheet_op + "&range_num=" + range_num;
-        sURL = sURL + qs;
 
+        qs = qs + "&sheet_op=" + encodeURIComponent(sheet_op) + "&range_num=" + encodeURIComponent(range_num) + "&search_text=" + encodeURIComponent(search_text);
+        sURL = sURL + qs;
+         
+        // Re-launch window with replacement URL
         window.location.replace(sURL);
 
      }
@@ -75,9 +110,17 @@
             if($(this).val() == 'Enter a number') $(this).val('');
         }).blur(function() {
             if( $(this).val() == '') $(this).val('Enter a number');
-        });
+        }); 
+        
+        // Do same for text input field
+        $('input#search_text').focus(function() {
+            if($(this).val() == 'Enter text') $(this).val('');
+        }).blur(function() {
+            if( $(this).val() == '') $(this).val('Enter text');
+        });        
     });
 </script>  
+
 
 </body>
 
