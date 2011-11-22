@@ -4,14 +4,14 @@
     		<title>Reference implementation</title>
     	</head> 
 
-<!-- This documentation is a reference implementation of the final output. 
+<!-- This document is a reference implementation of the final output. 
 Get things working here, then port code into corresponding areas of the wizard. -->
 
 <body>		
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 
 <!--Load the AJAX API-->  
-<script type="text/javascript" src="https://www.google.com/jsapi"></script><!--open script-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <script type="text/javascript">
 //Load the API and the controls package.  
@@ -57,29 +57,33 @@ Get things working here, then port code into corresponding areas of the wizard. 
     // Get any known values from URL and pre-fill form fields if they exist
     fdnq = decodeURIComponent($.getUrlVar('fdnq'));
     fdop = decodeURIComponent($.getUrlVar('fdop'));
-    fdtq = decodeURIComponent($.getUrlVar('fdtq'));  
-      
-    // console.log("initial",fdnq);
-    // console.log("initial",fdop);
-    // console.log("initial",fdtq);            
+    fdtq = decodeURIComponent($.getUrlVar('fdtq'));
+    fdall = decodeURIComponent($.getUrlVar('fdall'));    
+
+    // If fdall param is present, override any others and do a full query
+    if (fdall != 'undefined') {
+       fdall = true; 
+    } else {
+        fdall = false;
+    }  
+    
 
  
     // Don't attempt to call the visualization code 
     // or display the dashboard unless we have search terms.
     // Set global anyquery var for use elsewhere.    
-    if (fdtq != 'undefined' || fdnq != 'undefined') {
+    if (fdtq != 'undefined' || fdnq != 'undefined' || fdall == true) {
        anyquery = true; 
-       // console.log("showing dashboard");
-       google.setOnLoadCallback(drawVisualization());       
+       google.setOnLoadCallback(drawVisualization());
     } else {
         fdtq = 'Enter text';
         fdnq = 'Enter a number';        
-    };
-
+    }; 
+    
             
     // Render the chart - this function only called if we have query terms
     function drawVisualization() { 
-
+         
         // ------------ Load data from google docs ----------------
         var search_url = 'https://spreadsheets.google.com/a/google.com/tq?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE'
 
@@ -98,40 +102,42 @@ Get things working here, then port code into corresponding areas of the wizard. 
         if (fdnq == 'undefined') {
             fdnq = '';
         };
+        
 
-        // Query params exist. Start building string  
-        var querystring = "select A,B,C,D,E,F where ";
-    
-        // Three possible conditionals here, depending 
-        // on how they filled the search form
-        // (they might have filled in one field, both fields, or neither)
+        // If user clicked the Show all button, our query is simple
+        // (but dangerously slow-loading). Otherwise we have to build it up.
+        if (fdall) {
+            var querystring = "select *";
 
-
-        if (fdtq != '' && fdnq == '' ) {
-            // We have a textquery but not a numquery        
-             querystring = querystring + " A like '%" + fdtq + "%'";
-             console.log("Performing a text query"); 
-
-        } else if (fdtq == '' && fdnq != '' ) {
-            // We have a numquery but not a textquery
-            querystring = querystring + "F" + fdop + fdnq; 
-            console.log('Performing a number query'); 
-    
         } else {
-            // We have both a numquery and a textquery
-            querystring = querystring + " A like '%" + fdtq + "%'" + " and " + "F" + fdop + fdnq;
-            console.log(querystring) ;
-            console.log('Performing combined query');         
-        };
+        
+            // Query params exist. Start building string  
+            var querystring = "select A,B,C,D,E,F where ";
+    
+            // Three possible conditionals here, depending 
+            // on how they filled the search form
+            // (they might have filled in one field, both fields, or neither)
+
+            if (fdtq != '' && fdnq == '' ) {
+                // We have a textquery but not a numquery        
+                 querystring = querystring + " A like '%" + fdtq + "%'";
+
+            } else if (fdtq == '' && fdnq != '' ) {
+                // We have a numquery but not a textquery
+                querystring = querystring + "F" + fdop + fdnq; 
+    
+            } else {
+                // We have both a numquery and a textquery
+                querystring = querystring + " A like '%" + fdtq + "%'" + " and " + "F" + fdop + fdnq;
+            };   
+        
+        };  
 
         // URLencode query terms before appending to URL
-        console.log(querystring);
         querystring = encodeURIComponent(querystring);  
 
         // Append encoded query terms to search URL
         search_url = search_url + "&tq=" + querystring;  
-
-        console.log("final search url", search_url);
 
         var query = new google.visualization.Query(search_url);
         query.send(handleQueryResponse);  
@@ -209,26 +215,41 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
 
 </script>
 
+<h3>
+    Campaign contributions example
+</h3>
+<p>
+    The example below is a spreadsheet of California Gov. Jerry Brown's monetary campaign contributions for the 2010 election. There are roughly 25,000 records and the full spreadsheet is available <a href="https://docs.google.com/spreadsheet/ccc?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE">here</a>. The data was downloaded from the California Secretary of State <a href="http://cal-access.sos.ca.gov/">web site</a>.
+</p>
+<div id="full_search" style=" width:100%; background-color:#DADADA; padding:10px 0 10px 20px;">
+    <h2>
+        Search the entire database
+    </h2>
+    <p>
+        lead-in text
+    </p>
+    <p style="font-size:12px; line-height:30px">
+        <label for="search_text">Name includes:</label> 
+        <input id="search_text" value="Enter text" style="color:#656565"> 
+            <span style="color:#3F3F3F; font-size:10px">Example:</span><br />
+        
+        <label for="range_num">Contribution</label> 
+        <select name="sheet_op" id="sheet_op">
+            <option value="&gt;=">Greater than or equal to</option>
+            <option value="&lt;=">Less than or equal to</option>
+            <option value="&gt;">Greater than</option>
+            <option value="&lt;">Less than</option>
+            <option value="=">Equals</option>
+        </select> 
+        
+        <input id="range_num" value="Enter a number" style="color:#656565"> 
+        <input type="submit" value="Search" onclick="refresh()"> 
+            <span style="color:#3F3F3F; font-size:10px">Example:</span><br />
+        <input type="submit" id="show_all" value="Show all records" onclick="refresh('allrecs')">
+        <span style="color:#3F3F3F; font-size:10px">May cause long load times and browser slowdowns.</span>
+    </p>
+</div>
 
-<h3>Campaign contributions example</h3>
-<p> The example below is a spreadsheet of California Gov. Jerry Brown's monetary campaign contributions for the 2010 election. There are roughly 25,000 records and the full spreadsheet is available <a href="https://docs.google.com/spreadsheet/ccc?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE">here</a>. The data was downloaded from the California Secretary of State <a href="http://cal-access.sos.ca.gov/">web site</a>.   
-	<div id="full_search" style=" width:100%; background-color:#DADADA; padding:10px 0 10px 20px;">
-		<h2>Search the entire database</h2>
-		<p>lead-in text<p/>
-		<p style="font-size:12px; line-height:30px"><label for="search_text">Name includes:</label> <input id="search_text" value="Enter text" style="color:#656565"><span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
-			<label for="range_num">Contribution </label> 
-			<select name="sheet_op" id="sheet_op">
-			<option value=">=">Greater than or equal to</option>
-			<option value="<=">Less than or equal to</option>
-			<option value=">">Greater than</option>
-			<option value="<">Less than</option>
-			<option value="=">Equals</option>
-			</select>
-			<input id="range_num" value="Enter a number" style="color:#656565"> 
-			<input type="submit" value="Search" onclick="refresh()"> <span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
-			 <input type="submit" id="show_all" value="Show all records">&nbsp;<span style="color:#3F3F3F; font-size:10px">May cause long load times and browser slowdowns.</span>
-
-	</div>
 		
 		
 <!--Div that will hold the dashboard-->
@@ -242,8 +263,6 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
 </div>		
   
 
-
-
 <script type="text/javascript" charset="utf-8" > 
 
     // Initially hide the dashboard
@@ -254,16 +273,25 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
     // Pre-fill search fields from vars
     $('input#search_text').val(fdtq);
     $('input#range_num').val(fdnq);
-     
-    
-    
-    function refresh() { 
+    // Can't currently pre-set the value of the operator select box.
+    // It would be possible with some jimmying, but very verbose. 
+    // See bottom example at http://api.jquery.com/val/
+
+
+    function refresh(allrecs) { 
+
+        // The refresh() function strips our old values and adds new ones.
         // When search is clicked we get new values from form fields, build
-        // an encoded URL string from them, and request a new page with new values.
+        // an encoded URL string from them, and request a new page with new values. 
+        // If fdall is true, we strip out all of our own params
+        
+        // We initially got our values from the URL, but now we set new vars to 
+        // match what's been newly entered into search fields.
         var fdop = $('#sheet_op').val();
         var fdnq = $('#range_num').val();
-        var fdtq = $('#search_text').val(); 
-        
+        var fdtq = $('#search_text').val();
+         
+        // Get existing URL and start parsing
         var sURL = window.location.href;
         
         // Strip out our old URL params, leaving the host's originals and adding new ones back in.  
@@ -276,7 +304,7 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
         sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi,'');
         sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi,'');
         sURL = sURL.replace(/(fdop=.*&|fdop=.*$)/gi,'');
-        console.log(sURL);                          
+        sURL = sURL.replace(/(fdall=.*&|fdall=.*$)/gi,'');        
         
         // It's possible to end up with a trailing & - remove if so.
         sURL = sURL.replace(/&$/,'') 
@@ -291,13 +319,14 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
         // Make sure we don't send the default field values back to the URL
         if (fdnq == "Enter a number") {fdnq = ''};
         if (fdtq == "Enter text") {fdtq = ''};        
-                    
-        console.log("now",fdop);
-        console.log("now",fdnq);
-        console.log("now",fdtq);
-                
-        qs = qs + "&fdop=" + encodeURIComponent(fdop) + "&fdnq=" + encodeURIComponent(fdnq) + "&fdtq=" + encodeURIComponent(fdtq);
-        console.log(qs);
+
+        if (allrecs) {
+            qs = qs + "fdall=true"
+        } else {
+            qs = qs + "&fdop=" + encodeURIComponent(fdop) + "&fdnq=" + encodeURIComponent(fdnq) + "&fdtq=" + encodeURIComponent(fdtq);            
+        };
+
+        // console.log(qs);
 
         // Append to URL
         sURL = sURL + qs;
@@ -305,7 +334,36 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
         // Re-launch window with replacement URL
         window.location.replace(sURL);
 
-     }
+     }  
+     
+     // function refresh_all() {
+     //     // Show all records, even though it's slow for large spreadsheets
+     //     var sURL = window.location.href;                
+     //     
+     //     // Remove our old params
+     //     sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi,'');
+     //     sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi,'');
+     //     sURL = sURL.replace(/(fdop=.*&|fdop=.*$)/gi,'');  
+     //     
+     //     // It's possible to end up with a trailing & - remove if so.
+     //     sURL = sURL.replace(/&$/,'') 
+     // 
+     //     // Build new query string. Need to pre-pend ? if not already present. 
+     //     var qs = ''
+     //     var found = sURL.search('\\?');
+     //     if (found == -1) {
+     //         qs = "?";
+     //     }; 
+     //     
+     //     qs = qs + "&fdall=true"; 
+     //     
+     //     // Append to URL
+     //     sURL = sURL + qs;
+     // 
+     //     // Re-launch window with replacement URL
+     //     window.location.replace(sURL);
+     //     
+     // }     
 </script>  
 
 <script type="text/javascript" charset="utf-8">
