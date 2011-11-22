@@ -359,3 +359,28 @@ margin-bottom:5px;
 .tr_align{
 	vertical-align:top;
 }
+
+.td_pick_cols{
+	font-weight:bold; 
+	font-size:.85em; 
+	line-height:1.2em; 
+	text-align:left;
+	vertical-align:bottom;
+	padding-right:.75em;
+	margin:0;
+}
+
+input[type="checkbox"] {
+margin: 3px 0.5ex 3px 0;
+padding: initial;
+background-color: initial;
+border: initial;
+}
+
+.ul_start{
+	padding:0 10px 0 15px;
+	line-height:1.5em;	
+}
+.li_start{
+	margin-bottom:.5em;
+}
