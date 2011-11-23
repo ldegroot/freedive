@@ -170,7 +170,7 @@ top:20px;
   color:#000 !important;       
 }
 
-.swMain .buttonNext{
+.swMain .buttonNext {
   display:block;
   float:right;
   margin:5px 3px 0 3px;
@@ -186,35 +186,6 @@ top:20px;
   -moz-border-radius  : 5px; 
   -webkit-border-radius: 5px;    
 }
-
-.buttonNext:hover{
-	background-color:   #2375A1;
-	  border: 1px solid #2375A1;
-}
-
-
-.buttonOthers{
-/*  display:block;*/
-  margin:5px 3px 0 3px;
-/*  padding:5px;*/
-  text-decoration: none;
-  text-align: center;
-  font: bold 13px  "ff-din-web-1","ff-din-web-2", Arial, Helvetica, sans-serif;
-  width:auto;
-	height:20px;
-  color:#FFF;
-  outline-style:none;
-  background-color:   #103245;
-  border: 1px solid #103245;
-  -moz-border-radius  : 5px; 
-  -webkit-border-radius: 5px;    
-}
-
-.buttonOthers:hover{
-	background-color:   #2375A1;
-	  border: 1px solid #2375A1;
-}
-
 .swMain .buttonDisabled {
   color:#F8F8F8  !important;
   background-color: #CCCCCC !important;
@@ -237,12 +208,6 @@ top:20px;
   -moz-border-radius  : 5px; 
   -webkit-border-radius: 5px;    
 }
-
-.buttonPrevious:hover{
-	background-color:   #2375A1;
-	  border: 1px solid #2375A1;
-}
-
 .swMain .buttonFinish {
   display:block;
   float:right;
@@ -418,13 +383,4 @@ border: initial;
 }
 .li_start{
 	margin-bottom:.5em;
-}
-
-.select_menu select {
-	   background: transparent;
-	   width: 268px;
-	   padding: 5px;
-	   font-size: 16px;
-	   border: 1px solid #ccc;
-	   height: 34px;
 }
