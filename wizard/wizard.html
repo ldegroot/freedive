@@ -225,21 +225,22 @@
 	            <p>For the best results, clean and edit your spreadsheet before you use this tool. If you don’t know how to clean data, <a href="http://multimedia.journalism.berkeley.edu/tutorials/cleaning-data/">read our tutorial</a>. Here are some things to keep in mind:</p>
 				<div style="width:440px; height:180px;float:left">
 				<h3 class="sub_head_fd">Requirements</h3>
-					<ul style="padding:0 0 0 15px">
-						<li>You must have at least one column of numbers.</li>
-						<li>You must have a single row of column labels. Multiple label rows will break the tool.</li>
-						<li>Format special characters such as thousand separators (,) and currency signs ($) in the Google Spreadsheet.</li>
-						<li>The spreadsheet must have exactly one worksheet (the default).</li>
+					<ul class="ul_start">
+						<li class="li_start">You must have at least <strong><em>one text column</em></strong>.</li>
+						<li class="li_start">You must have at least <strong><em>one numeric column</em></strong>.
+						<li class="li_start">You must have a <strong><em>single row of column labels</em></strong>. Multiple label rows will break the tool.</li>
+						<li class="li_start">Format special characters such as thousand separators (,) and currency signs ($) in the Google Spreadsheet.</li>
+						<li class="li_start">The spreadsheet must have exactly <strong><em>one worksheet</em></strong> (the default).</li>
 						</ul>	
 				</div>
 				
 				<div style="width:440px; height:250px; float:right">
 				<h3 class="sub_head_fd">Recommendations</h3>
-					<ul style="padding:0 0 0 15px">
-						<li>Optimize your data for the Web for better performance. Delete everything you don’t need from your Google spreadsheet, including columns you don’t plan to publish and blank rows.</li>
-						<li>Arrange your columns in the order in which you would like them displayed.</li>
-						<li>Use a finished spreadsheet. If you must edit the Google spreadsheet, changes in will update automatically in the published graph. But editing can introduce errors that can break your table.</li>
-						<li>Do not use all caps text. It requires additional space and makes your chart harder to read.</li>
+					<ul class="ul_start">
+						<li class="li_start">Optimize your data for the Web for better performance. <strong><em>Delete everything you don’t need</em></strong> from your Google spreadsheet, including columns you don’t plan to publish and blank rows.</li>
+						<li class="li_start"><strong><em>Arrange your columns</em></strong> in the order in which you would like them displayed.</li>
+						<li class="li_start"><strong><em>Use a finished spreadsheet</em></strong>. If you must edit the Google spreadsheet, changes in will update automatically in the published graph. But editing can introduce errors that can break your table.</li>
+						<li class="li_start"><strong><em>Do not use all caps text</em></strong>. It requires additional space and makes your chart harder to read.</li>
 					</ul>	
 				</div>	
 	        </div>
@@ -253,9 +254,9 @@
 				<div style="width:200px; height:250px; float:left">
      					<p>Next you need to make sure your spreadsheet is published and available on the web. There are two steps:</p>
      					<ol style="padding:0 0 0 15px;font-weight:bold;">
-     	            <li><span style="font-weight:normal">Click the File menu and select Publish to the Web. Make sure Automatically republish changes is checked and click Start publishing. <br /></li>
+     	            <li><span style="font-weight:normal">Click the <b>File</b> menu and select <b>Publish to the Web</b>. Check <b>Automatically republish changes</b> and click <b>Start publishing</b>. <br /></li>
      	            <br/>
-     				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the Share button in the top right. Make the document viewable to anyone on the Web. <br /></li>
+     				<li><span style="font-weight:normal">Open your Google Spreadsheet and click the <b>Share</b> button in the top right. Make the document viewable to anyone on the Web. <br /></li>
      	            </ol>
      		       <p>If you are still a little confused, the video to the right demonstrates how to publish.</p>
                 </div>  
@@ -274,17 +275,17 @@
                 <p>With your spreadsheet open, look in the URL for the term “key=” This will be followed by a unique ID made of letters and numbers. Copy just the ID and paste in the field below.</p>
     			<img src="images/freeDive-key.png">
 
-             	<h3 class="sub_head_fd">Spreadsheet ID:</h3>
              	<p>
                  	<div id="spreadsheet_id"></div>
-                    <input id="sheet_id_field" value="">  
+                    <label for="sheet_id_field" style="font-size:1.3em;">Spreadsheet ID:</label>
+					<input id="sheet_id_field" value="">  
                     <input type="button" id="sidtest" value="Test">
                     <span id="sidtest_spinner"><img src="images/loader.gif" width="40" height="10" alt="Loader"></span>
                 </p>
-
+				<p><strong>Before continuing, please use the Test button to verify your spreadsheet. The test may take 30 seconds.</strong></p>
     			<p><em>TIP: If you want to work with the campaign contributions example, select the key in this link (text in bold):<br/>
     			<code>https://docs.google.com/spreadsheet/ccc?key=<b>0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE</b>&hl=en_US#gid=0</code></em></p>
-                <p><strong>Before continuing, please use the Test button to verify that we can work with your spreadsheet. The test may take 30 seconds.</strong></p>
+                
             </div>     
 
         
@@ -317,7 +318,7 @@
 
             <p id="col_load_spinner"></p>
             
-            <table>
+            <table >
 
                 <tbody>
                     <tr id="colnames">
@@ -461,13 +462,14 @@
             <h2 class="StepTitle">Size</h2>
             	
             <p>Setting the size of your chart is very important. It directly impacts how your reader interacts with your data. Make it too small and the the value of the data is diminished in their eyes. Make it too big and it will overwhelm and scare them away.
+
             </p>
            	<h3 class="sub_head_fd">Width in pixels</h3>
 			<input id="table_width" value="800"> 
+
 			<p><em>TIP: We recommend that you make your chart the full width of your regular story or post content. This helps it integrate the table into your site. If you must display 7-10 columns, you may have to make the table the full width of your page.</em></p>
-			
-			<h3 class="sub_head_fd">Height in pixels</h3>
-			<input id="table_height" value="400">
+			<br />
+			<label for="table_height" style="font-size:1.2em;">Height:  </label><input id="table_height" value="400" style="width:50px; text-align:right;"><label for="table_height" style="font-size:1.2em;font-weight:normal;"> pixels</label>
            <p><em>TIP: If the chart will be above a story, consider setting the height to 300-400 pixels. For example, this wizard is 450 pixels high so that if we need to display text below you will still be able to see it. If your table will stand alone on a page, 800 pixels or more of depth will give the reader access to more data and may be better.</em></p>
                			
         </div>
@@ -475,19 +477,22 @@
   			<div id="step-8">
             <h2 class="StepTitle">Congratulations! You’re done...</h2>
 
-			<div id="table_embed" style="width:440px; float:left">
+			<div id="table_embed" style="width:430px; float:left; margin-right:10px;">
 				<h3 class="sub_head_fd">Embed code</h3>
 				<p>Copy and paste this code into a or blog in HTML mode to display your table. The code is mainly javascript (which some platforms restrict) so you may have to ask someone with admin access to post it for you.</p>
-				<textarea id="table_embed_text" style="width:435px; height:150px"></textarea>
+				<textarea id="table_embed_text" style="width:410px; height:210px"></textarea>
 				
 			</div>
 			
 			<div id="widget_embed" style="width:440px; float:right">
-				<h3 class="sub_head_fd">Iframe</h3>
+				<h3 class="sub_head_fd">HTML page</h3>
 				<p>You can choose to download your table as an html document. This table uses the FreeDive theme and looks a little better. It also makes it easier for you to customize the CSS to match your site.</p>
-		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px" ></textarea>
-		            <input type="button" value="Download HTML" onclick="downloadTable()" /><br /><br />
-					<span class="help_text"><b>Instructions</b><ol><li>After download, rename the file to <b>"yourname.html"</b> and upload it to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code with the URL of your uploaded html page.</li></ol> <br/> <code>&ltiframe src="<b>URL</b>" width="100%" height="300" frameborder="0"&gt
+		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px;visibility:hidden;" ></textarea>
+		<input type="button" value="Preview" onclick="preview_pop()" />
+		            <input type="button" value=" Download HTML page " onclick="downloadTable()" /><br /><br />
+					
+					<span class="help_text"><b>Iframe instructions</b><ol>
+						<li>Rename the downloaded file to <b>"yourname.html"</b></li><li>Upload the renamed page to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code below with the URL of your uploaded html page.</li></ol>  <code>&ltiframe src="<b>URL</b>" width="100%" height="300" frameborder="0"&gt
 					  &ltp>Your browser does not support iframes.&lt/p&gt
 					&lt/iframe&gt</code> </span>
 			</div>
@@ -503,17 +508,19 @@
 
 <script type="text/javascript" charset="utf-8">
 
+function preview_pop() {
+	new_preview=window.open('','preview','height=700,width=800');
+	var tmp = new_preview.document;
+	tmp.write(document.getElementById('widget_embed_text').value);
+	tmp.close();
+}
+
 		function downloadTable(){
 						
 			uriContent = "data:application/octet-stream," + encodeURIComponent(document.getElementById('widget_embed_text').value);			
 			location.href = uriContent;
 		};
 		
-		// function previewTable(){
-		// 	uriContent = "data:application/octet-stream," + encodeURIComponent(document.getElementById('widget_embed_text').value);
-		// 	newWindow=window.open(uriContent, 'neuesDokument');
-		//  
-		// }
 </script>
 		
 <script type="text/javascript" charset="utf-8">
@@ -559,7 +566,7 @@
     // Populate sets of original column checkboxes 
     function populateColCells(orig_cols) {
         $.each(orig_cols, function(column, value) { 
-          $("tr#colnames").append('<td>' + value.label + '</td>');        
+          $("tr#colnames").append('<td class="td_pick_cols">' + value.label + '</td>');        
         });
     }
     
