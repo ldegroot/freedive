@@ -279,7 +279,7 @@
                  	<div id="spreadsheet_id"></div>
                     <label for="sheet_id_field" style="font-size:1.3em;">Spreadsheet ID:</label>
 					<input id="sheet_id_field" value="">  
-                    <input type="button" id="sidtest" value="Test">
+                    <input type="button" id="sidtest" value="Test" class="buttonOthers" style="height:22px;">
                     <span id="sidtest_spinner"><img src="images/loader.gif" width="40" height="10" alt="Loader"></span>
                 </p>
 				<p><strong>Before continuing, please use the Test button to verify your spreadsheet. The test may take 30 seconds.</strong></p>
@@ -363,7 +363,7 @@
                     	<p>Users can only search within a text column.</p>    
 
 	                    <p>
-	                		<select id="pick_main_col">
+	                		<select id="pick_main_col" class="select_menu">
 	                            <!-- Options generated with jQuery -->
 	                        </select>
 	                    </p>
@@ -488,8 +488,8 @@
 				<h3 class="sub_head_fd">HTML page</h3>
 				<p>You can choose to download your table as an html document. This table uses the FreeDive theme and looks a little better. It also makes it easier for you to customize the CSS to match your site.</p>
 		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px;visibility:hidden;" ></textarea>
-		<input type="button" value="Preview" onclick="preview_pop()" />
-		            <input type="button" value=" Download HTML page " onclick="downloadTable()" /><br /><br />
+		<input type="button" class="buttonOthers" value="Preview" onclick="preview_pop()" style="height:30px;"/>
+		            <input type="button" class="buttonOthers" value=" Download HTML page " onclick="downloadTable()" style="height:30px;"/><br /><br />
 					
 					<span class="help_text"><b>Iframe instructions</b><ol>
 						<li>Rename the downloaded file to <b>"yourname.html"</b></li><li>Upload the renamed page to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code below with the URL of your uploaded html page.</li></ol>  <code>&ltiframe src="<b>URL</b>" width="100%" height="300" frameborder="0"&gt
