@@ -488,19 +488,22 @@
   			<div id="step-8">
             <h2 class="StepTitle">Congratulations! You’re done...</h2>
 
-			<div id="table_embed" style="width:440px; float:left">
+			<div id="table_embed" style="width:430px; float:left; margin-right:10px;">
 				<h3 class="sub_head_fd">Embed code</h3>
 				<p>Copy and paste this code into a or blog in HTML mode to display your table. The code is mainly javascript (which some platforms restrict) so you may have to ask someone with admin access to post it for you.</p>
-				<textarea id="table_embed_text" style="width:435px; height:150px"></textarea>
+				<textarea id="table_embed_text" style="width:410px; height:210px"></textarea>
 				
 			</div>
 			
 			<div id="widget_embed" style="width:440px; float:right">
-				<h3 class="sub_head_fd">Iframe</h3>
+				<h3 class="sub_head_fd">HTML page</h3>
 				<p>You can choose to download your table as an html document. This table uses the FreeDive theme and looks a little better. It also makes it easier for you to customize the CSS to match your site.</p>
-		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px" ></textarea>
-		            <input type="button" value="Download HTML" onclick="downloadTable()" /><br /><br />
-					<span class="help_text"><b>Instructions</b><ol><li>After download, rename the file to <b>"yourname.html"</b> and upload it to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code with the URL of your uploaded html page.</li></ol> <br/> <code>&ltiframe src="<b>URL</b>" width="100%" height="300" frameborder="0"&gt
+		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px;visibility:hidden;" ></textarea>
+		<input type="button" value="Preview" onclick="preview_pop()" />
+		            <input type="button" value=" Download HTML page " onclick="downloadTable()" /><br /><br />
+					
+					<span class="help_text"><b>Iframe instructions</b><ol>
+						<li>Rename the downloaded file to <b>"yourname.html"</b></li><li>Upload the renamed page to your web server. Note the URL (web address) of where it's located.</li><li>Copy the code below and paste it into a web page.</li><li>Replace the <b>URL</b> text in the code below with the URL of your uploaded html page.</li></ol>  <code>&ltiframe src="<b>URL</b>" width="100%" height="300" frameborder="0"&gt
 					  &ltp>Your browser does not support iframes.&lt/p&gt
 					&lt/iframe&gt</code> </span>
 			</div>
@@ -516,17 +519,19 @@
 
 <script type="text/javascript" charset="utf-8">
 
+function preview_pop() {
+	new_preview=window.open('','preview','height=700,width=800');
+	var tmp = new_preview.document;
+	tmp.write(document.getElementById('widget_embed_text').value);
+	tmp.close();
+}
+
 		function downloadTable(){
 						
 			uriContent = "data:application/octet-stream," + encodeURIComponent(document.getElementById('widget_embed_text').value);			
 			location.href = uriContent;
 		};
 		
-		// function previewTable(){
-		// 	uriContent = "data:application/octet-stream," + encodeURIComponent(document.getElementById('widget_embed_text').value);
-		// 	newWindow=window.open(uriContent, 'neuesDokument');
-		//  
-		// }
 </script>
 		
 <script type="text/javascript" charset="utf-8">
