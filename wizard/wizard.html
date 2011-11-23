@@ -62,7 +62,8 @@
         
         } else if(step_num == 3) {
             
-            // Turn spinner on before we go and try to retrieve data
+            // Turn spinner on before we go and try to retrieve data 
+            // (Spinner turned off at end of getTableMeta)
             $('#colfetch_spinner').show();  
 
             // Take input from step 1 and insert vals into the DOM so they're available in step 2
@@ -90,13 +91,12 @@
             $("input[name='cols_use']:checked").each(function(){
                 temp = orig_cols[$(this).val()]; 
                 columns[$(this).val()] = {label: temp.label};  
-                // cols_as_text += temp.label + "%2C"; // Outputs column labels
-                cols_as_text += $(this).val() + "%2C"; // But we want column IDs for the URL search query
+                cols_as_text += $(this).val() + ","; // But we want column IDs for the URL search query
             });  
             
-            // Strip trailing comma (%2C) from cols_as_text
-            cols_as_text = cols_as_text.slice(0, -3)  
-            console.log(cols_as_text);
+            
+            // Strip trailing comma from cols_as_text
+            cols_as_text = cols_as_text.replace(/(^,)|(,$)/g, "") 
 
 			// Populate dropdowns for step 5 from new array of usable columns
 			populateDropDown(columns,'#pick_sortby_col');
@@ -116,8 +116,14 @@
     		search_widget_col = $('select#pick_main_col').val();      
 			number_widget_col = $('select#pick_sortby_col').val();   
 			search_headline = $('input#search_headline').val();
-            search_leadin = $('input#search_leadin').val();  
+            search_leadin = $('input#search_leadin').val(); 
             
+            // Get actual column IDs for use in search, using our reverse lookup function.
+            // Needed because we need column labels in the wizard, but need to convert
+            // those into column IDs in the search/visualization.
+            search_col_id = getColIdFromLabel(search_widget_col);
+            num_col_id = getColIdFromLabel(number_widget_col);            
+          
             
             return true; // Return true so that navigation continues
 
@@ -140,42 +146,25 @@
     		table_width = $('input[id=table_width]').val();
     		table_height = $('input[id=table_height]').val();
 		
-            // sheet_limit="&range=A1:F6"; // for testing remove before publishing
-	        
-	        // Dummy embed just to see our variables in action
-            // embed_text = 
-            //                 "Spreadsheet ID: " + spreadsheet_id + "\n" +
-            //                 "Columns: " + cols_as_text + "\n" +                
-            //                 "Search column: " + filter_col + "\n" +
-            //                 "Search label: " + filter_label + "\n" +
-            //                 "Filter column: " + picker_col + "\n" +
-            //                 "Filter label: " + picker_label + "\n" +
-            //                 "Range column: " + slider_col + "\n" +
-            //                 "Range label: " + slider_label + "\n" +
-            //  "Table Width: " + table_width + "\n" +
-            //  "Table Height: " + table_height + "\n" 
-            //             ;       
-                 
             // Retrieve our hidden template and replace out variables 
-            // If a var needs to be replaced more than once, use /g syntax for global
-		    embed_actual = $("textarea#embed_template").html();
-		    embed_actual = embed_actual.replace("SPREADSHEET_ID",spreadsheet_id);   
-		    embed_actual = embed_actual.replace("COLS_AS_TEXT",cols_as_text);
-		    embed_actual = embed_actual.replace("SLIDER_COL",slider_col);
-		    embed_actual = embed_actual.replace("SLIDER_LABEL",slider_label);		    		       
-		    embed_actual = embed_actual.replace("FILTER_COL",filter_col);
-		    embed_actual = embed_actual.replace("FILTER_LABEL",filter_label);		    		       
-		    embed_actual = embed_actual.replace("PICKER_COL",picker_col);
-		    embed_actual = embed_actual.replace("PICKER_LABEL",picker_label); 
+		    embed_actual = $('textarea#embed_template').html();
+		    embed_actual = embed_actual.replace(/SPREADSHEET_ID/g,spreadsheet_id);   
+		    embed_actual = embed_actual.replace(/COLS_AS_TEXT/g,cols_as_text);
+		    embed_actual = embed_actual.replace(/SLIDER_COL/g,slider_col);
+		    embed_actual = embed_actual.replace(/SLIDER_LABEL/g,slider_label);		    		       
+		    embed_actual = embed_actual.replace(/FILTER_COL/g,filter_col);
+		    embed_actual = embed_actual.replace(/FILTER_LABEL/g,filter_label);		    		       
+		    embed_actual = embed_actual.replace(/PICKER_COL/g,picker_col);
+		    embed_actual = embed_actual.replace(/PICKER_LABEL/g,picker_label); 
 		    embed_actual = embed_actual.replace(/TABLE_WIDTH/g,table_width); 
-		    embed_actual = embed_actual.replace("TABLE_HEIGHT",table_height); 
-		    embed_actual = embed_actual.replace("SEARCH_HEADLINE",search_headline); 
-		    embed_actual = embed_actual.replace("SEARCH_LEADIN",search_leadin); 		    		    		    		       	    		       
-            // embed_actual = embed_actual.replace("SHEET_LIMIT",sheet_limit);   
+		    embed_actual = embed_actual.replace(/TABLE_HEIGHT/g,table_height); 
+		    embed_actual = embed_actual.replace(/SEARCH_HEADLINE/g,search_headline); 
+		    embed_actual = embed_actual.replace(/SEARCH_LEADIN/g,search_leadin);   
+		    embed_actual = embed_actual.replace(/SEARCH_COL_ID/g,search_col_id);   
+		    embed_actual = embed_actual.replace(/NUM_COL_ID/g,num_col_id);   		    		    
 		    
 		    // Prep output for display to user
             embed_actual = pseudoMinify(embed_actual); 
-    		
     		iframe_actual = iframe_start+embed_actual+"&lt/body&gt&lt/html&gt";
 		
     		// Send embed code to text fields at end of wizard
@@ -193,10 +182,7 @@
         }
         
       }      
-      
-  
-          
-		});
+   });
 
 </script>
 
@@ -477,7 +463,7 @@
             <p>Setting the size of your chart is very important. It directly impacts how your reader interacts with your data. Make it too small and the the value of the data is diminished in their eyes. Make it too big and it will overwhelm and scare them away.
             </p>
            	<h3 class="sub_head_fd">Width in pixels</h3>
-			<input id="table_width" value="600"> 
+			<input id="table_width" value="800"> 
 			<p><em>TIP: We recommend that you make your chart the full width of your regular story or post content. This helps it integrate the table into your site. If you must display 7-10 columns, you may have to make the table the full width of your page.</em></p>
 			
 			<h3 class="sub_head_fd">Height in pixels</h3>
@@ -568,11 +554,8 @@
        $('#sidtest_spinner').show();           
        var testsid = $('input[id=sheet_id_field]').val();
        validateTable(testsid);                 
-
     });
         
-
-
     // Populate sets of original column checkboxes 
     function populateColCells(orig_cols) {
         $.each(orig_cols, function(column, value) { 
@@ -592,19 +575,44 @@
     // Takes an object of column data to use and a CSS selector as args.
     function populateDropDown(cols_ob,selector) { 
         $.each(cols_ob, function(column, value) { 
-          // $(selector).append('<option value="'+ column +'">'+ value.label +'</option>');        
           $(selector).append('<option value="'+ value.label +'">'+ value.label +'</option>');        
         });
-    }  
+    }     
     
-    // Takes any string variable and converts it to embeddable code
-    function pseudoMinify(s) {
-    	s = s.replace(/(^\s*)|(\s*$)/gi,""); // Remove leading and trailing spaces from lines
-    	s = s.replace(/\n /,"\n"); // Remove spaces after linebreaks
-        s = s.replace( /\s\s+/g, ' ' ) // Replace double spaces with single
-        s = s.replace(/(\r\n|\n|\r)/gm,""); // Remove all possible linebreak types (flatten)
+    // For reverse lookups, retrieves a column ID (e.g. "B")
+    // from "columns" object, given a column label.    
+    function getColIdFromLabel(labelstring) {
+        var matchcol = "undefined";
+        $.each(columns, function(key, value) { 
+          if (value.label.toString() == labelstring) { 
+              matchcol = key;
+          }; 
+        });
+        
+        return matchcol;
+    };    
+    
+    
+    function pseudoMinify(s) {   
+        // Convert our "template" code into embed code 
+        // Gotcha - URLs contain // just like comments so removing comments
+        // will also break URLs. Should be a better way to do this,
+        // but for now, replacing http:// with httpZZZ and then back again at the end.
+        s = s.replace(/https:\/\//gi, 'httpsZZZ'); // Preserve URLs cheap trick
+        s = s.replace(/http:\/\//gi, 'httpZZZ'); // Preserve URLs cheap trick        
+        
+        s = s.replace(/\/\*.+?\*\/|\/\/.*(?=[\n\r])/g, ''); // Remove Javascript comments
+        s = s.replace(/\n /,"\n"); // Remove spaces after linebreaks
+        s = s.replace(/\s+/g," "); // Replace double spaces with single
+        s = s.replace(/(\r\n|\n|\r)/gm,""); // Remove all possible linebreak types (flatten)   
+
+        // Reverse the URL preservation cheap trick
+        s = s.replace(/httpsZZZ/gi, 'https://'); // Preserve URLs cheap trick
+        s = s.replace(/httpZZZ/gi, 'http://'); // Preserve URLs cheap trick
+        
     	return s;
-    }  		
+    }
+      
     
     // Warn if user tries to select more than five columns
     function limitCols() {
@@ -626,7 +634,6 @@
     function validateTable(spreadsheet_id,response) {
 		var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=' + spreadsheet_id);
     	query.send(validateQueryResponse);
-        
     	}
 
     // Validate spreadsheet ID step #2 (similar to handleQueryResponse but without all the extra processing)
@@ -638,7 +645,7 @@
             alert('Spreadsheet is valid and accessible!');
 
         }
-        // Always turn off the spinner after the tests.
+        // Turn off the spinner after tests.
         $('#sidtest_spinner').hide();   
     }
     
@@ -684,65 +691,185 @@
         
         // Turn off the spinner after data is loaded
         $('#colfetch_spinner').hide();    
-        
 	}
-	
-	
-	
-
 </script> 
+
+
+
 
 <!-- This textarea stores a multi-line Javascript variable we can 
 search/replace through and minify on output to generate embed code 
-(a workaround since Javascript provides no heredoc syntax). -->
+(a workaround since Javascript provides no heredoc syntax). 
+Javascript comments will be stripped out. For now, do not include HTML comments.
+-->
 
 <textarea id="embed_template">
-
-<script type="text/javascript" src="https://www.google.com/jsapi"></script><!--open script-->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <script type="text/javascript">
+//Load the API and the controls package.  
   google.load('visualization', '1.1', {packages:['controls']});
 </script>
 
 
 <style type="text/css">
-div.control1{width:TABLE_WIDTHpx; padding: 0 0 20px 0; font-size:0.9em; color:black; vertical-align: middle;margin:0;}
-div.control2{height:30px; width:300px;font-size:0.9em; padding: 0 20px 20px 0; vertical-align: middle;margin:0;}
-div.control3{float:right; height:30px; font-size:0.9em;vertical-align:inherit; vertical-align: middle;margin:0;}	
-div.chart1{float: left;}
+    /*	div styles */
+    div.control1{width:620px; padding: 0 0 20px 0; font-size:0.9em; color:black; vertical-align: middle;margin:0;}
+    div.control2{height:30px; width:300px;font-size:0.9em; padding: 0 20px 20px 0; vertical-align: middle;margin:0;}
+    div.control3{float:right; height:30px; font-size:0.9em;vertical-align:inherit; vertical-align: middle;margin:0;}	
+    div.chart1{float: left;} 
 </style>
+
+
+<script type="text/javascript" charset="utf-8">
+    // jQuery plugin to extract URL vars
+	$.extend({
+      getUrlVars: function(){
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+          hash = hashes[i].split('=');
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+        }
+        return vars;
+      },
+      getUrlVar: function(name){
+        return $.getUrlVars()[name];
+      }
+    });
+</script>
+
 
 <script type="text/javascript">
 
-function drawVisualization() {
-    var query = new google.visualization.Query('https://spreadsheets.google.com/a/google.com/tq?key=SPREADSHEET_ID&tq=select%20COLS_AS_TEXT&range=A1:F101&pub=1');
-    query.send(handleQueryResponse);  
-}
+    // Assume we have no query vars to start
+    anyquery = false; 
 
-function handleQueryResponse(response) {
-  if (response.isError()) {
-	alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-	return;
-  }
+    // Get any known values from URL and pre-fill form fields if they exist.
+    // Using fdxx nomenclature to keep FreeDive params from colliding with host site params.
+    fdnq = decodeURIComponent($.getUrlVar('fdnq'));
+    fdop = decodeURIComponent($.getUrlVar('fdop'));
+    fdtq = decodeURIComponent($.getUrlVar('fdtq'));
+    fdall = decodeURIComponent($.getUrlVar('fdall'));    
 
-var data = response.getDataTable();
+    // If fdall param is present, override any others and do a full query
+    if (fdall != 'undefined') {
+       fdall = true; 
+    } else {
+        fdall = false;
+    };
 
+    // Don't attempt to call the visualization code 
+    // or display the dashboard unless we have search terms.
+    // Set global anyquery var for use elsewhere.    
+    if (fdtq != 'undefined' || fdnq != 'undefined' || fdall == true) {
+       anyquery = true; 
+       google.setOnLoadCallback(drawVisualization());
+    } else {
+        fdtq = 'Enter text';
+        fdnq = 'Enter a number';        
+    }; 
+
+
+    // Render the chart - this function only called if we have query terms
+    function drawVisualization() { 
+
+        // ------------ Load data from google docs ----------------
+        var search_url = 'https://spreadsheets.google.com/a/google.com/tq?key=SPREADSHEET_ID';
+
+        // Test strings
+        // fdtq=A%20like%20'%25St%25'
+        // fdnq=F%20%3E%200
+        // fdtq=A%20like%20'%25St%25'&fdnq=F%20%3E%200
+
+        // If one of these doesn't exist, it'll come back as string 'undefined'.
+        // Blanking it out here simplifies the query generating code. 
+        if (fdtq == 'undefined') {
+            fdtq = '';
+        };
+
+        if (fdnq == 'undefined') {
+            fdnq = '';
+        };
+
+        // If user clicked the Show all button, our query is simple
+        // (but dangerously slow-loading). Otherwise we have to build it up.
+        if (fdall) {
+            var querystring = "select *";
+
+        } else {
+
+            // Query params exist. Start building string  
+            // var querystring = "select A,B,C,D,E,F where ";
+            var querystring = "select COLS_AS_TEXT where ";
+
+            // Three possible conditionals here, depending 
+            // on how they filled the search form
+            // (they might have filled in one field, both fields, or neither)
+
+            if (fdtq != '' && fdnq == '' ) {
+                // We have a textquery but not a numquery        
+                 querystring = querystring + "SEARCH_COL_ID like '%" + fdtq + "%'";
+
+            } else if (fdtq == '' && fdnq != '' ) {
+                // We have a numquery but not a textquery
+                querystring = querystring + "NUM_COL_ID" + fdop + fdnq; 
+
+            } else {
+                // We have both a numquery and a textquery
+                querystring = querystring + "SEARCH_COL_ID like '%" + fdtq + "%'" + " and " + "NUM_COL_ID" + fdop + fdnq;
+            };   
+
+        };      
+        
+        // console.log(querystring);
+
+        // URLencode query terms before appending to URL
+        querystring = encodeURIComponent(querystring);  
+
+        // Append encoded query terms to search URL
+        search_url = search_url + "&tq=" + querystring;  
+        // console.log(search_url);
+
+        var query = new google.visualization.Query(search_url);
+        query.send(handleQueryResponse);  
+        }   
+
+
+
+    function handleQueryResponse(response) {
+      if (response.isError()) {
+    	console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+    	return;
+      }
+
+    var data = response.getDataTable();   
+
+
+// ------------ Draw dashboard ----------------
+
+// Define a NumberRangeFilter slider control
   var slider = new google.visualization.ControlWrapper({
     'controlType': 'NumberRangeFilter',
     'containerId': 'control1',
     'options': {
-      'filterColumnLabel': 'SLIDER_COL',  
+      'filterColumnLabel': 'SLIDER_COL',  // Must match your data!
       'minValue': 0,
+      // 'maxValue': 500000,
 	'ui': {
 		'label':'SLIDER_LABEL',
   }}
   });
 
+// Define a StringFilter control
 var stringFilter = new google.visualization.ControlWrapper({
   'controlType': 'StringFilter',
   'containerId': 'control2',
   'options': {
-	'filterColumnLabel': 'FILTER_COL', 
+	'filterColumnLabel': 'FILTER_COL', // Must match your data!
 	'matchType':'any',
 	'ui': {
 		'label':'FILTER_LABEL',
@@ -751,51 +878,66 @@ var stringFilter = new google.visualization.ControlWrapper({
 });
 
 
+// Define category pickers
 var categoryPicker = new google.visualization.ControlWrapper({
 'controlType': 'CategoryFilter',
 'containerId': 'control3',
 'options': {
-  'filterColumnLabel': 'PICKER_COL', 
+  'filterColumnLabel': 'PICKER_COL', // Must match your data!
   'ui': {
 	'label':'PICKER_LABEL',
     'allowTyping': false,
     'allowMultiple': false,
   }}
 });
-		
 
-
+// Here's our table visualization in a wrapper
 var table = new google.visualization.ChartWrapper({
   'chartType': 'Table',
   'containerId': 'chart1',
   'options': {'height': 'TABLE_HEIGHTpx', 'width': 'TABLE_WIDTHpx','allowHtml':'true', 'title': 'Click a column header to sort', }
 });
 
+//Create the dashboard 
 var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard')).
+// Configure the string to filter table and chart  [table, chart].
   bind([stringFilter,categoryPicker, slider], table).
   draw(data);   
-}
+  $('div#dashboard').show();   
 
-google.setOnLoadCallback(drawVisualization);
-
+};
 </script>
-  
-	<div id="full_search" style=" width:100%; background-color:#DADADA; padding:10px 0 10px 20px;">
-		<h2>SEARCH_HEADLINE</h2>
-		<p>SEARCH_LEADIN<p/>
-		<p style="font-size:12px; line-height:30px"><label for="range_label">Name includes: <input id="search_label" value="Enter text" style="color:#656565"><input type="submit" value="Search" ><span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
-			<label for="range_label">Contribution </label> <select name="sheet_op">
-			<option value=">=">Greater than or equal to</option>
-			<option value="<=">Less than or equal to</option>
-			<option value=">">Greater than</option>
-			<option value="<">Less than</option>
-			<option value="=">Equals</option>
-			</select><input id="range_label" value="Enter a number" style="color:#656565"> <input type="submit" value="Search"> <span style="color:#3F3F3F; font-size:10px"> Example: </span><br />
-			 <input type="submit" value="Show all records">&nbsp;<span style="color:#3F3F3F; font-size:10px">May cause long load times and browser slowdowns.</span>
-	</div>
-		
-		
-<!--Div that will hold the dashboard-->
+
+<div id="full_search" style=" width:100%; background-color:#DADADA; padding:10px 0 10px 20px;">
+    <h2>
+        SEARCH_HEADLINE
+    </h2>
+    <p>
+        SEARCH_LEADIN
+    </p>
+    <p style="font-size:12px; line-height:30px">
+        <label for="search_text">Name includes:</label> 
+        <input id="search_text" value="Enter text" style="color:#656565"> 
+            <span style="color:#3F3F3F; font-size:10px">Example:</span><br />
+
+        <label for="range_num">Contribution</label> 
+        <select name="sheet_op" id="sheet_op">
+            <option value="&gt;=">Greater than or equal to</option>
+            <option value="&lt;=">Less than or equal to</option>
+            <option value="&gt;">Greater than</option>
+            <option value="&lt;">Less than</option>
+            <option value="=">Equals</option>
+        </select> 
+
+        <input id="range_num" value="Enter a number" style="color:#656565"> 
+        <input type="submit" value="Search" onclick="refresh()"> 
+            <span style="color:#3F3F3F; font-size:10px">Example:</span><br />
+        <input type="submit" id="show_all" value="Show all records" onclick="refresh('allrecs')">
+        <span style="color:#3F3F3F; font-size:10px">May cause long load times and browser slowdowns.</span>
+    </p>
+</div>
+
+
 <div id="dashboard" style='width: 620px;font-family:Arial, sans-serif;'>
 	<h3>Explore your results</h3>
 	<p>You can use the slider, text filter and picker to investigate your search results or click on a column label to resort the table. To perform a new search, use the tool above. 
@@ -804,10 +946,105 @@ google.setOnLoadCallback(drawVisualization);
 	<div id="control2" class="control2"></div>
 	<div id="chart1" class="chart1"></div>
 </div>		
-	
 
+
+<script type="text/javascript" charset="utf-8" > 
+
+    // Initially hide the dashboard
+    if (typeof(anyquery) == 'undefined') {
+        $('div#dashboard').hide(); 
+    }; 
+
+    // Pre-fill search fields from vars
+    $('input#search_text').val(fdtq);
+    $('input#range_num').val(fdnq);
+    // Can't currently pre-set the value of the operator select box.
+    // It would be possible with some jimmying, but very verbose. 
+    // See bottom example at http://api.jquery.com/val/
+
+
+    function refresh(allrecs) { 
+
+        // The refresh() function strips our old values and adds new ones. 
+        // Takes an optional "allrecs" arg for handling all-record searches.
+        // When search is clicked we get new values from form fields, build
+        // an encoded URL string from them, and request a new page with new values. 
+        // If fdall is true, we strip out all of our own params.
+
+        // We got initial values from the URL, but now we set new vars to 
+        // match what user has entered into search fields.
+        var fdop = $('#sheet_op').val();
+        var fdnq = $('#range_num').val();
+        var fdtq = $('#search_text').val();
+
+        // Get existing URL and start parsing
+        var sURL = window.location.href;
+
+        // Strip out our old URL params, leaving the host's originals and adding new ones back in.  
+        // We can't just append to the URL because a person will likely do a 2nd, 3rd search etc.
+        // And we can't know what params are already in the host's system, so we have to respect them.
+
+        // Match either to the next ampersand or to the end of the line. It'll take the first 
+        // match found, so it's important that the end of line option comes second, or it 
+        // wipe out all params.
+        sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi,'');
+        sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi,'');
+        sURL = sURL.replace(/(fdop=.*&|fdop=.*$)/gi,'');
+        sURL = sURL.replace(/(fdall=.*&|fdall=.*$)/gi,'');        
+
+        // It's possible to end up with a trailing & - remove if so.
+        sURL = sURL.replace(/&$/,'');
+
+        // Build new query string. Need to pre-pend ? if not already present. 
+        var qs = '';
+        var found = sURL.search('\\?');
+        if (found == -1) {
+            qs = "?";
+        };
+
+        // Make sure we don't send the default field values back to the URL
+        if (fdnq == "Enter a number") {fdnq = ''};
+        if (fdtq == "Enter text") {fdtq = ''};        
+
+        if (allrecs) {
+            qs = qs + "fdall=true" ;
+        } else {
+            qs = qs + "&fdop=" + encodeURIComponent(fdop) + "&fdnq=" + encodeURIComponent(fdnq) + "&fdtq=" + encodeURIComponent(fdtq);            
+        };
+
+        // console.log(qs);
+
+        // Append to URL
+        sURL = sURL + qs;
+
+        // Re-launch window with replacement URL
+        window.location.replace(sURL);
+
+     }  
+
+</script>  
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){   
+
+        // Clear range field when clicked in IF it contains the default value
+        $('input#range_num').focus(function() {
+            if($(this).val() == 'Enter a number') $(this).val('');           
+        }).blur(function() {
+            if( $(this).val() == '') $(this).val('Enter a number');
+        }); 
+
+        // Do same for text input field
+        $('input#search_text').focus(function() {
+            if($(this).val() == 'Enter text') $(this).val(''); 
+        }).blur(function() {
+            if( $(this).val() == '') $(this).val('Enter text');
+        });        
+    });
+</script>
+           
 </textarea>
-<!-- End hidden embed code generator template -->
+<!-- End hidden embed code generation template -->
 
 </body>
 </html>
