@@ -42,8 +42,7 @@
         );
       
       function onFinishCallback(){
-        $('#wizard').smartWizard('showMessage','Finish Clicked');
-        // alert('Finish Clicked');
+        $('#wizard').smartWizard('showMessage','Please copy the embed code above to your clipboard.');
       } 
 
       function leaveAStepCallback(obj){
@@ -53,12 +52,10 @@
 		 if(step_num == 1){
 
 	            return true; // Return true so that navigation continues
-	
-	
+
 		} else if(step_num == 2) {
 
             return true; // Return true so that navigation continues
-
         
         } else if(step_num == 3) {
             
@@ -94,7 +91,6 @@
                 cols_as_text += $(this).val() + ","; // But we want column IDs for the URL search query
             });  
             
-            
             // Strip trailing comma from cols_as_text
             cols_as_text = cols_as_text.replace(/(^,)|(,$)/g, "") 
 
@@ -123,7 +119,6 @@
             // those into column IDs in the search/visualization.
             search_col_id = getColIdFromLabel(search_widget_col);
             num_col_id = getColIdFromLabel(number_widget_col);            
-          
             
             return true; // Return true so that navigation continues
 
@@ -136,7 +131,6 @@
             picker_label = $('input[id=picker_label]').val();
             slider_col = $('select#slider_col').val();
             slider_label = $('input[id=slider_label]').val(); 
-			;   
 
             return true; // Return true so that navigation continues
 			
@@ -170,10 +164,6 @@
     		// Send embed code to text fields at end of wizard
     		$('#table_embed_text').html(embed_actual);
     		$('#widget_embed_text').html(iframe_actual);  
-
-            return true; // Return true so that navigation continues
-
-		} else if(step_num == 8) {  
 
             return true; // Return true so that navigation continues
    
@@ -579,8 +569,10 @@ function preview_pop() {
     
     // Dropdown lists of columns appear at several places in the wizard, populated either with
     // the original list of columns or a subset. This function populates them as needed. 
-    // Takes an object of column data to use and a CSS selector as args.
+    // Takes an object of column data to use and a CSS selector as args.  
     function populateDropDown(cols_ob,selector) { 
+        $(selector).empty(); // Erase children first to prevent duplicate entries when they hit prev/next
+
         $.each(cols_ob, function(column, value) { 
           $(selector).append('<option value="'+ value.label +'">'+ value.label +'</option>');        
         });
