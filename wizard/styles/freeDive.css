@@ -579,8 +579,9 @@ margin-bottom:5px;
 	  color:#F8F8F8  !important;
 	  background-color: #CCCCCC !important;
 	  border: 1px solid #CCCCCC  !important;
-	  cursor:text;    
+	  cursor:text;
 	}
+
 	.swMain .buttonPrevious {
 	  display:block;
 	  float:right;
@@ -603,7 +604,9 @@ margin-bottom:5px;
 	}
 	.swMain .buttonFinish {
 	  display:block;
-	  float:right;
+/*	  float:right;*/
+		position:absolute;
+		left:10000px;
 	  margin:5px 10px 0 3px;
 	  padding:5px;
 	  text-decoration: none;
