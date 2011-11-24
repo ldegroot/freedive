@@ -958,9 +958,10 @@ var dashboard = new google.visualization.Dashboard(document.getElementById('dash
 <script type="text/javascript" charset="utf-8" > 
 
     // Initially hide the dashboard
-    if (typeof(anyquery) == 'undefined') {
+    if (anyquery == false) {
         $('div#dashboard').hide(); 
-    }; 
+    };                             
+    
 
     // Pre-fill search fields from vars
     $('input#search_text').val(fdtq);
