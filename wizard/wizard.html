@@ -465,11 +465,11 @@
 
             </p>
            	<h3 class="sub_head_fd">Width in pixels</h3>
-			<input id="table_width" value="800"> 
+			<label for="table_width" style="font-size:1.2em;">Width:  </label><input id="table_width" style="width:50px; text-align:right;" value="800"> <span style="font-size:1.2em;font-weight:normal;"> pixels</span>
 
 			<p><em>TIP: We recommend that you make your chart the full width of your regular story or post content. This helps it integrate the table into your site. If you must display 7-10 columns, you may have to make the table the full width of your page.</em></p>
 			<br />
-			<label for="table_height" style="font-size:1.2em;">Height:  </label><input id="table_height" value="400" style="width:50px; text-align:right;"><label for="table_height" style="font-size:1.2em;font-weight:normal;"> pixels</label>
+			<label for="table_height" style="font-size:1.2em;">Height:  </label><input id="table_height" value="400" style="width:50px; text-align:right;"><span style="font-size:1.2em;font-weight:normal;"> pixels</span>
            <p><em>TIP: If the chart will be above a story, consider setting the height to 300-400 pixels. For example, this wizard is 450 pixels high so that if we need to display text below you will still be able to see it. If your table will stand alone on a page, 800 pixels or more of depth will give the reader access to more data and may be better.</em></p>
                			
         </div>
@@ -488,7 +488,7 @@
 				<h3 class="sub_head_fd">HTML page</h3>
 				<p>You can choose to download your table as an html document. This table uses the FreeDive theme and looks a little better. It also makes it easier for you to customize the CSS to match your site.</p>
 		            <textarea id="widget_embed_text" style="width:150px; height:20px; position:absolute;left:620px;visibility:hidden;" ></textarea>
-		<input type="button" class="buttonOthers" value="Preview" onclick="preview_pop()" style="height:30px;"/>
+		<!-- <input type="button" class="buttonOthers" value="Preview" onclick="preview_pop()" style="height:30px;"/> -->
 		            <input type="button" class="buttonOthers" value=" Download HTML page " onclick="downloadTable()" style="height:30px;"/><br /><br />
 					
 					<span class="help_text"><b>Iframe instructions</b><ol>
