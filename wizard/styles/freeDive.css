@@ -605,8 +605,8 @@ margin-bottom:5px;
 	.swMain .buttonFinish {
 	  display:block;
 /*	  float:right;*/
-		position:absolute;
-		left:10000px;
+/*    position:absolute;*/
+/*    left:10000px;*/
 	  margin:5px 10px 0 3px;
 	  padding:5px;
 	  text-decoration: none;
