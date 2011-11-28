@@ -3,7 +3,12 @@ Freedive 0.1
 Knight Digital Media Center - http://kdmc.berkeley.edu/
 UC Berkeley Graduate School of Journalism - http://journalism.berkeley.edu/
 
-Freedive is a wizard-based tool which makes it easy to transform public Google Docs
-data sets into filtered tables and charts that can be embedded in news stories.
+freeDive is a tool that transforms Google spreadsheets into searchable databases that can be embedded in news stories. 
 
-This is a work in progress.
+Users first see a search area that returns an interactive, sortable table. The code also includes interactive filters so that users can further refine their search.  
+
+The freeDive wizard walks an editor through the process of creating a search widget. The editor customizes the user experience based on the content of the spreadsheet and results in an embed code that uses Google's default CSS styles. It also produces an html page for download that includes a custom freeDive theme. The CSS in this page can be edited to match an existing site design.
+
+This is a work in progress. It uses the Google Visualization API, Google Query Language, JavaScript and jQuery. Long-range plans include adding charts that interact with the data.  
+
+Primary developers of this tool are Len De Groot and Scot Hacker. Hacker has since left KDMC and is  very much missed.
