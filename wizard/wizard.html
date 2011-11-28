@@ -155,11 +155,13 @@
 		    embed_actual = embed_actual.replace(/SEARCH_HEADLINE/g,search_headline); 
 		    embed_actual = embed_actual.replace(/SEARCH_LEADIN/g,search_leadin);   
 		    embed_actual = embed_actual.replace(/SEARCH_COL_ID/g,search_col_id);   
-		    embed_actual = embed_actual.replace(/NUM_COL_ID/g,num_col_id);   		    		    
+		    embed_actual = embed_actual.replace(/NUM_COL_ID/g,num_col_id); 
+					    		    
 		    
 		    // Prep output for display to user
             embed_actual = pseudoMinify(embed_actual); 
     		iframe_actual = iframe_start+embed_actual+"&lt/body&gt&lt/html&gt";
+			iframe_actual = iframe_actual.replace(/'allowHtml':'true'/,"'allowHtml':'true', 'cssClassNames': theme_classes");
 		
     		// Send embed code to text fields at end of wizard
     		$('#table_embed_text').html(embed_actual);
@@ -471,7 +473,6 @@
 				<h3 class="sub_head_fd">Embed code</h3>
 				<p>Copy and paste this code into a or blog in HTML mode to display your table. The code is mainly javascript (which some platforms restrict) so you may have to ask someone with admin access to post it for you.</p>
 				<textarea id="table_embed_text" style="width:410px; height:210px"></textarea>
-				
 			</div>
 			
 			<div id="widget_embed" style="width:440px; float:right">
@@ -691,6 +692,11 @@ function preview_pop() {
         // Turn off the spinner after data is loaded
         $('#colfetch_spinner').hide();    
 	}
+	
+	// function themeCss(){
+	// 	CUSTOM_STYLES = "'cssClassNames': classes";
+	// }
+	
 </script> 
 
 
@@ -898,7 +904,7 @@ var categoryPicker = new google.visualization.ControlWrapper({
 var table = new google.visualization.ChartWrapper({
   'chartType': 'Table',
   'containerId': 'chart1',
-  'options': {'height': 'TABLE_HEIGHTpx', 'width': 'TABLE_WIDTHpx','allowHtml':'true', 'title': 'Click a column header to sort', }
+  'options': {'height': 'TABLE_HEIGHTpx', 'width': 'TABLE_WIDTHpx','allowHtml':'true' }
 });
 
 //Create the dashboard 
