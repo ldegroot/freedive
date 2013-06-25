@@ -1,14 +1,20 @@
-Freedive 0.1
+Freedive 0.2
 
 Knight Digital Media Center - http://kdmc.berkeley.edu/
 UC Berkeley Graduate School of Journalism - http://journalism.berkeley.edu/
+
+This update to freeDive extracts the working version from the kdmc at UC Berkeley site.
 
 freeDive is a tool that transforms Google spreadsheets into searchable databases that can be embedded in news stories. 
 
 Users first see a search area that returns an interactive, sortable table. The code also includes interactive filters so that users can further refine their search.  
 
-The freeDive wizard walks an editor through the process of creating a search widget. The editor customizes the user experience based on the content of the spreadsheet and results in an embed code that uses Google's default CSS styles. It also produces an html page for download that includes a custom freeDive theme. The CSS in this page can be edited to match an existing site design.
+The freeDive wizard walks an editor through the process of creating a search widget. The editor customizes the user experience based on the content of the spreadsheet and results in an embed code that uses Google's default CSS styles. It also produces an html page for download that includes a custom freeDive theme. The CSS in this page can be edited to match an existing site design. 
 
-This is a work in progress. It uses the Google Visualization API, Google Query Language, JavaScript and jQuery. Long-range plans include adding charts that interact with the data.  
+The wizard and all related pages can be viewed locally, with the exception of the preview button in the final step of the wizard. That requires publication on a web server to function properly.
 
-Primary developers of this tool are Len De Groot and Scot Hacker. Hacker has since left KDMC and is  very much missed.
+This is a work in progress. It uses the Google Visualization API, Google Query Language, JavaScript and jQuery. Primary developers of this tool are Len De Groot and Scot Hacker. Please bear in mind that this was their first deep dive into Javascript in 2011. So if something looks wonky, please feel free to fork the project and make improvements.
+
+freeDive is released under the GPL Version 2 license in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Additionally, it utilizes the Google Visualization API and is subject to it's user license. The most important part being that you can't package and sell a product that uses the API.
