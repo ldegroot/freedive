@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Table example</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <script src="js/modernizr.custom.2.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/jquery.1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+  <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../styles/dark.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script> <script type="text/javascript" src="https://www.google.com/jsapi"></script> 
+<script type="text/javascript"> google.load('visualization', '1.1', {packages:['controls']}); </script> 
+
+<style type="text/css"> 
+
+
+
+/*widget and filter styles*/
+
+#fd_main p {font: 13px/16px Arial; margin-bottom:10px !important; padding:0;}
+#fd_main h4 {font-family:Arial; font-weight:bold; text-transform:uppercase;text-align:left; padding:0 0 5px 0; margin:0;}
+#fd_main label {font: bold 13px/24px Arial; margin 0 10px 0 0; float:left; vertical-align: middle;}
+#fd_main input, textarea, select, button {font: 13px/16px Arial; color:#959595; vertical-align: middle;}
+.fd_note{font-family:Arial;color:#5E5E5E; font-size:.8em; border:none; padding:0;}
+div.search_widget{background:#E1E1E1;background:-webkit-gradient(linear,left top, left bottom,from(#FFF),to(#E1E1E1));background:-webkit-linear-gradient(top,#FFF,#E1E1E1);background:-moz-linear-gradient(top,#FFF,#E1E1E1);background:-ms-linear-gradient(top,#FFF,#E1E1E1);background:-o-linear-gradient(top,#FFF,#E1E1E1);border:2px solid #E1E1E1;padding:20px;-moz-border-radius:10px;-webkit-border-radius:10px; margin-bottom:20px;}
+div.control1{width:100%; margin-bottom: 15px; color:black;} 
+div.control2{width:300px; margin-bottom: 15px;} 
+div.control3{float:right;} 
+div.chart1{float: left;}
+
+/*table styles*/
+.header {background-color: #5B5B5B; color: #FFFFFF; font-family:Arial, sans-serif; text-align:left; font-size:0.8em; text-transform:uppercase; font-weight:600;letter-spacing:1px;line-height:1.4em;border:none;} 
+.row { background-color: #FFFFFF; color: #3F3F3F; font-family:inherit; font-size:0.9em;} 
+.oddRow { background-color: #F5F5F5; color: #3F3F3F; text-align: center; font-family:inherit; text-align:left; font-size:0.9em;} 
+.hoverRow { background-color: #CDCDCD; text-align: center; font-family:inherit; text-align:left; font-size:0.9em; } 
+.selectedRow { background-color: #DCDCDC; color: #3F3F3F; text-align: center; font-family:inherit; text-align:left; font-size:0.9em; } 
+.cell, table{padding:2px;border:none;} 
+.headCell{padding:0; } 
+
+.goog-menu {padding: 8px 0;} 
+
+.goog-menuitem-content {color: #3F3F3F;} 
+.goog-menuitem-highlight,.goog-menuitem-hover {background-color: #F0F0F0; border-color: #F0F0F0;} 
+.goog-menu-button-focused .goog-menu-button-outer-box,.goog-menu-button-focused .goog-menu-button-inner-box {border-color: #B1B1B1; margin: 0;} 
+.goog-menu-button-inner-box {font: 13px/24px Arial; margin:2px 0; padding:0 5px;} 
+.goog-menu-button-hover 
+.goog-menu-button-outer-box,.goog-menu-button-hover .goog-menu-button-inner-box {border-color: #B1B1B1!important;} 
+.goog-menu-button-active,.goog-menu-button-open {background-color: #F0F0F0;border-color: #B1B1B1;background-position: bottom left} 
+.goog-menu-button-focused .goog-menu-button-outer-box,.goog-menu-button-focused .goog-menu-button-inner-box {border-color: #B1B1B1} 
+
+.google-visualization-controls-slider-horizontal {border: 0px; background-color: #DBDBDB; border-radius: 5px; -moz-border-radius: 5px; outline:none; height:8px;} 
+.google-visualization-controls-slider-thumb {background-color: #616161; border: none;width: 12px; height: 12px; } 
+.google-visualization-controls-slider-horizontal .google-visualization-controls-slider-handle {height: 8px;} 
+.google-visualization-controls-slider-horizontal .google-visualization-controls-slider-thumb {top: -2px; left-margin: 8px; border-radius: 2px; -moz-border-radius: 2px;} 
+.google-visualization-controls-slider-handle {background-color: #616161; opacity: .6; height: 4px} 
+.google-visualization-controls-rangefilter-thumblabel {font-family:Arial;color: #3F3F3F;padding: 0 0.5em}
+
+
+</style>
+
+<script type="text/javascript"> 
+ $.extend({
+    getUrlVars: function() {
+        var vars = [],
+        hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVar: function(name) {
+        return $.getUrlVars()[name];
+    }
+});
+</script> 
+
+
+<body style="background-color:#FFFFFF;color:#3F3F3F">
+  <!-- Navigation -->
+  <nav>
+    <div id="smartphone_menu">Menu</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#article1">Introduction</a></li>
+      <li><a href="#article2">Key Features</a></li>
+      <li><a href="#article3">Examples</a></li>
+      <li><a href="#article4">Tutorial videos</a></li>
+      <li><a href="wizard.html">Use the wizard</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </nav>
+<div style="width:80%; margin:60px auto">
+
+<div >
+	<h1 id="this_is_a_headline_you_enter_in_your_cms" style="line-height:36px;">Search contributions to Gov. Jerry Brown's campaign</h1>
+	<p>Jerry Brown received nearly 25,000 contributions to his 2010 campaign for Governor of California. Enter the name or part of the name of a contributor to search the database. For example, type"Fred" in the Name field. </p>
+		<p>You can also add a filter to your results using the "Contribution" field. Select "Greater than or equal to" from the drop-down menu and enter "100" in the input field. This will limit the results to people with the name Fred that gave $100 or more. </p><br />
+</div>
+<div id="fd_main">
+	<div id="full_search" class="search_widget" style='float:left;width: 556px'> 
+	
+		<h4>
+			Search the database
+		</h4>
+		<p class="fd_note">
+			Text search is case sensitive. Leaving fields blank may slow response.
+		</p>
+		<p>
+			<label for="search_text">Name includes:&nbsp;</label>
+			<input id="search_text" value="Enter case-sensitive text" >
+		</p>
+		<p>
+			<label for="range_num">Contribution:&nbsp;</label>
+			<select name="sheet_op" id="sheet_op">
+			<option value=">=">Greater than or equal to</option> 
+			<option value="<=">Less than or equal to</option> 
+			<option value=">">Greater than</option> 
+			<option value="<">Less than</option> 
+			<option value="=">Equals</option> 
+			</select> 
+			<input id="range_num" value="Enter a number">
+		
+		</p>
+		<p>
+			<span class="fd_note" style="float:left;" >	
+				Powered by <a href="http://multimedia.journalism.berkeley.edu/tools/freedive">freeDive</a>
+			</span>
+			<input type="submit" value="SEARCH" onclick="refresh()" style="float:right; color:#000;">
+		</p>
+	
+	</div>
+
+	<div id="dashboard" style='width: 600px;font-family:Arial, sans-serif;float:left;'> 
+		<h4>
+			Explore your results
+		</h4> 
+		<p><b>Instructions:</b> Use the slider, text filter and picker to customize your search results. Use the tool above to perform a new search. 
+		</p>
+		<div id="control1" class="control1">
+		</div> 
+		<div id="control3" class="control3">
+		</div> 
+		<div id="control2" class="control2">
+		</div> 
+		<div class="fd_note" style="width:100%; margin-bottom:.3em">
+			Click on a column label to resort the table.
+		</div> 
+		<div id="chart1" class="chart1">
+			<p style="font-size:1.3em;color:#772327;text-align:center;padding:60px 0 20px">
+				Fetching data... Thank you for waiting.
+			</p>
+			<p style="color:#3F3F3F;text-align:center;padding:20px 0">
+				Searches with a large number of results may take longer to load.
+			</p>
+		</div> 
+	</div> 
+</div>
+</div>
+
+		<script type="text/javascript"> 
+			anyquery = false;
+			fdnq = decodeURIComponent($.getUrlVar('fdnq'));
+			fdop = decodeURIComponent($.getUrlVar('fdop'));
+			fdtq = decodeURIComponent($.getUrlVar('fdtq'));
+			fdall = decodeURIComponent($.getUrlVar('fdall'));
+			if (fdall != 'undefined') {
+			    fdall = true;
+			} else {
+			    fdall = false;
+			};
+			if (fdtq != 'undefined' || fdnq != 'undefined' || fdall == true) {
+			    anyquery = true;
+			    google.setOnLoadCallback(drawVisualization());
+			} else {
+			    fdtq = 'Enter text';
+			    fdnq = 'Enter a number';
+			};
+			function drawVisualization() {
+			    var search_url = 'https://spreadsheets.google.com/a/google.com/tq?key=0AtP_YtDJ532RdDcxZUl6Zkl4YkxKcEYzbld4ZDA4SlE';
+			    if (fdtq == 'undefined') {
+			        fdtq = '';
+			    };
+			    if (fdnq == 'undefined') {
+			        fdnq = '';
+			    };
+			    if (fdall) {
+			        var querystring = "select *";
+			    } else {
+			        var querystring = "select A,B,F where ";
+			        if (fdtq != '' && fdnq == '') {
+			            querystring = querystring + "A like '%" + fdtq + "%'";
+			        } else if (fdtq == '' && fdnq != '') {
+			            querystring = querystring + "F" + fdop + fdnq;
+			        } else {
+			            querystring = querystring + "A like '%" + fdtq + "%'" + " and " + "F" + fdop + fdnq;
+			        };
+			    };
+			    querystring = encodeURIComponent(querystring);
+			    search_url = search_url + "&tq=" + querystring;
+			    search_url = search_url.replace(/#&tq/, '&tq');
+			    var query = new google.visualization.Query(search_url);
+			    query.send(handleQueryResponse);
+			}
+			function handleQueryResponse(response) {
+			    if (response.isError()) {
+			        console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+			        return;
+			    }
+			    var data = response.getDataTable();
+			    var slider = new google.visualization.ControlWrapper({
+			        'controlType': 'NumberRangeFilter',
+			        'containerId': 'control1',
+			        'options': {
+			            'filterColumnLabel': 'Contribution',
+			            'minValue': 0,
+			            'ui': {
+			                'label': 'Change the range of contributions',
+			            }
+			        }
+			    });
+			    var stringFilter = new google.visualization.ControlWrapper({
+			        'controlType': 'StringFilter',
+			        'containerId': 'control2',
+			        'options': {
+			            'filterColumnLabel': 'Name',
+			            'matchType': 'any',
+			            'ui': {
+			                'label': 'Name includes',
+			                'cssClass': 'custom-stringfilter'
+			            }
+			        }
+			    });
+			    var categoryPicker = new google.visualization.ControlWrapper({
+			        'controlType': 'CategoryFilter',
+			        'containerId': 'control3',
+			        'options': {
+			            'filterColumnLabel': 'City',
+			            'ui': {
+			                'label': 'Pick a city',
+			                'allowTyping': false,
+			                'allowMultiple': false,
+			            }
+			        }
+			    });
+			    var classes = {
+			        headerRow: 'header',
+			        tableRow: 'row',
+			        hoverTableRow: 'hoverRow',
+			        oddTableRow: 'oddRow',
+			        selectedTableRow: 'selectedRow',
+			        tableCell: 'cell',
+			        headderCell: 'headCell'
+			    };
+			    var table = new google.visualization.ChartWrapper({
+			        'chartType': 'Table',
+			        'containerId': 'chart1',
+			        'options': {
+			            'height': '400px',
+			            'cssClassNames': classes,
+			            'width': '600px',
+			            'allowHtml': 'true'
+			        }
+			    });
+			    var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard')).bind([stringFilter, categoryPicker, slider], table).draw(data);
+			    $('div#dashboard').show();
+			};
+		
+		 
+		if (anyquery == false) {
+			$('div#dashboard').hide();
+		};
+		$('input#search_text').val(fdtq);
+		$('input#range_num').val(fdnq);
+
+		function refresh() {
+			var fdop = $('#sheet_op').val();
+			var fdnq = $('#range_num').val();
+			var fdtq = $('#search_text').val();
+			var sURL = window.location.href;
+			sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi, '');
+			sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi, '');
+			sURL = sURL.replace(/(fdop=.*&|fdop=.*$)/gi, '');
+			sURL = sURL.replace(/(fdall=.*&|fdall=.*$)/gi, '');
+			sURL = sURL.replace(/&$/, '');
+			var qs = '';
+			var found = sURL.search('\\?');
+			if (found == -1) {
+				qs = "?";
+			};
+			if (fdnq == "Enter a number") {
+				fdnq = ''
+			};
+			if (fdtq == "Enter text") {
+				fdtq = ''
+			};
+			if (fdnq == '' && fdtq == '') {
+				var allrecs = true;
+			};
+			if (allrecs) {
+				qs = qs + "fdall=true";
+			} else {
+				qs = qs + "&fdop=" + encodeURIComponent(fdop) + "&fdnq=" + encodeURIComponent(fdnq) + "&fdtq=" + encodeURIComponent(fdtq);
+			};
+			sURL = sURL + qs;
+			window.location.replace(sURL);
+		}
+		$(document).ready(function() {
+			$('input#range_num').focus(function() {
+				if ($(this).val() == 'Enter a number') $(this).val('');
+			}).blur(function() {
+				if ($(this).val() == '') $(this).val('Enter a number');
+			});
+			$('input#search_text').focus(function() {
+				if ($(this).val() == 'Enter text') $(this).val('');
+			}).blur(function() {
+				if ($(this).val() == '') $(this).val('Enter text');
+			});
+		});
+		
+		
+		 </script> 
+		
+	</body>
+</html>
+
+
+

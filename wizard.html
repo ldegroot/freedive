@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>freeDive Wizard</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+	<script src="js/modernizr.custom.2.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="js/jquery.1.9.1.min.js" type="text/javascript" charset="utf-8"></script> -->
+	<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+	
+	<!-- Main Stylesheet -->
+	<link href="styles/freedive.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="js/css3-mediaqueries.js"></script>
+	<script type="text/javascript" src="js/jquery.smartWizard-2.0.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript"> google.load('visualization', '1.1', {packages:['controls']}); </script> <!-- 1.1 for test environment -->
+
+<!-- Wizard script -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Smart Wizard 	
+			$('#wizard').smartWizard(
+				{
+					// Properties
+					selected: 0,  // Selected Step, 0 = first step   
+					keyNavigation: false, // Enable/Disable key navigation(left and right keys are used if enabled)
+					enableAllSteps: false,  // Enable/Disable all steps on first load
+					transitionEffect: 'fade', // Effect on navigation, none/fade/slide/slideleft
+					contentURL:null, // specifying content url enables ajax content loading
+					contentCache:true, // cache step contents, if false content is fetched always from ajax url
+					cycleSteps: false, // cycle step navigation
+					enableFinishButton: false, // makes finish button enabled always
+					errorSteps:[],    // array of step numbers to highlighting as error steps
+					labelNext:'Next', // label for Next button
+					labelPrevious:'Previous', // label for Previous button
+					labelFinish:'Finish',  // label for Finish button
+
+					// Events
+					onLeaveStep: leaveAStepCallback, // triggers when leaving a step
+					onShowStep: null,  // triggers when showing a step
+					onFinish: onFinishCallback  // triggers when Finish button is clicked
+				}
+			);
+     
+			function onFinishCallback(){
+				$('#wizard').smartWizard('showMessage','Please copy the embed code above to your clipboard.');
+				} 
+
+			function leaveAStepCallback(obj){
+				// This function gets called after each step
+				var step_num= obj.attr('rel'); // get the current step number
+				if(step_num == 1){
+				return true; // Return true so that navigation continues
+			} else if(step_num == 2) {
+				return true; // Return true so that navigation continues
+			} else if(step_num == 3) {
+		           return true; // Return true so that navigation continues
+			} else if(step_num == 4) {
+
+				// Turn spinner on before we go and try to retrieve data 
+				// (Spinner turned off at end of getTableMeta)
+				$('#colfetch_spinner').show();  
+
+				// Take input from step 1 and insert vals into the DOM so they're available in step 2
+				spreadsheet_id = $('input[id=sheet_id_field]').val();
+				$('#sheet_id').html(spreadsheet_id);
+				getTableMeta(spreadsheet_id);
+				return true; // Return true so that navigation continues
+			} else if(step_num == 5) {
+
+				// Need to make a new columns object that contains just
+				// the checked columns (unlike cols_orig which contains all cols from spreadsheet).
+				// This is tricky because the previous form element only sends the column IDs,
+				// while we need both IDs and values, and we need the passed columns array
+				// to have the same format as the original one.
+          
+				// Step through the checked columns, find the equivalent element
+				// in orig_cols, and make it a key/val pair in the new object.   
+				// Also build up a cols_as_text string for use in the embed code.
+          
+				columns = {}; 
+				cols_as_text = '';
+				$("input[name='cols_use']:checked").each(function(){
+					temp = orig_cols[$(this).val()]; 
+					columns[$(this).val()] = {label: temp.label}; 
+					cols_as_text += $(this).val() + ","; // But we want column IDs for the URL search query
+				});
+
+				// Strip trailing comma from cols_as_text
+				cols_as_text = cols_as_text.replace(/(^,)|(,$)/g, "") 
+				return true; // Return true so that navigation continues
+             
+			} else if(step_num == 6) {
+
+				// Populate dropdowns for step 7 from new array of usable columns
+				populateDropDown(columns,'#pick_sortby_col');
+				populateDropDown(columns,'#pick_main_col');
+
+				// Store selected values for embed code
+				table_width = $('input[id=table_width]').val();
+				table_height = $('input[id=table_height]').val();
+
+				//create flattened version of columns object
+				flattenColumns();
+				flattenColumnsSubset();
+				return true; // Return true so that navigation continues
+	
+			} else if(step_num == 7) {
+			
+				// Populate step 8 dropdowns when leaving step 7
+				populateDropDown(columns,'#bar_label_col');
+				populateDropDown(columns,'#bar_data_col');
+				populateDropDown(columns,'#bubble_label_col');
+				populateDropDown(columns,'#bubble_data_x');
+				populateDropDown(columns,'#bubble_data_y');
+				populateDropDown(columns,'#bubble_cat');
+				populateDropDown(columns,'#bubble_size');
+
+				// Store selected values for embed code
+				search_widget_col = $('select#pick_main_col').val();      
+				number_widget_col = $('select#pick_sortby_col').val();   
+				search_headline = $('input#search_headline').val();
+		           search_leadin = $('input#search_leadin').val(); 
+
+				// Get actual column IDs for use in search, using our reverse lookup function.
+				// Needed because we need column labels in the wizard, but need to convert
+				// those into column IDs in the search/visualization.
+				search_col_id = getColIdFromLabel(search_widget_col);
+				num_col_id = getColIdFromLabel(number_widget_col);   
+            
+				return true; // Return true so that navigation continues
+
+			} else if(step_num == 8) {
+		
+				// Populate step 9 dropdowns when leaving step 9
+				populateDropDown(columns,'#control1_col');
+				populateDropDown(columns,'#control2_col');
+				populateDropDown(columns,'#control3_col');
+	
+				// Collect inputs from step 8 
+				chart_title = $('input#[id=chart_title]').val();
+				chart_height = $('input#[id=chart_height]').val();
+				chart_ylabel = $('input#[id=chart_ylabel]').val();
+				chart_xlabel = $('input#[id=chart_xlabel]').val();
+	
+				bar_label_col = $('select#bar_label_col').val();
+				bar_data_col = $('select#bar_data_col').val();
+				bubble_label_col = $('select#bubble_label_col').val();
+				bubble_data_x = $('select#bubble_data_x').val();
+				bubble_data_y = $('select#bubble_data_y').val();
+				bubble_cat = $('select#bubble_cat').val();
+				bubble_size = $('select#bubble_size').val();
+		
+				// Get actual column IDs for use in search, using our reverse lookup function.
+				// Needed because we need column labels in the wizard, but need to convert
+				// those into column IDs in the search/visualization.
+				bar_label_idx = getColIndexFromLabelLab(bar_label_col);
+				bar_data_idx = getColIndexFromLabelLab(bar_data_col);
+				bubble_label_idx = getColIndexFromLabel(bubble_label_col);
+				bubble_data_x_idx = getColIndexFromLabel(bubble_data_x);
+				bubble_data_y_idx = getColIndexFromLabel(bubble_data_y);
+				bubble_cat_idx = getColIndexFromLabel(bubble_cat);
+				bubble_size_idx = getColIndexFromLabel(bubble_size);
+
+				return true; // Return true so that navigation continues
+	
+			} else if(step_num == 9) {
+
+				// Collect inputs from step 8 
+				control1_type = $('select#control1_type').val();
+				control1_col = $('select#control1_col').val();
+				control1_label = $('input[id=control1_label]').val();
+				control2_type = $('select#control2_type').val();
+				control2_col = $('select#control2_col').val();
+				control2_label = $('input[id=control2_label]').val();
+				control3_type = $('select#control3_type').val();
+				control3_col = $('select#control3_col').val();
+		           control3_label = $('input[id=control3_label]').val();
+
+				// Retrieve our hidden template and replace out variables 
+				embed_actual = $('textarea#embed_template').html();
+				embed_actual = embed_actual.replace(/SPREADSHEET_ID/g,spreadsheet_id);   
+				embed_actual = embed_actual.replace(/COLS_AS_TEXT/g,cols_as_text);
+				embed_actual = embed_actual.replace(/SEARCH_COL_ID/g,search_col_id);  
+				embed_actual = embed_actual.replace(/WIDGET_NUM_SEARCH/g,widget_num_search);
+				embed_actual = embed_actual.replace(/NUM_SEARCH/g,number_widget_col);
+
+				embed_actual = embed_actual.replace(/TABLE_WIDTH/g,table_width); 
+				embed_actual = embed_actual.replace(/TABLE_HEIGHT/g,table_height); 
+				embed_actual = embed_actual.replace(/SEARCH_HEADLINE/g,search_headline); 
+				embed_actual = embed_actual.replace(/SEARCH_LEADIN/g,search_leadin);   
+     
+				embed_actual = embed_actual.replace(/NUM_COL_ID/g,num_col_id); 
+				embed_actual = embed_actual.replace(/WIDGET_WIDTH/g,table_width-44);
+	
+				// chart vars
+				embed_actual = embed_actual.replace(/CHART_VAL/g,chart_val);
+				embed_actual = embed_actual.replace(/CHART_BIND/g,chart_bind);
+				embed_actual = embed_actual.replace(/CHART_div/g,chart_div);
+				embed_actual = embed_actual.replace(/CHART_TITLE/g,chart_title);
+				embed_actual = embed_actual.replace(/CHART_LEGEND/g,chart_legend);
+				embed_actual = embed_actual.replace(/CHART_HEIGHT/g,chart_height);
+				embed_actual = embed_actual.replace(/CHART_XLABEL/g,chart_xlabel);
+				embed_actual = embed_actual.replace(/CHART_YLABEL/g,chart_ylabel);
+	
+				embed_actual = embed_actual.replace(/BAR_LABEL_COL/g,bar_label_idx);
+				embed_actual = embed_actual.replace(/BAR_DATA_COL/g,bar_data_idx);
+	
+				embed_actual = embed_actual.replace(/BUBBLE_LABEL_COL/g,bubble_label_idx);
+				embed_actual = embed_actual.replace(/BUBBLE_DATA_X/g,bubble_data_x_idx);
+				embed_actual = embed_actual.replace(/BUBBLE_DATA_Y/g,bubble_data_y_idx);
+				embed_actual = embed_actual.replace(/BUBBLE_CAT/g,bubble_cat_idx);
+				embed_actual = embed_actual.replace(/BUBBLE_SIZE/g,bubble_size_idx);
+	
+				// data filter vars
+				embed_actual = embed_actual.replace(/CONTROL1_VAL/g,control1_val);
+				embed_actual = embed_actual.replace(/CONTROL1_TYPE/g,control1_type);
+				embed_actual = embed_actual.replace(/CONTROL1_LABEL/g,control1_label);
+				embed_actual = embed_actual.replace(/CONTROL1_COL/g,control1_col);
+	
+				embed_actual = embed_actual.replace(/CONTROL2_VAL/g,control2_val);
+				embed_actual = embed_actual.replace(/CONTROL2_TYPE/g,control2_type);
+				embed_actual = embed_actual.replace(/CONTROL2_LABEL/g,control2_label);
+				embed_actual = embed_actual.replace(/CONTROL2_COL/g,control2_col);
+				embed_actual = embed_actual.replace(/CONTROL2_BIND/g,control2_bind);
+				embed_actual = embed_actual.replace(/CONTROL2_div/g,control2_div);
+	
+				embed_actual = embed_actual.replace(/CONTROL3_VAL/g,control3_val);
+				embed_actual = embed_actual.replace(/CONTROL3_TYPE/g,control3_type);
+				embed_actual = embed_actual.replace(/CONTROL3_LABEL/g,control3_label);
+				embed_actual = embed_actual.replace(/CONTROL3_COL/g,control3_col);
+				embed_actual = embed_actual.replace(/CONTROL3_BIND/g,control3_bind);
+				embed_actual = embed_actual.replace(/CONTROL3_div/g,control3_div);
+	
+				embed_actual = embed_actual.replace(/FILTER_COL/g,search_widget_col);
+				// embed_actual = embed_actual.replace(/FILTER_LABEL/g,filter_label);
+	    
+				// Prep output for display to user
+				embed_actual = pseudoMinify(embed_actual); 
+				iframe_actual = "&lt;!DOCTYPE html &gt;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;"+embed_actual+"&lt;/body&gt;&lt;/html&gt;";
+	
+				// Send embed code to text fields at end of wizard
+				$('#table_embed_text').html(embed_actual);
+				$('#widget_embed_text').html(iframe_actual);  
+				$('#preview_embed_text').html(embed_actual);
+				return true; // Return true so that navigation continues
+  
+			} else {
+				return true; // Continue anyway
+			}
+		}});
+
+	</script>
+
+	<style type="text/css" media="screen">
+		input[type='checkbox'] 
+			{display:inline;width:20px;}
+			td {width:300px;}
+	</style>
+</head>
+
+<body style="background-color:#FFFFFF;color:#3F3F3F;">
+	<!-- Navigation -->
+	<nav>
+		<ul>
+			<li><a href="freedive.html">Home</a></li>
+			<li><a href="freedive.html#article1">Introduction</a></li>
+			<li><a href="freedive.html#article2">Key Features</a></li>
+			<li><a href="freedive.html#article3">Examples</a></li>
+			<li><a href="freedive.html#article4">Tutorial</a></li>
+			<li><a href="wizard.html">Use the wizard</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+		</ul>
+	</nav>
+
+	<div style="clear:both; margin:80px auto;"></div>
+
+	<div id="content" >
+
+		<table class="clean" id="fd">
+			<tr><td> 
+			<!-- Smart Wizard -->
+			<div id="wizard" class="swMain">
+				<ul>
+					<li><a href="#step-1"><label class="stepNumber">1</label></a></li>
+	  				<li><a href="#step-2"><label class="stepNumber">2</label></a></li>
+	  				<li><a href="#step-3"><label class="stepNumber">3</label></a></li>
+	  				<li><a href="#step-4"><label class="stepNumber">4</label></a></li>
+					<li><a href="#step-5"><label class="stepNumber">5</label></a></li>
+					<li><a href="#step-6"><label class="stepNumber">6</label></a></li>
+					<li><a href="#step-7"><label class="stepNumber">7</label></a></li>
+					<li><a href="#step-8"><label class="stepNumber">8</label></a></li>
+					<li><a href="#step-9"><label class="stepNumber">9</label></a></li>
+					<li><a href="#step-10"><label class="stepNumber">10</label></a></li>
+	  			</ul>
+
+				<div id="step-1">	   
+					<h2 class="StepTitle">Welcome to the freeDive wizard — your guide to making a searchable database</h2>
+					<p class="step_intro">If you're new to freeDive, check out our <a href="http://multimedia.journalism.berkeley.edu/tools/freedive/#wizard_vid">how-to video</a>. Start with a clean Google Spreadsheet. If you don’t know what this means, read our <a href="http://multimedia.journalism.berkeley.edu/tutorials/cleaning-data/"><strong>data cleaning tutorial</strong></a>. Make sure your spreadsheet has the following:</p>
+					<img src="images/reqs.png" alt="requirements" style="margin-top:-10px;">
+					</div>
+
+				<div id="step-2">	
+					<h2 class="StepTitle">Publish your spreadsheet</h2>
+					<p class="step_intro">This step gives freeDive access to your data by publishing your spreadsheet to the Web.</p>
+					<img src="images/publish.png" alt="publish" >	
+				</div>
+
+				<div id="step-3">	
+					<h2 class="StepTitle">Share your spreadsheet</h2>
+					<p class="step_intro">This step gives freeDive access to your spreadsheet URL.</p>
+					<img src="images/share.png" alt="share">	
+				</div>     
+
+				<div id="step-4">	
+					<h2 class="StepTitle">Enter your spreadsheet ID</h2>
+					<p class="step_intro">freeDive accesses your spreadsheet using the unique ID in the spreadsheet URL.</p>
+
+					<img src="images/freeDive-key.png" alt="key">
+
+					<label for="sheet_id_field" style="color:#98212A;">Paste your spreadsheet ID:</label>
+					<input id="sheet_id_field" type="text" value="">  
+					<input type="button" id="sidtest" value="Test" class="buttonOthers">
+					<span id="sidtest_spinner"><img src="images/loader.gif" width="40" height="10" alt="Loader"></span>
+					<br /><br />
+	    			<input type="button" value="Use Example" class="buttonOthers" style="float:left; margin-right:10px" onclick="test_id()">
+					<p class="step_intro"> Click to practice with a spreadsheet.</p>
+				</div>   
+
+	  			<div id="step-5">
+	            <h2 class="StepTitle">Select the columns you want to include in your table</h2>	
+				<p class="step_intro"><strong>At least one column must contain numeric data.</strong> We recommend that you select five columns or fewer to provide the best user experience. You can use more but the absolute limit is 10 columns. If you are using our example, "Contribution" is numeric, so make sure it's checked.
+				</p>
+				<p>You are working on spreadsheet: <strong><span id="sheet_id">&nbsp;</span></strong></p>
+				<br />
+				<p class="step_intro"><strong>Check the columns you want to use:</strong></p>    
+
+	            <p id="colfetch_spinner">Retrieving column data... <img src="images/loader.gif" width="40" height="10" alt="Loader"></p> 
+
+				<p id="col_load_spinner"></p>
+           
+				<table >
+					<tbody>
+						<tr id="colnames">
+						<!-- Cells populated by jQuery -->
+						</tr>
+						<tr id="colids">
+						<!-- Column IDs populated by jQuery -->                        
+						</tr>
+					</tbody>
+				</table>
+
+				<div id="col_no_warn" class="alert"></div>
+
+	        </div>
+
+			<div id="step-6">
+
+				<h2 class="StepTitle">Set the size of your table</h2>
+
+				<p class="step_intro">Setting the size of your table directly impacts how your reader interacts with your data. A too-small table makes the data hard to read and an overly large table can overwhelm your user. Set the height to 300-600 pixels (size of your content area) if the table will be above a story. If your table will stand alone on a page, 600-800 pixels is better because it gives the reader access to more data.
+				</p>
+
+				<div style="width:200px; float:left; margin-right:50px;">
+					<table>
+						<tbody>
+							<tr>
+								<td><label class="sub_head_fd" for="table_width"><strong>Width:</strong></label></td>
+								<td><input id="table_width" type="text" style="width:50px; text-align:right;" value="600"></td>
+								<td>pixels</td>
+							</tr>
+							<tr>
+								<td><label class="sub_head_fd" for="table_height"  ><strong>Height:</strong></label></td>
+								<td><input id="table_height" value="400" type="text" style="width:50px; text-align:right;"></td>
+								<td>pixels</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<img src="images/table-width.png" alt="table width">
+
+			</div>
+
+			<div id="step-7">
+				<h2 class="StepTitle">Set up the search widget</h2>	
+
+				<p class="step_intro" >The first thing users will see is a search widget. It lets them search the entire database and will display the initial results.</p>
+
+				<h3 class="sub_head_fd" >Write a headline
+
+	           <input class="input_fd" type="text" id="search_headline" style="width:300px;  text-transform:uppercase;" value="SEARCH THE DATABASE">
+	           <span class="help_text" >Customize or use the default headline</span></h3>
+
+				<img style='margin-bottom:5px' src="images/widget.png" alt="widget">           	
+
+				<table>
+					<tr class="tr_align">  
+						<td style="width:450px;">
+							<h3 class="sub_head_fd">Select the text search column</h3>
+							<p style="width:95%">This is the main column that your audience will use to search your data. In the example widget above, the column <em>"Name"</em> is selected. </p>    
+							<p>
+								<select id="pick_main_col" class="select_menu">
+			                    <!-- Options generated with jQuery -->
+								</select>
+							</p>
+						</td>
+						<td style="width:450px;">
+							<input type="checkbox" value="" id="widget_num_filter" style="float:left;" onchange="clear_num_widget();"/>
+							<div id="widget_num_select">
+								<h3 class="sub_head_fd"> Use optional numeric filter column</h3>
+								<div id="num_search_show">
+									<p>Allows users to select a numeric value for their search. In the example widget above, the column <strong>"Contribution"</strong> is selected.</p>
+									<p>
+										<select id="pick_sortby_col">
+										<!-- Options generated with jQuery -->
+									</select>
+									</p>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			<!-- </table> -->
+	    </div>
+
+		<div id="step-8">
+	        <h2 class="StepTitle">Would you like to include a chart? <em>(optional)</em> </h2>
+			<div><input type="button" class="buttonOthers" value="Yes" id="chart_yes" style="float:left;" onclick="displayYes()"/>
+			<span style="margin:10px;line-height:25px">This product is <a href="examples/chart.html" target="_blank"> <strong>experimental</strong></a> and should be used with caution. If <strong>No</strong>, please click <strong>Next</strong>.</span>
+			</div>
+			<p class="step_intro" style="padding:10px 0;" id="chart_decision_msg"></p>
+
+			<div id="select_chart" style="display:none;">
+				<table style='width:500px; margin-bottom:20px;'><tr>
+					<td><input type="radio" name="chart_type" value="pick_bar" style="float:left;" onclick="displayResult(this.value)"/>Bar &nbsp;<img alt="bar chart" src="images/bar.png" class="charticon"/></td>
+					<td><input type="radio" name="chart_type" value="pick_bubble" style="float:left;" onclick="displayResult(this.value)"/>Bubble &nbsp;<img alt="bubble chart" src="images/bubble.png" class="charticon"/></td></tr>
+				</table>
+
+			<input type="text" id="result" style="display:none;"/>
+			</div>
+
+				<div id="chart_globals" style="display:none;width:450px;height:500px;margin-right:40px; float:left">
+					<h3><label for="chart_title" >Enter a title (headline):</label><br /><input id="chart_title" style="width:300px; margin-left:0;" value="Title" type="text"/></h3>
+					<h3><label for="legend" >Show legend?</label>
+						<input type="checkbox" id="legend" onchange="use_chart_legend()"/>Yes </h3>
+						
+					<h3><label for="chart_height" ><strong>Height:</strong>&nbsp;&nbsp;</label><input id="chart_height" value="400" type="text" style="width:50px; text-align:right" /><span >pixels</span></h3>
+					<p><span class="help_text">This only affects the height of the chart. The width was set in Step 6.</span></p>
+				</div>
+
+				<div id="pick_bar" style="display:none;">
+					<!-- CONTROL1_COL --> <!-- Options populated with jQuery -->
+					<h3><label for="bar_label_col" >Select your label column:</label> <select id="bar_label_col"> </select></h3> 
+					<h3><label for="bar_data_col" >Select your data column:</label><select id="bar_data_col"> </select></h3> 
+				</div>
+		
+				<div id="pick_bubble" style="display:none;">
+					<h3><label for="bubble_label_col" >Label column (text):</label> <select id="bubble_label_col"> </select></h3>
+					<h3><label for="bubble_data_x">Data for X axis:</label><select id="bubble_data_x"> </select></h3> 
+					<h3><label for="chart_xlabel" >X-axis label (recommended)</label><input id="chart_xlabel" type="text" value="" style="width:200px; margin-left:0;"></h3>
+					<h3><label for="bubble_data_y" >Data for Y axis:</label><select id="bubble_data_y"> </select></h3> 
+					<h3><label for="chart_ylabel" >Y-axis label (recommended)</label><input id="chart_ylabel" type="text" value="" style="width:200px;"></h3>
+					<h3><label for="bubble_cat" >Sub-categories (text):</label><select id="bubble_cat"> </select></h3> 
+					<h3><label for="bubble_size">Data for bubble size:</label><select id="bubble_size"> </select></h3> 
+				</div>
+		</div>
+	
+		<div id="step-9">
+			<h2 class="StepTitle">Customize the results filters</h2>
+			<p class="step_intro" style="padding-bottom:10px;">Users can refine their search results with additional filters — which is especially helpful with large databases. You must use at least one filter and a related data column. You can mix and match up to three filters. To see them in use, check out this <a href="examples/example.html" target="_blank"><strong>example</strong></a>.</p>
+			<img style='float:left;padding-right:25px;width:440px;height:320px;' src="images/filters.png" alt="filters">
+
+			<!-- <div style="width:435px;float:left"> -->
+				<!-- <h3 class="sub_head_2_fd">Define the primary filter (required)</h3> -->
+				<h3>Define the primary filter (required)</h3>
+				
+				<p id="pick_control1" class="filters">
+					<select name='control1_type' id='control1_type' style="float:left;margin-right: 20px;">
+						<option value=''>Pick a filter type</option>
+						<option value='NumberRangeFilter'>Numeric range slider</option>
+						<option value='StringFilter'>Text search</option>
+						<option value='CategoryFilter'>Pick list</option>
+					</select>
+					<label for="control1_col" style="clear:both;">Select a column:</label>
+					<select id="control1_col"> 
+					<!-- CONTROL1_COL -->
+					<!-- Options populated with jQuery -->
+					</select>
+				</p>
+				<p class="filters">
+					<label class="lable_fd" for="control1_label">Write a label for the filter</label>
+					<input class="input_fd" type=text id="control1_label" value="Label">
+				</p>
+				<input type="checkbox" value="" id="clear_control2" style="float:left;" onchange="set_control2();"/><label class="lable_fd" for="clear_control2" style="color:#6F2125; margin-bottom:15px"><span class="help_text" >Check to use a second filter</span></label>
+				<!-- </div> -->
+			<!-- </div> -->
+								
+						
+			<!-- <h3 class="sub_head_2_fd"><input type="checkbox" value="" id="clear_control2" style="float:left;" onchange="set_control2();"/> Check to use a second filter</h3> -->
+			
+			<div id="pick_control2" style="block:none">
+				<p class="filters">
+					<select name='control2_type' id='control2_type' style="float:left;margin-right: 20px;">
+						<option value=''>Pick a filter type</option>
+						<option value='NumberRangeFilter'>Numeric range slider</option>
+						<option value='StringFilter'>Text search</option>
+						<option value='CategoryFilter'>Pick list</option>
+					</select>
+					<label for="control2_col" >Select a column:</label>
+				    <select id="control2_col"> <!-- CONTROL2_COL -->
+				               <!-- Options populated with jQuery -->
+				    </select>
+				</p>
+				<p class="filters">
+					<label class="lable_fd" for="control2_label">Write a label for the filter</label>
+					<input class="input_fd" type=text id="control2_label" value="Label">
+				</p>
+
+				<input type="checkbox" value="" id="clear_control3" style="float:left;" onchange="set_control3();"/><label class="lable_fd" for="clear_control3" style="color:#6F2125; margin-bottom:15px"><span class="help_text" >Check to use a third filter</span></label>
+
+				<div id='show_cont3' style="display:none">
+					<div id="pick_control3">
+						<p class="filters">
+						<select name='control3_type' id='control3_type' style="float:left;margin-right: 20px;">
+							<option value=''>Pick a filter type</option>
+							<option value='NumberRangeFilter'>Numeric range slider</option>
+							<option value='StringFilter'>Text search</option>
+							<option value='CategoryFilter'>Pick list</option>
+						</select>
+						<label for="control3_col" >Select a column:</label>
+					    <select id="control3_col"> <!-- CONTROL3_COL -->
+					               <!-- Options populated with jQuery -->
+					    </select>
+						</p>
+						<p class="filters">
+							<label class="lable_fd" for="control3_label">Write a label for the filter</label>
+							<input class="input_fd" type=text id="control3_label" value="Label">
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		
+		<div id="step-10">
+			
+			<h2 class="StepTitle">Congratulations! You're done...&nbsp;&nbsp; <input type="button" class="buttonOthers" value="Preview" onclick="preview_pop()" style="height:30px;"/></h2>
+
+			
+
+			<h3 class="sub_head_fd">Download an HTML file to use in an IFRAME (recommended)</h3>
+			
+			<input type="button" class="buttonOthers" value="Download HTML" onclick="downloadTable()" style="height:30px; float:left; margin-right:10px"/> 
+			<div id="name" style="width:100%;">
+			<table class="clean" >
+				<tr><td class="tooltip" style="padding:0;vertical-align:center;font-size:11px;font-weight:bold;color:#226E98;width:220px">INSTRUCTIONS<span style='font-size:14px;font-weight:normal;'><strong>How to use an iframe</strong><br />&bull; Upload the renamed page to your web server. Note the URL (web address) of where it's located.<br />&bull; Copy the sample iframe code below and paste it into a web page.<br />&bull; Replace the <strong>URL</strong> text in the sample code with the URL of your uploaded html page.</span></td><td class="tooltip" width="20px" style="padding:0;vertical-align:top;font-size:11px;font-weight:bold;color:#226E98;width:120px"></td>
+				</tr>
+			</table>
+				
+				
+			</div>	
+				
+				
+				
+				
+				<h3 class="sub_head_fd">Copy and paste this embed code into your post...</h3>
+
+				<p><textarea id="table_embed_text" style="width:500px; height:80px;margin-bottom:10px;"></textarea></p>
+				<table class="clean">
+					<tr>
+						<td class="tooltip"  style="padding:0;vertical-align:top;font-size:11px;font-weight:bold;color:#226E98;width:110px;">EMBED SECURITY<span style='font-size:14px;font-weight:normal;'>This embed code is mainly javascript which some platforms restrict, so you may have to ask someone with administrator access to post it for you.</span></td>
+						<td class="tooltip"  style="padding:0;vertical-align:top;font-size:11px;font-weight:bold;color:#226E98;width:110px;">WORDPRESS TIPS <span style='font-size:14px;font-weight:normal;'>WordPress users will need to use the <a href="http://www.artiss.co.uk/code-embed">Artiss Code Embed</a> plugin or something similar to work with WordPress security settings. When viewing your post in HTML mode, make sure all text has opening and closing tags (&lt;p&gt;, &lt;/p&gt;, etc ).</span></td>
+						<td class="tooltip" style="padding:0;vertical-align:top;font-size:11px;font-weight:bold;color:#226E98;width:140px;"> <a href="http://multimedia.journalism.berkeley.edu/contact/">GIVE US YOUR FEEDBACK</a></td>
+					</tr>
+				</table>
+				<br /><br />
+				<h3 class="sub_head_fd">...or download an HTML file to use in an IFRAME</h3>
+				<p><input type="button" class="buttonOthers" value="Download HTML" onclick="downloadTable()" style="height:30px; float:left; margin-right:10px"/> 
+				</p>
+				<table class="clean" >
+					<tr><td class="tooltip" style="padding:0;vertical-align:center;font-size:11px;font-weight:bold;color:#226E98;width:220px">INSTRUCTIONS<span style='font-size:14px;font-weight:normal;'><strong>How to use an iframe</strong><br />&bull; Upload the renamed page to your web server. Note the URL (web address) of where it's located.<br />&bull; Copy the sample iframe code below and paste it into a web page.<br />&bull; Replace the <strong>URL</strong> text in the sample code with the URL of your uploaded html page.</span></td><td class="tooltip" width="20px" style="padding:0;vertical-align:top;font-size:11px;font-weight:bold;color:#226E98;width:120px"></td>
+					</tr>
+				</table>
+			
+					
+					
+				<p><strong>IMPORTANT:</strong> Rename the downloaded file to <strong>"yourname.html"</strong></p>
+		
+		
+				<p style="width:500px;">
+					&lt;iframe src="<strong>URL</strong>" width="100%" height="300" frameborder="0" &gt;&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;&lt;/iframe&gt;
+				</p>
+				<br />
+				<p><span style="float:left;margin-right:10px;"><strong>SPREAD THE WORD</strong></span> <a title="Share on facebook" style="float:left;padding-right:10px;" href="http://www.facebook.com/sharer.php?u=http://kdmc.us/freeDive"><img src="images/icon_facebook.png" width="20" height="20" alt="Icon Facebook"></a>
+					<a style="padding-right:10px;" href="http://twitter.com/share?text=Make a free searchable database using freeDive via @kdmcinfo" title="Click to share this post on Twitter"><img src="images/icon_twitter.png" width="20" height="20" alt="Icon Twitter"></a>
+				</p>
+				<textarea id="widget_embed_text" style="width:150px; height:20px; visibility:hidden;" ></textarea>
+	  	</div>
+	</div>
+	
+	</td>
+	</tbody>
+	</table>
+</div>
+	<!-- End SmartWizard Content -->  		
+
+
+
+
+	<!-- This textarea stores a multi-line Javascript variable we can 
+	search/replace through and minify on output to generate embed code 
+	(a workaround since Javascript provides no heredoc syntax). 
+	Javascript comments will be stripped out. For now, do not include HTML comments.
+	-->
+
+	<textarea id="embed_template" >
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+	<script type="text/javascript">
+	//Load the API and the controls package.  
+	  google.load('visualization', '1.0', {packages:['controls']});
+	</script>
+
+
+	<style type="text/css">
+	    /*widget and filter styles*/
+
+		#fd_main p{font:13px/16px Arial;margin-bottom:10px !important;padding:0;}
+		#fd_main h4{font-family:Arial;font-weight:bold;text-transform:uppercase;text-align:left;padding:0 0 5px 0;margin:0;}
+		#fd_main label{font:bold 13px/24px Arial;padding:0 5px 0 0;float:left;vertical-align:middle;}
+		#fd_main input,textarea,select,button{font:13px/16px Arial;color:#959595;vertical-align:middle;}
+		.fd_note{font-family:Arial;color:#5E5E5E;font-size:.8em;border:none;padding:0;}
+		div.search_widget{background:#E1E1E1;background:-webkit-gradient(linear,left top,left bottom,from(#FFF),to(#E1E1E1));background:-webkit-linear-gradient(top,#FFF,#E1E1E1);background:-moz-linear-gradient(top,#FFF,#E1E1E1);background:-ms-linear-gradient(top,#FFF,#E1E1E1);background:-o-linear-gradient(top,#FFF,#E1E1E1);border:2px solid #E1E1E1;padding:20px;-moz-border-radius:10px;-webkit-border-radius:10px;margin-bottom:20px;}
+		div.control{margin-bottom:15px;color:black;height:26px;}
+		div.chart1{float:left;}
+		/* table styles */
+		.header{background-color:#5B5B5B;color:#FFFFFF;font-family:Arial,sans-serif;text-align:left;font-size:0.8em;text-transform:uppercase;font-weight:600;letter-spacing:1px;line-height:1.4em;border:none;}
+		.row{background-color:#FFFFFF;color:#3F3F3F;font-family:inherit;font-size:0.9em;}
+		.oddRow{background-color:#F5F5F5;color:#3F3F3F;font-family:inherit;text-align:left;font-size:0.9em;}
+		.hoverRow{background-color:#CDCDCD;font-family:inherit;text-align:left;font-size:0.9em;}
+		.selectedRow{background-color:#DCDCDC;color:#3F3F3F;text-align:center;font-family:inherit;text-align:left;font-size:0.9em;}
+		.cell,table{padding:2px;border:none;}
+		.headCell{padding:0;}
+		/* drop down menu item */
+		.goog-menu{font-family:Arial;}
+		/*padding:8px 0*/
+		.goog-menuitem-content{color:#3F3F3F;}
+		.goog-menuitem-highlight,.goog-menuitem-hover{background-color:#F0F0F0;border-color:#F0F0F0;}
+		.goog-menu-button-focused .goog-menu-button-outer-box,.goog-menu-button-focused .goog-menu-button-inner-box{border-color:#B1B1B1;margin}
+		.goog-menu-button-inner-box{font:13px/18px Arial,sans-serif;margin:2px 0;padding:0 5px;}
+		.goog-menu-button-hover .goog-menu-button-outer-box,.goog-menu-button-hover .goog-menu-button-inner-box{border-color:#B1B1B1!important;}
+		.goog-menu-button-active,.goog-menu-button-open{background-color:#F0F0F0;border-color:#B1B1B1;background-position:bottom left}
+		.goog-menu-button-focused .goog-menu-button-outer-box,.goog-menu-button-focused .goog-menu-button-inner-box{border-color:#B1B1B1}
+		/* numeric range filter */
+		.google-visualization-controls-slider-horizontal{border:0px;background-color:#DBDBDB;border-radius:5px;-moz-border-radius:5px;outline:none;height:8px;}
+		.google-visualization-controls-slider-thumb{background-color:#616161;border:none;width:12px;height:12px;}
+		.google-visualization-controls-slider-horizontal .google-visualization-controls-slider-handle{height:8px;}
+		.google-visualization-controls-slider-horizontal .google-visualization-controls-slider-thumb{top:-2px;left-margin:8px;border-radius:2px;-moz-border-radius:2px;}
+		.google-visualization-controls-slider-handle{background-color:#616161;opacity:.6;height:4px}
+		.google-visualization-controls-rangefilter-thumblabel{font:13px/24px Arial;color:#3F3F3F;padding:0 0.5em}
+		#page-loader{position:absolute;top:0;bottom:0%;left:0;right:0%;background-color:white;z-index:99;display:none;text-align:center;width:100%;padding-top:25px;}
+		
+
+	</style>
+
+	<div id="container">
+		<div id="fd_main" style='width:WIDGET_WIDTHpx'>
+			<div id="full_search" class="search_widget" style='float:left;width:WIDGET_WIDTHpx'> 
+				<h4>SEARCH_HEADLINE</h4>
+				<p class="fd_note">
+					Text search is case sensitive. Leave fields blank to see the entire database (may cause longer load times).
+				</p>
+				<p>
+					<label for="search_text">FILTER_COL includes </label>
+					<input id="search_text" value="" onfocus="changeSearchButton1()" >
+				</p>
+				<div id="num_search_bit">
+					WIDGET_NUM_SEARCH
+				</div>
+				<div style='display:none;' id="name">
+					<p ><input id='range_num' value='' ></p>
+				</div>
+				<p>
+					<span class="fd_note" style="float:left;" >
+						Powered by <a href="http://multimedia.journalism.berkeley.edu/tools/freedive">freeDive</a>
+					</span>
+					<input id="submit_button" type="submit" value="SEARCH" onclick="fd_refresh()" style="float:right; color:#000;">
+				</p>
+			</div>
+			<div id="page_loader"></div>
+
+			<div id="dashboard" style='width: TABLE_WIDTHpx;font-family:Arial, sans-serif;float:left;'>
+				<h4 style="font-size:14px !important">Explore your results</h4> 
+				<p><strong>Instructions:</strong> Use the filter(s) below to customize your search results. Use the tool above to perform a new search. 
+				</p> 
+				<div id="control1" class="control"></div>
+				CONTROL2_div
+				CONTROL3_div
+				CHART_div
+				<div class="fd_note" style="width:100%; margin-bottom:.3em">
+					Click on a column label to resort the table.
+				</div>
+				<div id="chart1" class="chart1"> 
+					<p style='font-size:1.3em;color:#772327;text-align:center !important;padding:60px 0 20px'>Fetching data... Thank you for waiting. </p> 
+					<p style='color:#3F3F3F;text-align:center !important;padding:20px 0'>Searches with a large number of results may take longer to load.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" charset="utf-8">
+
+	    // jQuery plugin to extract URL vars
+		$.extend({
+			getUrlVars: function(){
+				var vars = [], hash;
+				var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+				for(var i = 0; i < hashes.length; i++)
+				{
+					hash = hashes[i].split('=');
+					vars.push(hash[0]);
+					vars[hash[0]] = hash[1];
+				}
+				return vars;
+			},
+			getUrlVar: function(name){
+				return $.getUrlVars()[name];
+			}
+		});
+
+		// Assume we have no query vars to start
+		anyquery = false; 
+
+		// Get any known values from URL and pre-fill form fields if they exist.
+		// Using fdxx nomenclature to keep FreeDive params from colliding with host site params.
+		fdnq = decodeURIComponent($.getUrlVar('fdnq'));
+		fdop = decodeURIComponent($.getUrlVar('fdop'));
+		fdtq = decodeURIComponent($.getUrlVar('fdtq'));
+		fdall = decodeURIComponent($.getUrlVar('fdall'));    
+
+		// If fdall param is present, override any others and do a full query
+		if (fdall != 'undefined') {
+			fdall = true; 
+		} else {
+			fdall = false;
+		};
+
+		// Don't attempt to call the visualization code 
+		// or display the dashboard unless we have search terms.
+		// Set global anyquery var for use elsewhere.    
+		if (fdtq != 'undefined' || fdnq != 'undefined' || fdall == true) {
+			anyquery = true; 
+			google.setOnLoadCallback(drawVisualization());
+		} else {
+			fdtq = 'Enter case-sensitive text';  //Enter case-sensitive text
+			fdnq = 'Enter a number';  // Enter a number
+		}; 
+
+		// Render the chart - this function only called if we have query terms
+		function drawVisualization() { 
+
+			// ------------ Load data from google docs ----------------
+			var search_url = 'https://spreadsheets.google.com/a/google.com/tq?key=SPREADSHEET_ID';
+
+			// Test strings
+			// fdtq=A%20like%20'%25St%25'
+			// fdnq=F%20%3E%200
+			// fdtq=A%20like%20'%25St%25'&fdnq=F%20%3E%200
+
+			// If one of these doesn't exist, it'll come back as string 'undefined'.
+			// Blanking it out here simplifies the query generating code. 
+			if (fdtq == 'undefined') {
+				fdtq = '';
+			};
+
+			if (fdnq == 'undefined') {
+				fdnq = '';
+			};
+
+			// If user clicked the Show all button, our query is simple
+			// (but dangerously slow-loading). Otherwise we have to build it up.
+			if (fdall) {
+				var querystring = "select *";
+
+	        } else {
+
+				// Query params exist. Start building string  
+				// var querystring = "select A,B,C,D,E,F where ";
+				var querystring = "select COLS_AS_TEXT where ";
+
+				// Three possible search strings here, depending  on whether
+				// they filled in one field, the other, or both.
+
+				if (fdtq != '' && fdnq == '' ) {
+					// We have a textquery but not a numquery        
+					querystring = querystring + "SEARCH_COL_ID like '%" + fdtq + "%'";
+
+				} else if (fdtq == '' && fdnq != '' ) {
+					// We have a numquery but not a textquery
+					querystring = querystring + "NUM_COL_ID" + fdop + fdnq; 
+
+				} else {
+					// We have both a numquery and a textquery
+					querystring = querystring + "SEARCH_COL_ID like '%" + fdtq + "%'" + " and " + "NUM_COL_ID" + fdop + fdnq;
+				};   
+	        };      
+
+			// URLencode query terms before appending to URL
+			querystring = encodeURIComponent(querystring);  
+
+			// Append encoded query terms to search URL
+			search_url = search_url + "&tq=" + querystring; 
+
+			// A mysterious hash mark slips in sometimes, which causes the query to 
+			// return all records regardless of the search terms. Strip it out.
+			search_url = search_url.replace(/#&tq/,'&tq');
+
+			var query = new google.visualization.Query(search_url);
+			query.send(handleQueryResponse);  
+		}   
+
+		function handleQueryResponse(response) {
+			if (response.isError()) {
+				console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+				return;
+			}
+
+			var data = response.getDataTable();   
+
+			// ------------ Draw dashboard ----------------
+
+			// define the control filters
+
+			var control1_use = CONTROL1_VAL; 
+			CONTROL2_VAL; 
+			CONTROL3_VAL;
+
+			// Here's our table visualization in a wrapper
+
+			var classes = {headerRow: 'header', tableRow: 'row', hoverTableRow: 'hoverRow', oddTableRow: 'oddRow', selectedTableRow:'selectedRow', tableCell:'cell', headderCell:'headCell' };
+
+			CHART_VAL;
+
+			var table = new google.visualization.ChartWrapper({
+				'chartType': 'Table',
+				'containerId': 'chart1',
+				'options': {'height': 'TABLE_HEIGHTpx', 'cssClassNames': classes, 'width': 'TABLE_WIDTHpx','allowHtml':'true' }
+			});
+
+			//Create the dashboard 
+			var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard')).
+			// Configure the string to filter table and chart  [table, chart].
+			bind([control1_use CONTROL2_BIND CONTROL3_BIND], [table CHART_BIND]).
+			draw(data);   
+			$('div#dashboard').show();   
+		};
+
+		// Initially hide the dashboard
+		if (anyquery == false) {
+			$('div#dashboard').hide();
+			// $('input#submit_button').value=="SEE ALL RECORDS";
+		};                             
+
+		// Pre-fill search fields from vars
+		$('input#search_text').val(fdtq);
+		$('input#range_num').val(fdnq);
+		// Can't currently pre-set the value of the operator select box.
+		// It would be possible with some jimmying, but very verbose. 
+		// See bottom example at http://api.jquery.com/val/
+
+		// change search button text when clicking in text field
+		function changeSearchButton1() {
+			document.getElementById('submit_button').value = 'SEARCH';
+		};
+
+
+		function fd_refresh() { 
+
+			// The refresh() function strips our old values and adds new ones. 
+			// Takes an optional "allrecs" arg for handling all-record searches.
+			// When search is clicked we get new values from form fields, build
+			// an encoded URL string from them, and request a new page with new values. 
+
+			// We got initial values from the URL, but now we set new vars to 
+			// match what user has entered into search fields.
+			var fdop = $('#sheet_op').val();
+			var fdnq = $('#range_num').val();
+			var fdtq = $('#search_text').val();
+
+			// Get existing URL and start parsing
+			var sURL = window.location.href;
+
+			// Strip out our old URL params, leaving the host's originals and adding new ones back in.  
+			// We can't just append to the URL because a person will likely do a 2nd, 3rd search etc.
+			// And we can't know what params are already in the host's system, so we have to respect them.
+
+			// Match either to the next ampersand or to the end of the line. It'll take the first 
+			// match found, so it's important that the end of line option comes second, or it 
+			// wipe out all params.
+			sURL = sURL.replace(/(fdtq=.*&|fdtq=.*$)/gi,'');
+			sURL = sURL.replace(/(fdnq=.*&|fdnq=.*$)/gi,'');
+			sURL = sURL.replace(/(fdop=.*&|fdop=.*$)/gi,'');
+			sURL = sURL.replace(/(fdall=.*&|fdall=.*$)/gi,'');        
+
+			// It's possible to end up with a trailing & - remove if so.
+			sURL = sURL.replace(/&$/,'');
+
+			// Build new query string. Need to pre-pend ? if not already present. 
+			var qs = '';
+			var found = sURL.search('\\?');
+			if (found == -1) {
+				qs = "?";
+			};
+
+			// Make sure we don't send the default field values back to the URL
+			if (fdnq == "Enter a number") {fdnq = ''};
+			if (fdtq == "Enter case-sensitive text") {fdtq = ''};        
+
+			// Simplify the search param if no terms entered.
+			if (fdnq == '' && fdtq == '') {
+				var allrecs = true;
+			};
+
+			if (allrecs) {
+				qs = qs + "fdall=true" ;
+			} else {
+				qs = qs + "&fdop=" + encodeURIComponent(fdop) + "&fdnq=" + encodeURIComponent(fdnq) + "&fdtq=" + encodeURIComponent(fdtq);            
+			};
+
+			// console.log(qs);
+
+			// Append to URL
+			sURL = sURL + qs;
+
+			// Re-launch window with replacement URL
+			window.location.replace(sURL);
+		}  
+
+		$(document).ready(function(){   
+
+			// Clear range field when clicked in IF it contains the default value
+			$('input#range_num').focus(function() {
+	            if($(this).val() == 'Enter a number') $(this).val('');           
+			}).blur(function() {
+	            if( $(this).val() == '') $(this).val('Enter a number');
+			}); 
+
+			// Do same for text input field
+			$('input#search_text').focus(function() {
+				if($(this).val() == 'Enter case-sensitive text') $(this).val(''); 
+			}).blur(function() {
+				if( $(this).val() == '') $(this).val('Enter case-sensitive text');
+			});
+
+			if (anyquery == false) {
+				document.getElementById('submit_button').value='SEE ALL RECORDS';}
+			else{
+				document.getElementById('submit_button').value='SEARCH';
+			};
+	    });
+	</script>
+	</textarea>
+		
+		<!-- End hidden embed code generation template -->
+	<footer>
+		<script src="js/wizard.js" type="text/javascript" charset="utf-8"></script>
+	</footer>
+		
+</body>
+</html>

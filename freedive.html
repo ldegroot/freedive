@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to freeDive</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+  <script src="js/modernizr.custom.2.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/jquery.1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <link href="styles/freedive.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" id="mainstylesheet">
+
+
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#article1">Introduction</a></li>
+      <li><a href="#article2">Key Features</a></li>
+      <li><a href="#article3">Examples</a></li>
+      <li><a href="#article4">Tutorial</a></li>
+      <li><a href="wizard.html">Use the wizard</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+  </nav>
+  
+  <!-- main header -->
+  <header id="home">
+    <img src="images/splash-trans.png" alt="freeDive icon" width="30%" >
+    <h1>freeDive (alpha)</h1>
+    <h2>Create user searchable databases in minutes</h2>
+	<p style="text-align:center">
+		&bull; Built-in search and filters <br />
+		&bull; Use Google Spreadsheets as your database <br />
+		&bull; Copy embed code or download an HTML page
+	</p>
+	<p style="text-align:center">
+		<input type="button" value="USE THE WIZARD" id="fd_wizard" class="fd_button" style="margin-right:10px;" onclick="window.location.href='wizard.html'">
+		<input type="button" value="FAQ" id="fd_faq" class="fd_button" onclick="window.location.href='wizard.html'">
+	</p>
+	<p style="text-align:center"><a title="Share on facebook" href="http://www.facebook.com/sharer.php?u=http://kdmc.us/freeDive"><img src="images/icon_facebook.png" width="30" height="30" alt="Icon Facebook"></a> <a title="Share on Twitter" href="http://twitter.com/share?text=Make a free searchable database using freeDive via @kdmcinfo" ><img src="images/icon_twitter.png" width="30" height="30" alt="Icon Twitter"></a></p>
+  </header>
+  
+  <!-- Each story -->
+  <article id="article1">
+	<h3>
+		Transform Google Spreadsheets into embeddable, searchable databases.</h3><br />
+    <iframe src="http://player.vimeo.com/video/35991763?title=0&amp;byline=0&amp;portrait=0" width="100%" height="500" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+  </article>
+  
+  <article id="article2">
+		<div style="float:left;padding:0 80px 30px 0;">
+			<h3>Key Features</h3> 
+			<ul>
+				<li>Easily search your data.</li>	
+				<li>Get results in an interactive, sortable table</li>
+				<li>Use filters to refine the search.</li>
+				<li>A wizard walks you through creating a widget.</li>
+				<li>Customize the interface.</li>
+				<li>Share search results on social networks.</li>
+			</ul>
+		</div>
+		<div>
+			<h3>Technical stuff</h3> 
+			<ul>
+				<li>Uses the Google Visualization API.
+				</li>	
+				<li>The resulting embed code uses HTML, CSS and JavaScript.</li>
+				<li>Open Source under <a href="http://www.opensource.org/licenses/gpl-2.0.php">GPL Version 2 license</a>.<br />
+				</li>
+				<li>Created by Len De Groot and Scot Hacker</li>
+			</ul>
+		</div>
+    
+  </article>
+
+  <article id="article3">
+	
+	<p ><iframe src="http://player.vimeo.com/video/35977402?title=0&amp;byline=0&amp;portrait=0" width="100%" height="450"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></p>
+	<h3 >Try a live version</h3>
+	<p ><a href="examples/example.html"><img class="fd_thumb" src="images/finance.jpg" alt="table example" /></a><a href="examples/chart.html"><img class="fd_thumb" src="images/bubble.jpg"  alt="chart example" /></a>
+	</p>
+
+    
+  </article>
+  
+  <article id="article4">
+	<p><iframe src="http://player.vimeo.com/video/35986206?title=0&amp;byline=0&amp;portrait=0" width="100%" height="450"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></p>
+  </article>
+</body>
+</html>

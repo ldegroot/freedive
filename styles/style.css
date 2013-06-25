@@ -1,0 +1,120 @@
+/* first for Internet Explorer */
+@font-face {
+	font-family: DinReg;
+	src: url(../fonts/DINWeb.eot);
+	font-weight: normal;
+	font-style:  normal;
+}
+
+@font-face {
+	font-family: DinReg;
+	src: url(../fonts/DINWeb-Medium.eot);
+	font-weight: bold;
+	font-style:  normal;
+}
+
+  /* then for Others */
+  @font-face {
+    font-family: DinReg;
+    src: url(../fonts/DINWeb.woff) format('woff');
+}
+
+@font-face {
+	font-family: DinReg;
+	src: url(../fonts/DINWeb-Medium.woff);
+	font-weight: bold;
+	font-style:  normal;
+}
+
+body{
+		width:100%;
+		max-width:940px;
+		padding: 0;
+		margin-left:auto;
+		margin-right:auto;
+		font-family: DinReg, Helvetica, Arial, sans-serif;
+		line-height:1.3;
+		font-style:normal; 
+		background-color:#DCEAEF;
+	}
+	
+#nav_main ul{
+		list-style: none;
+		position: fixed;
+		margin-top:10px;
+		top:10px;
+		z-index: 999;
+		overflow:hidden;
+/*		margin:0px;*/
+	}
+
+	/* Navigation */
+	nav{
+	  position:fixed;
+	  top:0;
+	  display:block;
+	  width:100%;
+	  background:#6F7280;
+	  text-align:center;
+	  z-index:100;
+	  color:#cccccc;
+	}
+
+	nav li{
+	  margin:0;
+	  padding:0;
+	}
+
+	nav li.selected a{
+	  background:#282A33;
+	}
+
+	nav li a:hover{
+	  cursor:pointer;
+	  color:#fff;
+	  background:#363F4A;
+	}
+	nav a{
+	  display:block;
+	  padding:10px 15px;
+	  text-decoration:none;
+	  color:#ccc;
+	}
+	
+/*#nav_main li{
+		margin: 10 0 20px 0;
+		display:inline;
+		float:left;
+		
+	}
+
+#nav_main a:link,a:visited
+	{
+	display:block;
+	width:60px;
+	font-size:12px;
+	font-weight:normal;
+	color:#ddd;
+	/* background-color:rgba(200, 200, 200, 0.3);
+	text-align:center;
+	line-height:1.3em;
+	padding:4px;
+	text-decoration:none;
+	text-transform:uppercase;
+	background: #103244;
+	background: -webkit-gradient(linear, left top, left bottom, from(#103244), to(#07161E));
+	background: -webkit-linear-gradient(top, #103244, #103244);
+	background: -moz-linear-gradient(top, #103244, #07161E);
+	background: -ms-linear-gradient(top, #103244, #07161E);
+	background: -o-linear-gradient(top, #103244, #07161E);
+	}*/
+	
+/*	p.questions {font-size:.9em; font-weight:bold; line-height:1.3em;}
+	p.answers {font-size:.9em; font-weight:normal; line-height:1.3em;}*/
+
+/*#nav_main a:hover,a:active
+	{
+		background: #06151D;
+		color: #FFF;
+	}*/
+	

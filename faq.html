@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>freeDive FAQ</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+  <script src="js/modernizr.custom.2.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/jquery.1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+<link href="styles/freedive.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" id="mainstylesheet">
+
+</head>
+
+
+<body style="background-color:#FFFFFF;color:#3F3F3F;">
+	<!-- Navigation -->
+	<nav>
+		<ul>
+			<li><a href="freedive.html">Home</a></li>
+			<li><a href="freedive.html#article1">Introduction</a></li>
+			<li><a href="freedive.html#article2">Key Features</a></li>
+			<li><a href="freedive.html#article3">Examples</a></li>
+			<li><a href="freedive.html#article4">Tutorial</a></li>
+			<li><a href="wizard.html">Use the wizard</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+		</ul>
+	</nav>
+	
+<div id="faq">
+
+	<h1>freeDive: frequently asked questions</h1>
+	<p class="answers">The information below was prepared prior to the launch of the <strong>freeDive</strong> alpha. Please feel free to contact us if you have additional questions you would like answered.</p>
+	
+	<h2>Requirements</h2>
+
+	<p class="questions"><a href="#question1">Why do I have to have a column of numbers?</a></p>
+	<p class="questions"><a href="#question2">Why do I have to have a column of text?</a></p>
+	<p class="questions"><a href="#question3">Can I search for  a number?</a></p>
+	<p class="questions"><a href="#question4">Why do I need a single row of column labels?</a></p>
+	<p class="questions"><a href="#question5">Why do I have to format special characters (thousand separators, currency, etc)?</a></p>
+	<p class="questions"><a href="#question6">Why must the spreadsheet have exactly one spreadsheet?</a></p>
+
+	<h2>Recommendations</h2>
+
+	<p class="questions"><a href="#question7">Why do I need to optimize my spreadsheet?</a></p>
+	<p class="questions"><a href="#question8">Should I design my table before I use <b>freeDive</b>?</a></p>
+	<p class="questions"><a href="#question9">What happens if I edit column labels in my spreadsheet after I use <b>freeDive</b>?</a></p>
+	<p class="questions"><a href="#question10">What happens if I edit data in my spreadsheet after I use <b>freeDive</b>?</a></p>
+	<p class="questions"><a href="#question11">Why shouldn't I use all caps text?</a></p>
+
+	<h2>Common problems</h2>
+
+	<p class="questions"><a href="#question12">I entered my spreadsheet URL but the test fails.</a></p>
+	<p class="questions"><a href="#question13">I entered my spreadsheet key but the test fails.</a></p>
+	<p class="questions"><a href="#question14">Can I have more than five columns?</a></p>
+	<p class="questions"><a href="#question15">How do I see the downloaded HTML page?</a></p>
+	
+
+	<h2>Publishing</h2>
+
+	<p class="questions"><a href="#question16">Which browsers are compatible?</a></p>
+	<p class="questions"><a href="#question17">Does <b>freeDive</b> work in IE 6 or 7?</a></p>
+	<p class="questions"><a href="#question18">What are the advantages to using the embed code?</a></p>
+	<p class="questions"><a href="#question19">What are the disadvantages to using the embed code?</a></p>
+	<p class="questions"><a href="#question20">What are the advantages to using the HTML page?</a></p>
+	<p class="questions"><a href="#question21">What are the disadvantages to using the HTML page?</a></p>
+	<p class="questions"><a href="#question22">Can users share search results with social media?</a></p>
+	<p class="questions"><a href="#question23">Does this work on an iPad or tablet?</a></p>
+	<p class="questions"><a href="#question24">Does it work on a smart phone?</a></p>
+
+	<h2>Other Questions</h2>
+	<p class="questions"><a href="question25">Does numeric search or slider work with columns using percent signs?</a></p>
+	<p class="questions"><a href="#question26">Can I include links?</a></p>
+	<p class="questions"><a href="#question27">Can I include images and a caption?</a></p>
+
+
+<br />
+
+	<h2>Answers</h2>
+
+	<h3 id="question1">Why do I have to have a column of numbers?</h3>
+	<p class="answers"><b>freeDive</b> uses Google APIs to access the spreadsheet data. The API guesses which row contains the column headers by comparing text with numbers in each column. Having a column on numbers assures the Google API guesses correctly. </p>
+
+	<h3 id="question2">Why do I have to have a column of text?</h3>
+	<p class="answers"><b>freeDive</b> can only search text fields. </p>
+
+	<h3 id="question3">Can I search for  a number?</h3>
+	<p class="answers">No. Searching for the number 10 would result in any number with a 10 in it (100, 1,000, or 1,000,000,000).  <b>freeDive</b> uses operators (greater than, less than) to select ranges of numbers. Number search would be a nice feature and we may get to it eventually, but it's not practical for our initial launch.</p>
+
+	<h3 id="question4">Why do I need a single row of column labels?</h3>
+	<p class="answers"><b>freeDive</b> uses Google APIs to access the spreadsheet data. The API guesses which row contains the column headers by comparing text with numbers in a column. If there are two header rows, the API cannot guess reliably.</p>
+
+	<h3 id="question5">Why do I have to format special characters (thousand separators, currency, etc)?</h3>
+	<p class="answers">Honestly, we probably could have figured this out and may still. But it's a low priority issue and easily addressed in the spreadsheet.  Plus, it gives you control over the appearance.</p>
+
+	<h3 id="question6">Why must the spreadsheet have exactly one spreadsheet?</h3>
+	<p class="answers">Multiple sheets occasionally cause problems in <b>freeDive</b>. Additionally, they can slow performance.</p>
+
+	<!-- <h2>Recommendations</h2> -->
+
+	<h3 id="question7">Why do I need to optimize my spreadsheet?</h3>
+	<p class="answers">Every bit of information that has to transmitted can slow performance. Deleting everything you don't need will provide a better user experience. </p>
+
+	<h3 id="question8">Should I design my table before I use <b>freeDive</b>?</h3>
+	<p class="answers">Yes. The more refined your spreadsheet is, the better your experience with <b>freeDive</b> will be. Clean your data, arrange the order of your columns, delete everything you don need.</p>
+
+	<h3 id="question9">What happens if I edit column labels in my spreadsheet after I use <b>freeDive</b>?</h3>
+	<p class="answers">Your searchable will break.</p>
+
+	<h3 id="question10">What happens if I edit data in my spreadsheet after I use <b>freeDive</b>?</h3>
+	<p class="answers">Make sure that your spreadsheet publishing options are set to automatically republish. Eventually the new data will appear in <b>freeDive</b>. You can make the changes immediate by opening the spreadsheet publish settings and clicking Republish now.</p>
+
+	<h3 id="question11">Why shouldn't I use all caps text?</h3>
+	<p class="answers">All caps text takes up a lot space and is hard to read. Title text is easier to read and will help a table with several columns fit into a story or post area. But if you have space and really want to use all caps, you can.</p>
+
+	<!-- <h2>Common problems</h2> -->
+
+	<h3 id="question12">I entered my spreadsheet URL but the test fails.</h3>
+	<p class="answers">Make sure that you only enter your key, not the entire URL.</p>
+
+	<h3 id="question13">I entered my spreadsheet key but the test fails.</h3>
+	<p class="answers">Make sure you have published your spreadsheet and changed the sharing settings to Public.</p>
+
+	<h3 id="question14">Can I have more than five columns?</h3>
+	<p class="answers">Yes. You may have up to 10 columns. Keep in mind that too many columns in a small space may result in a horizontal slider (which we hate).</p>
+
+	<h3 id="question15">How do I see the downloaded HTML page?</h3>
+	<p class="answers">To view the page, you must rename it to "yourname.html" The you can open it with your browser.</p>	
+	
+
+	<!-- <h2>Publishing</h2> -->
+
+	<h3 id="question16">Which browsers are compatible?</h3>
+	<p class="answers"><b>freeDive</b> works in Internet Explorer 8+, Chrome, Firefox, Safari and Opera.</p>
+
+	<h3 id="question17">Does <b>freeDive</b> work in IE 6 or 7?</h3>
+	<p class="answers">No. IE 6 and 7 account for less than five percent of browser use. We will not support these browsers.</p>
+
+	<h3 id="question18">What are the advantages to using the embed code?</h3>
+	<p class="answers">The embed code allows the table to live inside your web site. As a result, whenever a user changes the primary search, the page URL is updated. This creates a link to results that users can share on social networks with whichever social sharing buttons you choose to use on your site.</p>
+
+	<h3 id="question19">What are the disadvantages to using the embed code?</h3>
+	<p class="answers">Some content management systems restrict what kinds of code can be embedded. While there is usually an administrator who can address the problem, it is common for reporters/editors to be restricted.</p>
+
+	<h3 id="question20">What are the advantages to using the HTML page?</h3>
+	<p class="answers">The HTML page allows the use of <b>freeDive</b> with an iframe. This is critical in cases where content management systems restrict what kinds of embed code can be used. It's also easier to edit the CSS and customize the table to match a web site.</p>
+
+	<h3 id="question21">What are the disadvantages to using the HTML page?</h3>
+	<p class="answers">When using an iframe, the ability to share search results with social media sharing sharing buttons is lost. </p>
+
+	<h3 id="question22">Can users share search results with social media?</h3>
+	<p class="answers">Yes. But you must use the embed code. </p>
+
+	<h3 id="question23">Does freeDive work on an iPad or tablet?</h3>
+	<p class="answers">Yes, as long as the tablet browser supports javascript.</p>
+
+	<h3 id="question24">Does it work on a smart phone?</h3>
+	<p class="answers">Yes, as long as the phone browser supports javascript. The only caveat is that smaller screens may result in a horizontal scroll bar.</p>
+
+	<!-- <h2>Other Questions</h2> -->
+	
+	<h3 id="question25">Does numeric search work with columns using percent signs?</h3>
+	<p class="answers">The Google API sees % in columns as a decimal. For example, 34% is seen as 0.34. This means that the numeric slider will display a range from 0 to 1, rendering it useless. The numeric search function will be confusing for users and should not be used on this column type. We have requested fix for this issue and will update in this space if there is a change.</p>
+
+	<h3 id="question26">Can I include links?</h3>
+	<p class="answers">Yes. <b>freeDive</b> supports limited HTML in your spreadsheet. For example, a cell with &lt;;a href="URL"&gt;;Link&lt;/a&gt;; will display a clickable link.</p>
+
+	<h3 id="question27">Can I include images? With a caption?</h3>
+	<p class="answers">Yes. And yes.  You can reference an image available on the web. If you are using the embed code you can reference your CSS. Use this: &lt;img src="URL" /&gt;;&lt;br /&gt;;&lt;p&gt;;cutline&lt;p&gt;;  If you are using embed code, you can use your site CSS. Example: &lt;img src="URL" /&gt;&lt;br /&gt;&lt;p <b>class="cutline"</b>&gt;cutline&lt;p&gt; </p>
+
+</div>
+{% endblock %}
