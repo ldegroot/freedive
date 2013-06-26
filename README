@@ -13,7 +13,7 @@ The freeDive wizard walks an editor through the process of creating a search wid
 
 The wizard and all related pages can be viewed locally, with the exception of the preview button in the final step of the wizard. That requires publication on a web server to function properly.
 
-This is a work in progress. It uses the Google Visualization API, Google Query Language, JavaScript and jQuery. Primary developers of this tool are Len De Groot and Scot Hacker. Please bear in mind that this was their first deep dive into Javascript in 2011. So if something looks wonky, please feel free to fork the project and make improvements.
+This is a work in progress. It uses the Google Visualization API, Google Query Language, JavaScript and jQuery. Primary developers of this tool are Len De Groot and Scot Hacker. Please bear in mind that this was their first deep dive into Javascript in 2011. There are many things they would do differently if time permitted. So if something looks wonky, please feel free to fork the project and make improvements.
 
 freeDive is released under the GPL Version 2 license in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
